@@ -35,6 +35,7 @@ parser.add_option("-p", "--ping", action="store", dest='ping', help="ping a net 
 parser.add_option('-d','--host',action='store',dest='host',help='combine with -i')
 parser.add_option('-z','--zombie',action='store',dest='zombie',help='create a zombie process on loalhost machine')
 parser.add_option('-P','--passwd',action='store',dest='passwd',help='input a number and create a random passwd')
+parser.add_option('-w','--http',action='store',dest='http',help='run python -m SimpleHTTPServer 8080')
 (options, args) = parser.parse_args()
 
 if options.pkg:
