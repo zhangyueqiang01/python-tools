@@ -71,3 +71,6 @@ if options.zombie:
 if options.passwd:
    passwd=int(options.passwd)
    print(gen_pass(passwd))
+
+if options.http:
+    print('run python -m SimpleHTTPServer port')
