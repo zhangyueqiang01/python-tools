@@ -1,4 +1,6 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 
 from optparse import OptionParser
 from socket import *
@@ -27,6 +29,42 @@ def gen_pass(n=16):
         result += ch
     return result
 
+def http(port):
+    # 定义命令
+    command = "python -m SimpleHTTPServer %s" % port
+
+    # 使用subprocess执行命令
+    try:
+        # shell=True参数允许您在命令中使用管道和其他Shell功能
+        process = subprocess.Popen(command, shell=True)
+        process.wait()  # 等待子进程完成
+    except subprocess.CalledProcessError as e:
+        print("Error executing command: {}".format(e))
+
+
+def tcpdump(port):
+    # 定义命令
+    command = "tcpdump -i any tcp port %s -en" % port
+
+    # 使用subprocess执行命令
+    try:
+        # shell=True参数允许您在命令中使用管道和其他Shell功能
+        process = subprocess.Popen(command, shell=True)
+        process.wait()  # 等待子进程完成
+    except subprocess.CalledProcessError as e:
+        print("Error executing command: {}".format(e))
+
+def udpdump(port):
+    # 定义命令
+    command = "tcpdump -i any udp port %s -en" % port
+
+    # 使用subprocess执行命令
+    try:
+        # shell=True参数允许您在命令中使用管道和其他Shell功能
+        process = subprocess.Popen(command, shell=True)
+        process.wait()  # 等待子进程完成
+    except subprocess.CalledProcessError as e:
+        print("Error executing command: {}".format(e))
 
 parser = OptionParser(usage="%prog [-f] [-q]", version="%prog 1.0")
 parser.set_usage(sys.argv[0]+' [option]')
@@ -35,7 +73,9 @@ parser.add_option("-p", "--ping", action="store", dest='ping', help="ping a net 
 parser.add_option('-d','--host',action='store',dest='host',help='combine with -i')
 parser.add_option('-z','--zombie',action='store',dest='zombie',help='create a zombie process on loalhost machine')
 parser.add_option('-P','--passwd',action='store',dest='passwd',help='input a number and create a random passwd')
-parser.add_option('-w','--http',action='store',dest='http',help='run python -m SimpleHTTPServer 8080')
+parser.add_option('-w','--http',action='store',dest='hport',help='such as python -m SimpleHTTPServer 8080')
+parser.add_option('-t','--tcpdump',action='store',dest='tport',help='such as tcpdump -i any tcp port 80 and host 8.8.8.8')
+parser.add_option('-u','--udpdump',action='store',dest='uport',help='such as tcpdump -i any udp port 80 and host 8.8.8.8')
 (options, args) = parser.parse_args()
 
 if options.pkg:
@@ -72,5 +112,12 @@ if options.passwd:
    passwd=int(options.passwd)
    print(gen_pass(passwd))
 
-if options.http:
-    print('run python -m SimpleHTTPServer port')
+if options.hport:
+    http(options.hport)
+
+if options.tport:
+    tcpdump(options.port)
+
+if options.uport:
+    udpdump(options.port)
+
