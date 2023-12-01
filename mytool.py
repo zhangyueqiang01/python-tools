@@ -116,8 +116,8 @@ if options.hport:
     http(options.hport)
 
 if options.tport:
-    tcpdump(options.port)
+    tcpdump(options.tport)
 
 if options.uport:
-    udpdump(options.port)
+    udpdump(options.uport)
 
