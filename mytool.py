@@ -172,7 +172,7 @@ def run_threads(args):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="design by Michael")
+    parser = argparse.ArgumentParser(description="designed by Michael")
     parser.add_argument("--udp", action="store_true", help="Print UDP header format")
     parser.add_argument("--tcp", action="store_true", help="Print TCP header format")
     parser.add_argument("--ipv4", action="store_true", help="Print IPV4 header format")
