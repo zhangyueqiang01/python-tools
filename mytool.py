@@ -1,8 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-
-from optparse import OptionParser
+import argparse
 from socket import *
 import os
 import subprocess
@@ -10,6 +9,86 @@ import time
 import sys
 from random import choice
 import string
+
+def print_udp_header():
+    print("https://www.ietf.org/rfc/rfc768.txt")
+    print("UDP Header Format:")
+    udp_header_format = """
+                  0      7 8     15 16    23 24    31 
+                 +--------+--------+--------+--------+
+                 |          source address           |
+                 +--------+--------+--------+--------+
+                 |        destination address        |
+                 +--------+--------+--------+--------+
+                 |  zero  |protocol|   UDP length    |
+                 +--------+--------+--------+--------+
+"""
+    print(udp_header_format)
+
+    
+def print_tcp_header():
+    print("https://www.ietf.org/rfc/rfc793.txt")
+    print("TCP Header Format:")
+    tcp_header_format = """
+    0                   1                   2                   3   
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |          Source Port          |       Destination Port        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                        Sequence Number                        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                    Acknowledgment Number                      |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |  Data |           |U|A|P|R|S|F|                               |
+   | Offset| Reserved  |R|C|S|S|Y|I|            Window             |
+   |       |           |G|K|H|T|N|N|                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |           Checksum            |         Urgent Pointer        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                    Options                    |    Padding    |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                             data                              |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   """
+    print(tcp_header_format)
+
+def print_ipv4_header():
+    print("https://datatracker.ietf.org/doc/html/rfc791")
+    print("ipv4 Header Format:")
+    ipv4_header_format = """
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |Version|  IHL  |Type of Service|          Total Length         |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |         Identification        |Flags|      Fragment Offset    |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |  Time to Live |    Protocol   |         Header Checksum       |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                       Source Address                          |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                    Destination Address                        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                    Options                    |    Padding    |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   """
+    print(ipv4_header_format)
+
+def print_icmp_header():
+    print("https://datatracker.ietf.org/doc/html/rfc792")
+    print("ICMP Header Format:")
+    ipv4_header_format = """
+	0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |     Type      |     Code      |          Checksum             |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                             unused                            |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |      Internet Header + 64 bits of Original Data Datagram      |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   """
+    print(ipv4_header_format)
 
 def ping(host):
     rc = subprocess.call(
@@ -66,58 +145,77 @@ def udpdump(port):
     except subprocess.CalledProcessError as e:
         print("Error executing command: {}".format(e))
 
-parser = OptionParser(usage="%prog [-f] [-q]", version="%prog 1.0")
-parser.set_usage(sys.argv[0]+' [option]')
-parser.add_option("-i", "--install", action='store', dest="pkg",help="install packages on remote host")
-parser.add_option("-p", "--ping", action="store", dest='ping', help="ping a net such as ping 8.8.8")
-parser.add_option('-d','--host',action='store',dest='host',help='combine with -i')
-parser.add_option('-z','--zombie',action='store',dest='zombie',help='create a zombie process on loalhost machine')
-parser.add_option('-P','--passwd',action='store',dest='passwd',help='input a number and create a random passwd')
-parser.add_option('-w','--http',action='store',dest='hport',help='such as python -m SimpleHTTPServer 8080')
-parser.add_option('-t','--tcpdump',action='store',dest='tport',help='such as tcpdump -i any tcp port 80 and host 8.8.8.8')
-parser.add_option('-u','--udpdump',action='store',dest='uport',help='such as tcpdump -i any udp port 80 and host 8.8.8.8')
-(options, args) = parser.parse_args()
+def main():
+    parser = argparse.ArgumentParser(description="Print network packets header format")
+    parser.add_argument("--udp", action="store_true", help="Print UDP header format")
+    parser.add_argument("--tcp", action="store_true", help="Print TCP header format")
+    parser.add_argument("--ipv4", action="store_true", help="Print IPV4 header format")
+    parser.add_argument("--icmp", action="store_true", help="Print ICMP header format")
+    parser.add_argument("-i", "--install", action='store', dest="pkg",help="install packages on remote host")
+    parser.add_argument("-p", "--ping", action="store", dest='ping', help="ping a net such as ping 8.8.8")
+    parser.add_argument('-d','--host',action='store',dest='host',help='combine with -i')
+    parser.add_argument('-z','--zombie',action='store',dest='zombie',help='create a zombie process on loalhost machine')
+    parser.add_argument('-P','--passwd',action='store',dest='passwd',help='input a number and create a random passwd')
+    parser.add_argument('-w','--http',action='store',dest='hport',help='such as python -m SimpleHTTPServer 8080')
+    parser.add_argument('-t','--tcpdump',action='store',dest='tport',help='such as tcpdump -i any tcp port 80 and host 8.8.8.8')
+    parser.add_argument('-u','--udpdump',action='store',dest='uport',help='such as tcpdump -i any udp port 80 and host 8.8.8.8')
 
-if options.pkg:
-    HOST=options.host
-    PORT=2222
-    BUFSIZ=1024
-    ADDR=(HOST,PORT)
-    tcpCliSock=socket(AF_INET,SOCK_STREAM)
-    tcpCliSock.connect(ADDR)
-    tcpCliSock.send(options.pkg)
-    result=tcpCliSock.recv(BUFSIZ)
-    print(result)
-    tcpCliSock.close()
+    args = parser.parse_args()
 
-if options.ping:
-    ips = (options.ping+'.'+'%s' % i for i in range(1, 255))
-    for ip in ips:
+    if args.udp:
+        print_udp_header()
+    elif args.tcp:
+        print_tcp_header()
+    elif args.icmp:
+        print_icmp_header()
+    elif args.ipv4:
+        print_ipv4_header()
+    elif args.pkg:
+        HOST=args.host
+        PORT=2222
+        BUFSIZ=1024
+        ADDR=(HOST,PORT)
+        tcpCliSock=socket(AF_INET,SOCK_STREAM)
+        tcpCliSock.connect(ADDR)
+        tcpCliSock.send(args.pkg)
+        result=tcpCliSock.recv(BUFSIZ)
+        print(result)
+        tcpCliSock.close()
+    
+    elif args.ping:
+        ips = (args.ping+'.'+'%s' % i for i in range(1, 255))
+        for ip in ips:
+            pid = os.fork()
+            if not pid:
+                ping(ip)
+                exit()
+        time.sleep(20)
+    
+    elif args.zombie:
+        print('zombie process has been created')
         pid = os.fork()
-        if not pid:
-            ping(ip)
-            exit()
-    time.sleep(20)
-
-if options.zombie:
-    print('zombie process has been created')
-    pid = os.fork()
-    if pid:
-        while True:
-            time.sleep(10)
+        if pid:
+            while True:
+                time.sleep(10)
+        else:
+            time.sleep(3)
+    
+    elif args.passwd:
+       passwd=int(args.passwd)
+       print(gen_pass(passwd))
+    
+    elif args.hport:
+        http(args.hport)
+    
+    elif args.tport:
+        tcpdump(args.tport)
+    
+    elif args.uport:
+        udpdump(args.uport)    
     else:
-        time.sleep(3)
+        print("Please specify args")
 
-if options.passwd:
-   passwd=int(options.passwd)
-   print(gen_pass(passwd))
+if __name__ == "__main__":
+    main()
 
-if options.hport:
-    http(options.hport)
-
-if options.tport:
-    tcpdump(options.tport)
-
-if options.uport:
-    udpdump(options.uport)
 
