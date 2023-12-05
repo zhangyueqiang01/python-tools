@@ -29,6 +29,81 @@ def print_udp_header():
 """
     print(udp_header_format)
 
+def print_ethernet2_header():
+    print("Ethernet II Header Format:")
+    ethernet2_header_format = """
++-------------------+----------------------+----------------------+----------------------+----------------------+----------------------+----------------------+
+| Preamble          | Start Frame Delimiter| Destination Address  | Source Address       | Type/Length Field    | Data                 | Frame Check Sequence |
+| (7 bytes)         | (1 byte)             | (6 bytes)            | (6 bytes)            | (2 bytes)            | (46-1500 bytes)      | (4 bytes)            |
++-------------------+----------------------+----------------------+----------------------+----------------------+----------------------+----------------------+
+IPv4帧:  值为0x0800,表示数据部分是IPv4协议的数据。
+ARP帧: 值为0x0806,表示数据部分是地址解析协议(ARP)的数据。
+IPv6帧: 值为0x86DD,表示数据部分是IPv6协议的数据。
+VLAN帧: 值为0x8100,表示数据部分包含802.1Q虚拟局域网(VLAN)标签。
+IPv4 over IPv6帧: 值为0x0800,表示IPv4数据被封装在IPv6帧中。
+PPPoE帧: 值为0x8864,表示数据部分是点对点协议(PPP)的封装。
+"""
+    print(ethernet2_header_format)
+
+def print_vlan_header():
+    print("https://support.huawei.com/enterprise/zh/doc/EDOC1100088136")
+    print("IEEE 802.1Q VLAN Header Format:")
+    vlan_header_format = """
++-------------------+----------------------+----------------------+----------------------+----------------------+----------------------+----------------------+----------------------+----------------------+
+| Preamble          | Start Frame Delimiter| Destination Address  | Source Address       | Type/Length Field    | VLAN Tag             | Type/Length Field    | Data                 | Frame Check Sequence |
+| (7 bytes)         | (1 byte)             | (6 bytes)            | (6 bytes)            | (2 bytes)            | (4 bytes)            | (2 bytes)            | (46-1500 bytes)      | (4 bytes)            |
++-------------------+----------------------+----------------------+----------------------+----------------------+----------------------+----------------------+----------------------+----------------------+
+
+
+  0                   1                   2                   3   
+  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ | TPI (0x81)    | PRI (PCP+CFI)   |            VLAN ID          |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |            EtherType or Length (for Ethernet II)              |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+第一个类型/长度字段(2字节): 如果帧的长度小于或等于1500字节,这个字段表示帧中的数据长度;如果长度超过1500字节,这个字段表示帧的类型。在IEEE 802.1Q中,这个字段的值是0x8100,表示后面是802.1Q标签。
+标签协议标识(TPID)(2字节): 固定为0x8100,表示这是一个IEEE 802.1Q标签。
+优先级(3位)和CFI(Canonical Format Identifier,1位)(1字节): 这4个比特位组成了一个单独的字节。其中,3位的优先级字段用于指定VLAN的优先级,而CFI位通常被设置为0。
+VLAN标识(12位): VLAN标识字段用于标识具体的VLAN。这个字段可以包含0到4095之间的值,其中0和4095有特殊用途,0表示不使用VLAN,而4095用于保留所有VLAN标识。
+第二个类型/长度字段(2字节): 指示帧中数据的类型或长度,通常是IPv4(0x0800)或IPv6(0x86DD)。
+
+"""
+    print(vlan_header_format)
+
+def print_vxlan_header():
+    print("https://support.huawei.com/enterprise/zh/doc/EDOC1100065793/2845c625")
+    print("vxlan Header Format:")
+    vxlan_header_format = """
++---------------------+
+|Outer Ethernet Header|
++---------------------+
+| IP Header (UDP)     |
++---------------------+
+| UDP Header          |
++---------------------+
+| VXLAN Header        |
++---------------------+
+| Original Ethernet   |
+| Frame (Payload)     |
++---------------------+
+
+
+0                   1                   2                   3   
+0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|R|R|R|R|I|R|R|R|            Reserved                           |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                VXLAN Network Identifier (VNI)                 |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                UDP Source Port (Default: 4789)                |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                UDP Destination Port (Default: 4789)           |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+"""
+    print(vxlan_header_format)
     
 def print_tcp_header():
     print("https://www.ietf.org/rfc/rfc793.txt")
@@ -177,6 +252,9 @@ def main():
     parser.add_argument("--tcp", action="store_true", help="Print TCP header format")
     parser.add_argument("--ipv4", action="store_true", help="Print IPV4 header format")
     parser.add_argument("--icmp", action="store_true", help="Print ICMP header format")
+    parser.add_argument("--ethernet2", action="store_true", help="Print Ethernet II header format")
+    parser.add_argument("--vlan", action="store_true", help="Print vlan header format")
+    parser.add_argument("--vxlan", action="store_true", help="Print vxlan header format")
     parser.add_argument("-i", "--install", action='store', dest="pkg",help="install packages on remote host")
     parser.add_argument("-p", "--ping", action="store", dest='ping', help="ping a net such as ping 8.8.8")
     parser.add_argument('-d','--ihost',action='store',dest='host',help='combine with -i')
@@ -201,6 +279,12 @@ def main():
         print_icmp_header()
     elif args.ipv4:
         print_ipv4_header()
+    elif args.ethernet2:
+        print_ethernet2_header()
+    elif args.vlan:
+        print_vlan_header()
+    elif args.vxlan:
+        print_vxlan_header()
     elif args.pkg:
         HOST=args.ihost
         PORT=2222
