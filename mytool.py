@@ -202,7 +202,7 @@ def http(port):
 
 def tcpdump(port):
     # 定义命令
-    command = "tcpdump -i any tcp port %s -en" % port
+    command = "tcpdump -i any tcp port %s -ennl -vv" % port
 
     # 使用subprocess执行命令
     try:
@@ -213,16 +213,23 @@ def tcpdump(port):
         print("Error executing command: {}".format(e))
 
 def udpdump(port):
-    # 定义命令
-    command = "tcpdump -i any udp port %s -en" % port
+    command = "tcpdump -i any udp port %s -ennl -vv" % port
 
-    # 使用subprocess执行命令
     try:
-        # shell=True参数允许您在命令中使用管道和其他Shell功能
         process = subprocess.Popen(command, shell=True)
-        process.wait()  # 等待子进程完成
+        process.wait()  
     except subprocess.CalledProcessError as e:
         print("Error executing command: {}".format(e))
+
+def arpdump():
+    command = "tcpdump -i any arp -ennl -vv"
+
+    try:
+        process = subprocess.Popen(command, shell=True)
+        process.wait()  
+    except subprocess.CalledProcessError as e:
+        print("Error executing command: {}".format(e))
+ 
 
 def send_large_message(host, port, size, num_packets):
     logging.basicConfig(filename='udp_logs.txt', level=logging.INFO, format='%(asctime)s - %(message)s')
@@ -263,6 +270,7 @@ def main():
     parser.add_argument('-w','--http',action='store',dest='hport',help='such as python -m SimpleHTTPServer 8080')
     parser.add_argument('-t','--tcpdump',action='store',dest='tport',help='such as tcpdump -i any tcp port 80 and host 8.8.8.8')
     parser.add_argument('-u','--udpdump',action='store',dest='uport',help='such as tcpdump -i any udp port 80 and host 8.8.8.8')
+    parser.add_argument("--arpdump", action="store_true", help="such as tcpdump -i any arp -ennl")
     parser.add_argument('--host', default=' ', help='send UDP packages to Host name or IP address, default is NUll')
     parser.add_argument('--port', type=int, default=12345, help='send UDP packages to Port number, default is 12345')
     parser.add_argument('--size', type=int, default=1024, help='send UDP packages Message size in bytes, default is 1024 Kb')
@@ -327,6 +335,10 @@ def main():
     
     elif args.uport:
         udpdump(args.uport)
+
+    elif args.arpdump:
+        arpdump()
+
     elif args.host:
         run_threads(args)
 
@@ -335,5 +347,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
