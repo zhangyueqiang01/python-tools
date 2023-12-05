@@ -202,7 +202,7 @@ def http(port):
 
 def tcpdump(port):
     # 定义命令
-    command = "tcpdump -i any tcp port %s -ennl -vv" % port
+    command = "tcpdump -i any tcp port %s -ennl" % port
 
     # 使用subprocess执行命令
     try:
@@ -269,8 +269,8 @@ def main():
     parser.add_argument('-P','--passwd',action='store',dest='passwd',help='input a number and create a random passwd')
     parser.add_argument('-w','--http',action='store',dest='hport',help='such as python -m SimpleHTTPServer 8080')
     parser.add_argument('-t','--tcpdump',action='store',dest='tport',help='such as tcpdump -i any tcp port 80 and host 8.8.8.8')
-    parser.add_argument('-u','--udpdump',action='store',dest='uport',help='such as tcpdump -i any udp port 80 and host 8.8.8.8')
-    parser.add_argument("--arpdump", action="store_true", help="such as tcpdump -i any arp -ennl")
+    parser.add_argument('-u','--udpdump',action='store',dest='uport',help='such as tcpdump -i any udp port 80 and host 8.8.8.8 -vv')
+    parser.add_argument("--arpdump", action="store_true", help="such as tcpdump -i any arp -ennl -vv")
     parser.add_argument('--host', default=' ', help='send UDP packages to Host name or IP address, default is NUll')
     parser.add_argument('--port', type=int, default=12345, help='send UDP packages to Port number, default is 12345')
     parser.add_argument('--size', type=int, default=1024, help='send UDP packages Message size in bytes, default is 1024 Kb')
