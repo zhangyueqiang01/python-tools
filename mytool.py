@@ -217,6 +217,19 @@ def udpdump(port):
     except subprocess.CalledProcessError as e:
         print("Error executing command: {}".format(e))
 
+def scanport(host, port):
+    command = "nc -zv {} {}".format(host, port)
+    try:
+        process = subprocess.Popen(command, shell=True)
+        process.wait()
+    except subprocess.CalledProcessError as e:
+        print("Error executing command: {}".format(e))
+
+# 示例用法
+scanport("example.com", 80)
+ 
+
+
 def arpdump():
     command = "tcpdump -i any arp -ennl -vv"
 
@@ -272,6 +285,9 @@ def main():
     parser.add_argument('--size', type=int, default=1024, help='send UDP packages Message size in bytes, default is 1024 Kb')
     parser.add_argument('--packets-per-thread', type=int, default=3, help='Number of UDP packets per thread, default is 3')
     parser.add_argument('--total-threads', type=int, default=10, help='Total number of threads, default is 10')
+    parser.add_argument('--shost', default=' ', help='Scan a special host tcp port, default host is NUll')
+    parser.add_argument('--sport', type=int, default=' ', help='Scan a host  speial tcp port like "nc -zv 192.168.1.1 80", default port is NUll')
+
 
     args = parser.parse_args()
 
@@ -337,6 +353,9 @@ def main():
 
     elif args.host:
         run_threads(args)
+
+    elif args.shost is not None and args.sport is not None:
+        scanport(args.shost,args.sport)
 
     else:
         print("Please specify args")
