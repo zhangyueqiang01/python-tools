@@ -226,7 +226,7 @@ def ncscanport(host, port):
         print("Error executing command: {}".format(e))
 
 def nmapscanport(host, port):
-    command = "nmap -p {} {}".format(port,host)
+    command = "nmap -sV -p {} {}".format(port,host)
     try:
         process = subprocess.Popen(command, shell=True)
         process.wait()
@@ -360,7 +360,7 @@ def main():
     elif args.shost is not None and args.sport is not None:
         print('nc -zv {} {}'.format(args.shost, args.sport))
         ncscanport(args.shost,args.sport)
-        print('nmap -p {} {}'.format(args.sport, args.shost))
+        print('nmap -sV -p {} {}'.format(args.sport, args.shost))
         nmapscanport(args.shost,args.sport)
 
     else:
