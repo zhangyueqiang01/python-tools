@@ -289,7 +289,7 @@ def main():
     parser.add_argument('--packets-per-thread', type=int, default=3, help='Number of UDP packets per thread, default is 3')
     parser.add_argument('--total-threads', type=int, default=10, help='Total number of threads, default is 10')
     parser.add_argument('--shost', default=' ', help='Scan a special host tcp port, default host is NUll')
-    parser.add_argument('--sport', type=int, default=' ', help='Scan a host  speial tcp port like "nc -zv 8.8.8.8 80" or "nmap -sV -p 22 8.8.8.8", default port is NUll')
+    parser.add_argument('--sport', default='', help='Scan a host  speial tcp port like "nc -zv 8.8.8.8 80" or "nmap -sV -p 22 8.8.8.8", default port is NUll')
 
 
     args = parser.parse_args()
