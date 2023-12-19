@@ -317,6 +317,10 @@ def run_threads(args):
 
 
 def cntoeng(file_path):
+    if not os.path.isfile(file_path):
+        print("Error: File '{}' not found.".format(file_path))
+        sys.exit(1)
+
     sed_command = "sed -i 's/（/(/g; s/）/)/g; s/：/:/g; s/，/,/g; s/。/./g; s/？/?/g' %s" % file_path
 
     try:
