@@ -330,6 +330,22 @@ def cntoeng(file_path):
         print("Error executing sed command:", e)
         sys.exit(1)
 
+def ncscanport(host, port):
+    command = "nc -zv {} {}".format(host, port)
+    try:
+        process = subprocess.Popen(command, shell=True)
+        process.wait()
+    except subprocess.CalledProcessError as e:
+        print("Error executing command: {}".format(e))
+
+def nmapscanport(host, port):
+    command = "nmap -sV -p {} {}".format(port,host)
+    try:
+        process = subprocess.Popen(command, shell=True)
+        process.wait()
+    except subprocess.CalledProcessError as e:
+        print("Error executing command: {}".format(e))
+
 def main():
     parser = argparse.ArgumentParser(description="designed by Michael")
     parser.add_argument("--udp", action="store_true", help="Print UDP header format")
@@ -359,6 +375,8 @@ def main():
     parser.add_argument('--size', type=int, default=1024, help='send UDP packages Message size in bytes, default is 1024 Kb')
     parser.add_argument('--packets-per-thread', type=int, default=3, help='Number of UDP packets per thread, default is 3')
     parser.add_argument('--total-threads', type=int, default=10, help='Total number of threads, default is 10')
+    parser.add_argument('--shost', default=' ', help='Scan a special host tcp port, default host is NUll')
+    parser.add_argument('--sport', default='', help='Scan a host  speial tcp port like "nc -zv 8.8.8.8 80" or "nmap -sV -p 22 8.8.8.8", default port is NUll')
     parser.add_argument("--cntoeng", nargs=1,help="Modify all Chinese punctuation marks into English punctuation marks, like sed -i s/：/:/g test.py")
 
     args = parser.parse_args()
@@ -430,6 +448,12 @@ def main():
 
     elif args.cntoeng:
         cntoeng(args.cntoeng[0])
+
+    elif args.shost is not None and args.sport is not None:
+        print('nc -zv {} {}'.format(args.shost, args.sport))
+        ncscanport(args.shost,args.sport)
+        print('nmap -sV -p {} {}'.format(args.sport, args.shost))
+        nmapscanport(args.shost,args.sport)
 
     else:
         print("Please specify args")
