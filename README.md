@@ -17,4 +17,4 @@ optional arguments:
                         install packages on remote host  
   -p PING, --ping PING  ping a net such as ping 8.8.8  
   -d HOST, --ihost HOST  
-                        combine with -i  
+                        combine with -i 
