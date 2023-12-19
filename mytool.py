@@ -49,14 +49,10 @@ def print_vlan_header():
     print("https://support.huawei.com/enterprise/zh/doc/EDOC1100088136")
     print("IEEE 802.1Q VLAN Header Format:")
     vlan_header_format = """
-+-------------------+----------------------+----------------------+----------------------+----------------------+----------------------+----------------------+----------------------+
-| Preamble          | Start Frame Delimiter| Destination Address  | Source Address       | VLAN Tag             | Type/Length Field    | Data                 | Frame Check Sequence |
-| (7 bytes)         | (1 byte)             | (6 bytes)            | (6 bytes)            | (4 bytes)            | (2 bytes)            | (46-1500 bytes)      | (4 bytes)            |
-+-------------------+----------------------+----------------------+----------------------+----------------------+----------------------+----------------------+----------------------+
-
-#Access：发送给PC的报文没有vlan id
-#Trunk：发送给PC的报文有vlan id
-#Hybrid：可以有也可以没有
++-------------------+----------------------+----------------------+----------------------+----------------------+----------------------+----------------------+----------------------+----------------------+
+| Preamble          | Start Frame Delimiter| Destination Address  | Source Address       | Type/Length Field    | VLAN Tag             | Type/Length Field    | Data                 | Frame Check Sequence |
+| (7 bytes)         | (1 byte)             | (6 bytes)            | (6 bytes)            | (2 bytes)            | (4 bytes)            | (2 bytes)            | (46-1500 bytes)      | (4 bytes)            |
++-------------------+----------------------+----------------------+----------------------+----------------------+----------------------+----------------------+----------------------+----------------------+
 
 
   0                   1                   2                   3   
@@ -66,6 +62,14 @@ def print_vlan_header():
  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
  |            EtherType or Length (for Ethernet II)              |
  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+第一个类型/长度字段(2字节): 如果帧的长度小于或等于1500字节,这个字段表示帧中的数据长度;如果长度超过1500字节,这个字段表示帧的类型。在IEEE 802.1Q中,这个字段的值是0x8100,表示后面是802.1Q标签。
+标签协议标识(TPID)(2字节): 固定为0x8100,表示这是一个IEEE 802.1Q标签。
+优先级(3位)和CFI(Canonical Format Identifier,1位)(1字节): 这4个比特位组成了一个单独的字节。其中,3位的优先级字段用于指定VLAN的优先级,而CFI位通常被设置为0。
+VLAN标识(12位): VLAN标识字段用于标识具体的VLAN。这个字段可以包含0到4095之间的值,其中0和4095有特殊用途,0表示不使用VLAN,而4095用于保留所有VLAN标识。
+第二个类型/长度字段(2字节): 指示帧中数据的类型或长度,通常是IPv4(0x0800)或IPv6(0x86DD)。
+
 """
     print(vlan_header_format)
 
@@ -165,6 +169,69 @@ def print_icmp_header():
    """
     print(ipv4_header_format)
 
+def print_http_header():
+    print("rfc url")
+    print("http Header Format:")
+    http_header_format = """
+   +--------------------------------------+
+   |           HTTP Request Header        |
+   +--------------------------------------+
+   | Method: GET                          |
+   | Path: /path/resource                 |
+   | Protocol: HTTP/1.1                   |
+   | Host: www.example.com                |
+   | User-Agent: Mozilla/5.0              |
+   | Accept: text/html, application/xml   |
+   | Connection: keep-alive               |
+   +--------------------------------------+
+
+   +--------------------------------------+
+   |          HTTP Response Header        |
+   +--------------------------------------+
+   | Protocol: HTTP/1.1                   |
+   | Status Code: 200 OK                  |
+   | Status Text: OK                      |
+   | Content-Type: text/html              |
+   | Content-Length: 12345                |
+   | Server: Apache/2.4.38                |
+   | Set-Cookie: sessionid=12345;         |
+   |    Path=/; Expires=Wed, 18 Dec 2024  |
+   +--------------------------------------+
+
+   1xx(信息性状态码): 服务器收到请求，需要请求者继续执行操作。
+   100 Continue: 服务器已经收到请求的头部，并且客户端应该继续发送请求的其余部分。
+
+   2xx(成功状态码): 请求被成功接收、理解、并接受。
+   200 OK: 请求成功。
+   201 Created: 请求已经被实现，而且有一个新的资源已经依据请求的需要而建立。
+   204 No Content: 服务器成功处理了请求，但没有返回任何内容。
+
+   3xx(重定向状态码): 需要客户端采取进一步的操作才能完成请求。
+   301 Moved Permanently: 请求的资源已被永久移动到新位置。
+   302 Found: 请求的资源临时从不同的URI响应请求。
+   304 Not Modified: 资源未被修改，可以使用缓存的版本。
+
+   4xx(客户端错误状态码): 客户端似乎有错误，无法完成请求。
+   400 Bad Request: 服务器不理解请求的语法。
+   401 Unauthorized: 请求要求身份验证。
+   403 Forbidden: 服务器理解请求，但拒绝执行。
+   404 Not Found:(未找到)
+
+   5xx(服务器错误状态码): 服务器在处理请求的过程中发生错误。
+   500 Internal Server Error: 服务器遇到了一个未曾预料的状况。
+   502 Bad Gateway: 服务器作为网关或代理，从上游服务器收到无效响应。
+   503 Service Unavailable: 服务器暂时不可用。
+   """
+    print(http_header_format)    
+
+def print_xxx_header():
+    print("rfc url")
+    print("xxx Header Format:")
+    xxx_header_format = """
+    xxx
+   """
+    print(xxx_header_format)
+
 def ping(host):
     rc = subprocess.call(
         'ping -c2 %s &> /dev/null' % host,
@@ -217,22 +284,6 @@ def udpdump(port):
     except subprocess.CalledProcessError as e:
         print("Error executing command: {}".format(e))
 
-def ncscanport(host, port):
-    command = "nc -zv {} {}".format(host, port)
-    try:
-        process = subprocess.Popen(command, shell=True)
-        process.wait()
-    except subprocess.CalledProcessError as e:
-        print("Error executing command: {}".format(e))
-
-def nmapscanport(host, port):
-    command = "nmap -sV -p {} {}".format(port,host)
-    try:
-        process = subprocess.Popen(command, shell=True)
-        process.wait()
-    except subprocess.CalledProcessError as e:
-        print("Error executing command: {}".format(e))
-
 def arpdump():
     command = "tcpdump -i any arp -ennl -vv"
 
@@ -274,12 +325,18 @@ def main():
     parser.add_argument("--ethernet2", action="store_true", help="Print Ethernet II header format")
     parser.add_argument("--vlan", action="store_true", help="Print vlan header format")
     parser.add_argument("--vxlan", action="store_true", help="Print vxlan header format")
+    parser.add_argument("--http", action="store_true", help="Print http header format")
+    parser.add_argument("--ftp", action="store_true", help="Print ftp header format")
+    parser.add_argument("--ssh", action="store_true", help="Print ssh header format")
+    parser.add_argument("--dhcp", action="store_true", help="Print dhcp header format")
+    parser.add_argument("--ipv6", action="store_true", help="Print ipv6 header format")
+
     parser.add_argument("-i", "--install", action='store', dest="pkg",help="install packages on remote host")
     parser.add_argument("-p", "--ping", action="store", dest='ping', help="ping a net such as ping 8.8.8")
     parser.add_argument('-d','--ihost',action='store',dest='host',help='combine with -i')
     parser.add_argument('-z','--zombie',action='store',dest='zombie',help='create a zombie process on loalhost machine')
     parser.add_argument('-P','--passwd',action='store',dest='passwd',help='input a number and create a random passwd')
-    parser.add_argument('-w','--http',action='store',dest='hport',help='such as python -m SimpleHTTPServer 8080')
+    parser.add_argument('-w','--web',action='store',dest='hport',help='such as python -m SimpleHTTPServer 8080')
     parser.add_argument('-t','--tcpdump',action='store',dest='tport',help='such as tcpdump -i any tcp port 80 and host 8.8.8.8')
     parser.add_argument('-u','--udpdump',action='store',dest='uport',help='such as tcpdump -i any udp port 80 and host 8.8.8.8 -vv')
     parser.add_argument("--arpdump", action="store_true", help="such as tcpdump -i any arp -ennl -vv")
@@ -288,9 +345,6 @@ def main():
     parser.add_argument('--size', type=int, default=1024, help='send UDP packages Message size in bytes, default is 1024 Kb')
     parser.add_argument('--packets-per-thread', type=int, default=3, help='Number of UDP packets per thread, default is 3')
     parser.add_argument('--total-threads', type=int, default=10, help='Total number of threads, default is 10')
-    parser.add_argument('--shost', default=' ', help='Scan a special host tcp port, default host is NUll')
-    parser.add_argument('--sport', default='', help='Scan a host  speial tcp port like "nc -zv 8.8.8.8 80" or "nmap -sV -p 22 8.8.8.8", default port is NUll')
-
 
     args = parser.parse_args()
 
@@ -308,6 +362,8 @@ def main():
         print_vlan_header()
     elif args.vxlan:
         print_vxlan_header()
+    elif args.http:
+        print_http_header()
     elif args.pkg:
         HOST=args.ihost
         PORT=2222
@@ -357,17 +413,10 @@ def main():
     elif args.host:
         run_threads(args)
 
-    elif args.shost is not None and args.sport is not None:
-        print('nc -zv {} {}'.format(args.shost, args.sport))
-        ncscanport(args.shost,args.sport)
-        print('nmap -sV -p {} {}'.format(args.sport, args.shost))
-        nmapscanport(args.shost,args.sport)
-
     else:
         print("Please specify args")
 
 if __name__ == "__main__":
     main()
-
 
 
