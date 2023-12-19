@@ -316,6 +316,16 @@ def run_threads(args):
         thread.join()
 
 
+def cntoeng(file_path):
+    sed_command = "sed -i 's/（/(/g; s/）/)/g; s/：/:/g; s/，/,/g; s/。/./g; s/？/?/g' %s" % file_path
+
+    try:
+        subprocess.Popen(sed_command, shell=True).wait()
+        print("Sed command executed successfully.")
+    except subprocess.CalledProcessError as e:
+        print("Error executing sed command:", e)
+        sys.exit(1)
+
 def main():
     parser = argparse.ArgumentParser(description="designed by Michael")
     parser.add_argument("--udp", action="store_true", help="Print UDP header format")
@@ -345,6 +355,7 @@ def main():
     parser.add_argument('--size', type=int, default=1024, help='send UDP packages Message size in bytes, default is 1024 Kb')
     parser.add_argument('--packets-per-thread', type=int, default=3, help='Number of UDP packets per thread, default is 3')
     parser.add_argument('--total-threads', type=int, default=10, help='Total number of threads, default is 10')
+    parser.add_argument("--cntoeng", nargs=1,help="Modify all Chinese punctuation marks into English punctuation marks, like sed -i s/：/:/g test.py")
 
     args = parser.parse_args()
 
@@ -412,6 +423,9 @@ def main():
 
     elif args.host:
         run_threads(args)
+
+    elif args.cntoeng:
+        cntoeng(args.cntoeng[0])
 
     else:
         print("Please specify args")
