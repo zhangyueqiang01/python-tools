@@ -329,6 +329,33 @@ display mpls ldp lsp statistics
    """
     print(huawei2_cmd)   
 
+def print_osp_cmd():
+    print("OpenStack usage command:")
+    osp_cmd = """
+nova show 6e18eca1-497b-4071-ab93-0fd905aba22d
+nova instance-action-list 6e18eca1-497b-4071-ab93-0fd905aba22d
+nova get-vnc-console 6e18eca1-497b-4071-ab93-0fd905aba22d novnc
+openstack catalog list
+openstack endpoint list
+openstack compute service list
+openstack server show 6e18eca1-497b-4071-ab93-0fd905aba22d
+   """
+    print(osp_cmd)  
+
+def print_ceph_cmd():
+    print("ceph usage command:")
+    ceph_cmd = """
+ceph -s
+   """
+    print(ceph_cmd)  
+
+def print_docker_cmd():
+    print("docker usage command:")
+    docker_cmd = """
+docker image ls
+   """
+    print(docker_cmd)  
+
 def print_xxx_header():
     print("rfc url")
     print("xxx Header Format:")
@@ -470,6 +497,9 @@ def main():
     parser.add_argument("--dp", action="store_true", help="Print DP devices health check")
     parser.add_argument("--huawei1", action="store_true", help="Print HUAWEI devices health check,like CE5855/CE6851/CE12808S")
     parser.add_argument("--huawei2", action="store_true", help="Print HUAWEI devices health check,like NE40/Eudemon1000E/Eudemon8000E")
+    parser.add_argument("--osp", action="store_true", help="Print OpenStack usage command")
+    parser.add_argument("--ceph", action="store_true", help="Print ceph usage command")
+    parser.add_argument("--docker", action="store_true", help="Print docker usage command")
 
     parser.add_argument("-i", "--install", action='store', dest="pkg",help="install packages on remote host")
     parser.add_argument("-p", "--ping", action="store", dest='ping', help="ping a net such as ping 8.8.8")
@@ -517,6 +547,12 @@ def main():
         print_huawei2_cmd()
     elif args.zte:
         print_zte_cmd()
+    elif args.osp:
+        print_osp_cmd()
+    elif args.ceph:
+        print_ceph_cmd()
+    elif args.docker:
+        print_docker_cmd()
     elif args.pkg:
         HOST=args.ihost
         PORT=2222
