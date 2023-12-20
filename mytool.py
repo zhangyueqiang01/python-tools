@@ -222,7 +222,112 @@ def print_http_header():
    502 Bad Gateway: 服务器作为网关或代理，从上游服务器收到无效响应。
    503 Service Unavailable: 服务器暂时不可用。
    """
-    print(http_header_format)    
+    print(http_header_format) 
+
+def print_h3c_cmd():
+    print("h3c usage command:")
+    h3c_cmd = """
+screen-length disable
+display alarm
+display logbuffer
+display current-configuration
+display cpu-usage
+display memory
+display environment
+display device verbose
+display fan
+display power
+display clock
+display interface brief
+   """
+    print(h3c_cmd)   
+
+def print_dp_cmd():
+    print("dp usage command:")
+    dp_cmd = """
+terminal line 0
+show running-config
+show logging syslog recent 100
+show cpu-usage
+show cf-card usage
+show harddisk usage
+show memory all
+show device
+show interface status
+show ip interface brief
+show ntp status
+show board-power
+show environment
+   """
+    print(dp_cmd)   
+
+def print_zte_cmd():
+    print("zte usage command:")
+    zte_cmd = """
+terminal length 0
+show interface brief
+show alarm current
+show running-config
+show processor
+show temperature
+show version
+show fan
+show power
+   """
+    print(zte_cmd)   
+
+def print_huawei1_cmd():
+    print("HUAWEI1 usage command:")
+    huawei1_cmd = """
+screen-l 0 temp
+display current-configuration
+display logbuffer
+display alarm active 
+display health
+display cpu
+display memory
+display device
+display ntp status
+display ip fib slot 2 statistics
+display ipv6 fib slot 2 statistics
+display device power
+   """
+    print(huawei1_cmd)   
+
+def print_huawei2_cmd():
+    print("HUAWEI2 usage command:")
+    huawei2_cmd = """
+screen-l 0 temp
+display logbuffer
+display alarm active 
+display health
+display cpu-usage
+display device
+display device ofc-status
+display device pic-status
+display voltage
+display power 
+display fan 
+display temperature
+display memory-usage
+display ntp-service status
+display users
+display fabric fiber status error
+display fabric fiber connection error
+display interface brief 
+display alarm active
+display alarm hardware
+display bgp peer
+display bgp vpnv4 all peer
+display bgp vpnv6 all peer
+display mpls ldp
+display license state
+display info-center
+display fib slot clc1/1 statistics all
+display ipv6 fib slot clc1/1 statistics all
+display mpls ldp lsp statistics
+   """
+    print(huawei2_cmd)   
 
 def print_xxx_header():
     print("rfc url")
@@ -360,6 +465,11 @@ def main():
     parser.add_argument("--ssh", action="store_true", help="Print ssh header format")
     parser.add_argument("--dhcp", action="store_true", help="Print dhcp header format")
     parser.add_argument("--ipv6", action="store_true", help="Print ipv6 header format")
+    parser.add_argument("--h3c", action="store_true", help="Print H3C devices health check")
+    parser.add_argument("--zte", action="store_true", help="Print ZTE devices health check")
+    parser.add_argument("--dp", action="store_true", help="Print DP devices health check")
+    parser.add_argument("--huawei1", action="store_true", help="Print HUAWEI devices health check,like CE5855/CE6851/CE12808S")
+    parser.add_argument("--huawei2", action="store_true", help="Print HUAWEI devices health check,like NE40/Eudemon1000E/Eudemon8000E")
 
     parser.add_argument("-i", "--install", action='store', dest="pkg",help="install packages on remote host")
     parser.add_argument("-p", "--ping", action="store", dest='ping', help="ping a net such as ping 8.8.8")
@@ -397,6 +507,16 @@ def main():
         print_vxlan_header()
     elif args.http:
         print_http_header()
+    elif args.h3c:
+        print_h3c_cmd()
+    elif args.dp:
+        print_dp_cmd()
+    elif args.huawei1:
+        print_huawei1_cmd()
+    elif args.huawei2:
+        print_huawei2_cmd()
+    elif args.zte:
+        print_zte_cmd()
     elif args.pkg:
         HOST=args.ihost
         PORT=2222
