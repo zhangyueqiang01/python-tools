@@ -356,6 +356,20 @@ docker image ls
    """
     print(docker_cmd)  
 
+def print_iptables_cmd():
+    print("iptables usage command:")
+    iptables_cmd = """
+iptables -L
+   """
+    print(iptables_cmd)
+
+def print_tcpdump_cmd():
+    print("tcpdump usage command:")
+    tcpdump_cmd = """
+tcpdump -i any
+   """
+    print(tcpdump_cmd)  
+
 def print_xxx_header():
     print("rfc url")
     print("xxx Header Format:")
@@ -500,6 +514,9 @@ def main():
     parser.add_argument("--osp", action="store_true", help="Print OpenStack usage command")
     parser.add_argument("--ceph", action="store_true", help="Print ceph usage command")
     parser.add_argument("--docker", action="store_true", help="Print docker usage command")
+    parser.add_argument("--iptables", action="store_true", help="Print iptables usage command")
+    parser.add_argument("--tcpdump", action="store_true", help="Print tcpdump usage command")
+
 
     parser.add_argument("-i", "--install", action='store', dest="pkg",help="install packages on remote host")
     parser.add_argument("-p", "--ping", action="store", dest='ping', help="ping a net such as ping 8.8.8")
@@ -507,7 +524,7 @@ def main():
     parser.add_argument('-z','--zombie',action='store',dest='zombie',help='create a zombie process on loalhost machine')
     parser.add_argument('-P','--passwd',action='store',dest='passwd',help='input a number and create a random passwd')
     parser.add_argument('-w','--web',action='store',dest='hport',help='such as python -m SimpleHTTPServer 8080')
-    parser.add_argument('-t','--tcpdump',action='store',dest='tport',help='such as tcpdump -i any tcp port 80 and host 8.8.8.8')
+    parser.add_argument('-t','--mytcpdump',action='store',dest='tport',help='such as tcpdump -i any tcp port 80 and host 8.8.8.8')
     parser.add_argument('-u','--udpdump',action='store',dest='uport',help='such as tcpdump -i any udp port 80 and host 8.8.8.8 -vv')
     parser.add_argument("--arpdump", action="store_true", help="such as tcpdump -i any arp -ennl -vv")
     parser.add_argument('--host', default=' ', help='send UDP packages to Host name or IP address, default is NUll')
@@ -553,6 +570,10 @@ def main():
         print_ceph_cmd()
     elif args.docker:
         print_docker_cmd()
+    elif args.iptables:
+        print_iptables_cmd()
+    elif args.tcpdump:
+        print_tcpdump_cmd()
     elif args.pkg:
         HOST=args.ihost
         PORT=2222
