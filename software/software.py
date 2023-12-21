@@ -28,3 +28,23 @@ docker image ls
    """
     print(docker_cmd)  
 
+def print_ovs_cmd():
+    print("ovs usage command:")
+    ovs_cmd = """
+ovs -s
+   """
+    print(ovs_cmd)  
+
+def print_php_cmd():
+    print("php usage command:")
+    php_cmd = """
+php -s
+   """
+    print(php_cmd)  
+
+def print_git_cmd():
+    print("git usage command:")
+    git_cmd = """
+git -s
+   """
+    print(git_cmd)  

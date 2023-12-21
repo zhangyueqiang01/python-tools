@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2.7
 # -*- coding: utf-8 -*-
 
 from __future__ import absolute_import
@@ -23,6 +23,7 @@ from sysutils.sysutils import *
 from software.software import *
 from network.devices import *
 from network.header import *
+from databases.databases import *
 
 
 def ping(host):
@@ -141,32 +142,7 @@ def nmapscanport(host, port):
 
 def main():
     parser = argparse.ArgumentParser(description="designed by Michael")
-    parser.add_argument("--udp", action="store_true", help="Print UDP header format")
-    parser.add_argument("--tcp", action="store_true", help="Print TCP header format")
-    parser.add_argument("--ipv4", action="store_true", help="Print IPV4 header format")
-    parser.add_argument("--icmp", action="store_true", help="Print ICMP header format")
-    parser.add_argument("--ethernet2", action="store_true", help="Print Ethernet II header format")
-    parser.add_argument("--vlan", action="store_true", help="Print vlan header format")
-    parser.add_argument("--vxlan", action="store_true", help="Print vxlan header format")
-    parser.add_argument("--http", action="store_true", help="Print http header format")
-    parser.add_argument("--ftp", action="store_true", help="Print ftp header format")
-    parser.add_argument("--ssh", action="store_true", help="Print ssh header format")
-    parser.add_argument("--dhcp", action="store_true", help="Print dhcp header format")
-    parser.add_argument("--ipv6", action="store_true", help="Print ipv6 header format")
-    parser.add_argument("--h3c", action="store_true", help="Print H3C devices health check")
-    parser.add_argument("--zte", action="store_true", help="Print ZTE devices health check")
-    parser.add_argument("--dp", action="store_true", help="Print DP devices health check")
-    parser.add_argument("--huawei1", action="store_true", help="Print HUAWEI devices health check,like CE5855/CE6851/CE12808S")
-    parser.add_argument("--huawei2", action="store_true", help="Print HUAWEI devices health check,like NE40/Eudemon1000E/Eudemon8000E")
-    parser.add_argument("--osp", action="store_true", help="Print OpenStack usage command")
-    parser.add_argument("--ceph", action="store_true", help="Print ceph usage command")
-    parser.add_argument("--docker", action="store_true", help="Print docker usage command")
-    parser.add_argument("--iptables", action="store_true", help="Print iptables usage command")
-    parser.add_argument("--tcpdump", action="store_true", help="Print tcpdump usage command")
-    parser.add_argument("--route", action="store_true", help="Print route usage command")
-    parser.add_argument("--nmcli", action="store_true", help="Print nmcli usage command")
-    parser.add_argument("--ip", action="store_true", help="Print ip usage command")
-
+    parser.add_argument("--show", choices=['ceph', 'docker','udp','tcp','icmp','ipv4','ipv6','ethernet2','vlan','vxlan','http','h3c','dp','huawei1','huawei2','zte','osp','ceph','docker','iptables','tcpdump','route','ip','nmcli'], help="Display usage instance")
 
     parser.add_argument("-i", "--install", action='store', dest="pkg",help="install packages on remote host")
     parser.add_argument("-p", "--ping", action="store", dest='ping', help="ping a net such as ping 8.8.8")
@@ -188,48 +164,49 @@ def main():
 
     args = parser.parse_args()
 
-    if args.udp:
+    if args.show == 'udp':
         print_udp_header()
-    elif args.tcp:
+    elif args.show == 'tcp':
         print_tcp_header()
-    elif args.icmp:
+    elif args.show == 'icmp':
         print_icmp_header()
-    elif args.ipv4:
+    elif args.show == 'ipv4':
         print_ipv4_header()
-    elif args.ethernet2:
+    elif args.show == 'ethernet2':
         print_ethernet2_header()
-    elif args.vlan:
+    elif args.show == 'vlan':
         print_vlan_header()
-    elif args.vxlan:
+    elif args.show == 'vxlan':
         print_vxlan_header()
-    elif args.http:
+    elif args.show == 'http':
         print_http_header()
-    elif args.h3c:
+    elif args.show == 'h3c':
         print_h3c_cmd()
-    elif args.dp:
+    elif args.show == 'dp':
         print_dp_cmd()
-    elif args.huawei1:
+    elif args.show == 'huawei1':
         print_huawei1_cmd()
-    elif args.huawei2:
+    elif args.show == 'huawei2':
         print_huawei2_cmd()
-    elif args.zte:
+    elif args.show == 'zte':
         print_zte_cmd()
-    elif args.osp:
+    elif args.show == 'osp':
         print_osp_cmd()
-    elif args.ceph:
+    elif args.show == 'ceph':
         print_ceph_cmd()
-    elif args.docker:
+    elif args.show == 'docker':
         print_docker_cmd()
-    elif args.iptables:
+    elif args.show == 'iptables':
         print_iptables_cmd()
-    elif args.tcpdump:
+    elif args.show == 'tcpdump':
         print_tcpdump_cmd()
-    elif args.route:
+    elif args.show == 'route':
         print_route_cmd()
-    elif args.ip:
+    elif args.show == 'ip':
         print_ip_cmd()
-    elif args.nmcli:
+    elif args.show == 'nmcli':
         print_nmcli_cmd()
+
     elif args.pkg:
         HOST=args.ihost
         PORT=2222
