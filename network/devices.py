@@ -68,6 +68,14 @@ display ntp status
 display ip fib slot 2 statistics
 display ipv6 fib slot 2 statistics
 display device power
+
+system-view
+security-policy
+rule name kaifang80
+dis this
+destination-address  mask 255.255.255.255
+undo destination-address  mask 255.255.255.255
+
    """
     print(huawei1_cmd)   
 
