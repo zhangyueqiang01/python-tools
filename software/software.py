@@ -69,6 +69,7 @@ docker image ls
 docker pull wcjiang/linux-command
 docker ps
 docker run --name linux-command -itd -p 9665:3000 wcjiang/linux-command:latest
+docker exec -it myweb /bin/bash
 docker ps -a
 docker rm d45
 docker stop d45
