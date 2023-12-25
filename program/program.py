@@ -4,7 +4,50 @@
 def print_kvm_cmd():
     print("kvm usage command:")
     kvm_cmd = """
-kvm -s
+[磁盘管理]
+创建image
+qemu-img create -f raw disk.raw 10G
+qemu-img create -f qcow2 -b $IMG_DIR/.${BASEVM}.img $IMG_DIR/${NEWVM}.img &> /dev/null
+
+镜像格式转换
+qemu-img convert -f qcow2 -O qcow2 src.img dst-convert.img
+
+镜像压缩
+qemu-img convert -c -f qcow2 -O qcow2 src.img dst-compress.qcow2
+
+镜像加密
+qemu-img convert -o encryption -f qcow2 -O qcow2 src.qcow2 dst-encrypt.qcow2
+
+查看镜像信息
+qemu-img info dst-compress.qcow2
+
+镜像扩容
+qemu-img resize test.qcow2 +10G
+growpart /dev/vda 1
+xfs_growfs /dev/vda1；resize2fs /dev/sda1
+
+写入/写出磁盘中的文件
+virt-copy-out -d ct7_node06 /root/zyq /tmp/
+virt-copy-in -d ct7_node06 /tmp/test.xml /root/
+
+查看镜像里的磁盘分区信息
+virt-filesystems -a centos7.qcow2
+
+将磁盘分区挂载到本地
+guestmount -d <vm name> -m <镜像内的磁盘分区> <宿主机上的挂载目录>
+guestmount -d ct7_node06 -m /dev/sda1 /mnt/test
+guestmount -a <qcow2镜像文件> -m <镜像内的磁盘分区> <宿主机上的挂载目录>
+
+将磁盘分区卸载
+guestunmount /mnt/ 或者 umount /mnt/
+
+[虚拟机管理]
+virsh list 
+virsh list --all
+virsh console domainID
+virsh console vmID
+virsh dumpxml vmID
+virsh dumpxml domain-name/vm
    """
     print(kvm_cmd)  
 
