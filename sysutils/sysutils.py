@@ -92,6 +92,8 @@ ip route list
 route -n
 ip route add 10.0.12.0/24 via 10.0.41.1 dev bond0
 ip route del 192.168.4.0/24
+route add -net 192.56.76.0 netmask 255.255.255.0 dev eth0
+route del -net 192.56.76.0 netmask 255.255.255.0 dev eth0
 
 sudo vi /etc/rc.d/rc.local
 sudo chmod +x /etc/rc.d/rc.local
