@@ -66,6 +66,19 @@ def print_docker_cmd():
     print("docker usage command:")
     docker_cmd = """
 docker image ls
+docker pull wcjiang/linux-command
+docker ps
+docker run --name linux-command -itd -p 9665:3000 wcjiang/linux-command:latest
+docker ps -a
+docker rm d45
+docker stop d45
+docker update --restart=always 容器ID(或者容器名)
+docker run -d  -e MYSQL_ROOT_PASSWORD=redhat -p 3306:3306 docker.io/mysql:5.7
+docker inspect docker.io/michaelzhangyq/loganalyzer
+docker network create db
+docker network  ls
+docker network  ls --help
+docker network inspect db
    """
     print(docker_cmd)  
 
