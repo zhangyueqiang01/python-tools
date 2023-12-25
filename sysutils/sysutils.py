@@ -1,6 +1,76 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+def print_bond_cmd():
+    print("bond usage command:")
+    ip_bond = """
+***管理网网卡1***
+[root@cc-hnhyxzspj-x86-controller-1 network-scripts]# cat ifcfg-enp51s0f0
+SLAVE=yes
+USERCTL=no
+BOOTPROTO=none
+MASTER=bond0
+DEVICE=enp51s0f0
+TYPE=Ethernet
+ONBOOT=yes
+ 
+***管理网网卡2***
+[root@cc-hnhyxzspj-x86-controller-1 network-scripts]# cat ifcfg-enp51s0f1
+SLAVE=yes
+USERCTL=no
+BOOTPROTO=none
+MASTER=bond0
+DEVICE=enp51s0f1
+TYPE=Ethernet
+ONBOOT=yes
+ 
+***管理网网卡bond***
+[root@cc-hnhyxzspj-x86-controller-1 network-scripts]# cat ifcfg-bond0   
+DEVICE=bond0
+TYPE=Ethernet
+ONBOOT=yes
+BOOTPROTO=static
+IPV6INIT=no
+BONDING_MASTER=yes
+BONDING_OPTS="miimon=100 mode=1"
+ 
+***管理网网卡bond.3021子接口***
+[root@cc-hnhyxzspj-x86-controller-1 network-scripts]# cat ifcfg-bond0.3021 #管理网网卡
+DEVICE=bond0.3021
+TYPE=Vlan
+PHYSDEV=bond0
+ONBOOT=yes
+BOOTPROTO=static
+REORDER_HDR=yes
+IPADDR=10.180.16.52         #管理网ip
+PREFIX=22
+GATEWAY=10.180.16.254
+IPV6INIT=no
+BONDING_MASTER=yes
+BONDING_OPTS="miimon=100 mode=1"
+VLAN=yes	
+VLANID=3021
+ 
+ 
+# 停掉NetworkManager服务
+systemctl stop NetworkManager.service 
+systemctl disable NetworkManager.service
+ 
+#查看network服务
+systemctl restart network.service
+ 
+#没有route命令时查看路由的方法
+ip route
+ 
+#没有route命令时添加路由的方法
+sudo ip route add 目标网络/子网掩码 dev bond0.3021
+ 
+#没有route命令时临时删除路由的方法
+sudo ip route del 目标网络/子网掩码
+   """
+    print(ip_bond)  
+
+
 def print_iptables_cmd():
     print("iptables usage command:")
     iptables_cmd = """
