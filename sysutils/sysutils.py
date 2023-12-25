@@ -88,7 +88,17 @@ tcpdump -i any
 def print_route_cmd():
     print("route usage command:")
     route_cmd = """
+ip route list
 route -n
+ip route add 10.0.12.0/24 via 10.0.41.1 dev bond0
+ip route del 192.168.4.0/24
+
+sudo vi /etc/rc.d/rc.local
+sudo chmod +x /etc/rc.d/rc.local
+sudo systemctl enable rc-local
+sudo nmcli connection modify eth0 +ipv4.routes "192.168.3.0/24 192.168.2.12"
+sudo nmcli connection modify eth0 -ipv4.routes "192.168.3.0/24 192.168.2.12"
+sudo nmcli connection show eth0
    """
     print(route_cmd)  
 
