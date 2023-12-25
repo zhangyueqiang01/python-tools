@@ -56,6 +56,8 @@ show power
 def print_huawei1_cmd():
     print("HUAWEI1 usage command:")
     huawei1_cmd = """
+【HUAWEI CE5855/CE6851/CE12808S】
+    
 screen-l 0 temp
 display current-configuration
 display logbuffer
@@ -68,6 +70,10 @@ display ntp status
 display ip fib slot 2 statistics
 display ipv6 fib slot 2 statistics
 display device power
+display history-command 
+
+通过本地的172.18.122.5 ping远端vpc内的地址10.1.92.248
+ping -a 172.18.122.5 -vpn-instance DLine24 10.1.92.248
 
 system-view
 security-policy
@@ -82,6 +88,8 @@ undo destination-address  mask 255.255.255.255
 def print_huawei2_cmd():
     print("HUAWEI2 usage command:")
     huawei2_cmd = """
+【HUAWEI NE40/Eudemon1000E/Eudemon8000E】
+
 screen-l 0 temp
 display logbuffer
 display alarm active 
