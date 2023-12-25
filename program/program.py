@@ -1,6 +1,14 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+def print_kvm_cmd():
+    print("kvm usage command:")
+    kvm_cmd = """
+kvm -s
+   """
+    print(kvm_cmd)  
+
+
 def print_python27_cmd():
     print("python27 usage command:")
     python27_cmd = """

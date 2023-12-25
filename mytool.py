@@ -24,6 +24,8 @@ from software.software import *
 from network.devices import *
 from network.header import *
 from databases.databases import *
+from program.program import *
+
 
 
 def ping(host):
@@ -142,7 +144,10 @@ def nmapscanport(host, port):
 
 def main():
     parser = argparse.ArgumentParser(description="designed by Michael")
-    parser.add_argument("--show", choices=['ceph', 'docker','udp','tcp','icmp','ipv4','ipv6','ethernet2','vlan','vxlan','http','h3c','dp','huawei1','huawei2','zte','osp','ceph','docker','iptables','tcpdump','route','ip','nmcli','bond'], help="Display usage instance")
+    parser.add_argument("--show", choices=['ceph', 'docker','udp','tcp','icmp','ipv4','ipv6','ethernet2','vlan','vxlan','http',\
+                                           'h3c','dp','huawei1','huawei2','zte','osp','ceph','docker','iptables','tcpdump','route',\
+                                            'ip','nmcli','bond','kvm'], help="Display usage instance")
+
 
     parser.add_argument("-i", "--install", action='store', dest="pkg",help="install packages on remote host")
     parser.add_argument("-p", "--ping", action="store", dest='ping', help="ping a net such as ping 8.8.8")
@@ -208,7 +213,8 @@ def main():
         print_nmcli_cmd()
     elif args.show == 'bond':
         print_bond_cmd()
-
+    elif args.show == 'kvm':
+        print_kvm_cmd()
 
 
     elif args.pkg:
