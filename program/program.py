@@ -48,6 +48,14 @@ virsh console domainID
 virsh console vmID
 virsh dumpxml vmID
 virsh dumpxml domain-name/vm
+
+# 使用 virsh 命令重启虚拟机
+virsh reboot ct7_node09
+
+# 使用 virsh 命令强制关闭虚拟机，然后再启动
+virsh destroy ct7_node09
+virsh start ct7_node09
+
    """
     print(kvm_cmd)  
 
