@@ -17,6 +17,7 @@ nova instance-action-list 6e18eca1-497b-4071-ab93-0fd905aba22d
 nova get-vnc-console 6e18eca1-497b-4071-ab93-0fd905aba22d novnc
 nova volume-attach <instance_id> <volume_id> 
 nova volume-detach <instance_id> <volume_id>
+openstack --os-compute-api-version 2.11 compute service set --disable --disable-reason "Manually disabled" --down compute2 nova-compute
 
 
 [glance]
