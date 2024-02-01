@@ -222,3 +222,54 @@ find [路径]  [参数] [表达式]  -exec  指令 {}  \；
    """
     print(find_cmd)   
 
+def print_linuxbasic_cmd():
+    print("linux basic knowledges:")
+    linuxbasic_cmd = """
+重定向
++----------+--------------+--------------+-------------+
+|  设  备  |  设备名称    | 文件描述符   |   类型      |
++----------+--------------+--------------+-------------+
+|  键  盘  | /dev/stdin   |	0        |  标准输入   |
++----------+--------------+--------------+-------------+
+|  显示器  | /dev/stdout  |	1        |  标准输出   |
++----------+--------------+--------------+-------------+
+|  显示器  | /dev/stderr  |	2        | 标准错误输  |
++----------+--------------+--------------+-------------+
+错误重定向：2>错误重定向
+    wadwadwad 2> test
+双重输出重定向
+    # 将正确的输出结果与错误输出结果一次性单独地送到不同的地方
+    find /etc/ -name passwd >file 2> test
+    # 不管是正确输出还是错误输结果都送到同一个指定的地方则可使用“&> 或 &>>”
+    find /etc/ -name passwd &> test
+
+输入重定向
+    cat > ok << EOF
+    123
+    456
+    EOF
+
+文件操作命令	
+	more    文件分页查看，空格向下一屏，Ctrl+B 返回上一屏
+	less    文件分页查看， 使用[pageup] [pagedown]来往前往后翻看文件，回车一行，空格翻页，q退出
+	head /etc/passwd    默认前10行		
+	head -5 /etc/passwd
+	tail /etc/passwd    默认后10行
+	tail -n 5 /etc/passwd
+	tail -f /var/log/message    实时监测文件
+	wc -l /etc/passwd   显示行数
+	paste file1 file2 file3	    把每个文件以列对列的方式，一列列地加以合并
+
+sort
+    -r 以相反的顺序来排序
+    -n 依照数值的大小排序
+    -k 是指按照那一列进行排序
+    -t <分隔字符>指定排序时所用的栏位分隔字符。
+    -c 在每行旁边显示该行重复出现的次数
+
+打印cpu使用率top10的进程，倒序排列
+ps aux | sort -k4rn | head
+添加标题再进行打印
+{ ps aux | head -1 ; ps aux | sort -k4rn | head ; }
+   """
+    print(linuxbasic_cmd)   
