@@ -9,7 +9,16 @@ def print_git_cmd():
 	git push
 	git log
 	git status
-	git pull origin master   #只同步变化的内容
+
+	# 暂存本地更改
+	git stash
+	
+	# 拉取远程仓库的更新
+	git pull origin master
+	
+	# 恢复暂存的更改（如果需要）
+	git stash pop
+
    """
     print(git_cmd)  
 
