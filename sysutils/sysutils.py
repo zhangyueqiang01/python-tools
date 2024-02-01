@@ -196,27 +196,27 @@ def print_find_cmd():
     print("find usage command:")
     find_cmd = """
 find [路径]  [参数] [表达式]  -exec  指令 {}  \；
+常用选项：
+    -name	根据文件名寻找文件
+    -user	根据文件拥有者寻找文件
+    -group	根据文件所属组寻找文件
+    -perm	根据文件权限寻找文件
+    -size	根据文件大小寻找文件[±Sizek]
+    -type      根据文件类型寻找文件，常见类型有： f(普通文件) 、c(字符设备文件)、b(块设备文件)、l(连接文件)、d（目录）、s(套接字文件)、p(命名管道FIFO)
+    -o 	         表达式或
+    -a	         表达式与
 	
-	find ./ *.py
-	find / -name passwd
+    find ./ *.py
+    find / -name passwd
     find /tmp/ -user zyq
     find /tmp/ -group zyq
     find /tmp/ -perm 644
     find /tmp/ -size +10k
     find /etc/ -size -10k
-	
-	find /etc/ -type 类型
-		find /etc/ -type  f/c/b/l/d
-		f： 普通文件
-		d： 目录
-		l： 符号链接
-		b： 块设备文件
-		c： 字符设备文件
-		s： 套接字文件
-		p： 命名管道（FIFO）
+    find /etc/ -type f/c/b/l/d/s/p
     find /tmp/ -type f -exec rm -rf {} \;
-		{}代表find找到的文件
-		；命令结束标志，由于各个系统中的;会有不同的意义，所以前面加 \ 转义
+	{}代表find找到的文件
+	；命令结束标志，由于各个系统中的;会有不同的意义，所以前面加 \ 转义
    """
     print(find_cmd)   
 
