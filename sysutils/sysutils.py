@@ -164,3 +164,31 @@ def print_vim_cmd():
    """
     print(vim_cmd)   
 
+def print_bash_cmd():
+    print("bash usage command:")
+    bash_cmd = """
+控制台的快捷键
+	Tab健补全
+	Ctrl + Insert 组合键或用鼠标选中 复制
+	Shift + Insert 组合键或单击鼠标滚轮  粘贴
+	Ctrl+l 清空屏幕或者clear
+	Ctrl+c 退出某个正在执行中的操作
+	Ctrl+d退出shell或者exit退出
+	Ctrl+a 将光标移到行首
+	Ctrl+e 将光标移到行尾
+	Ctrl+u 删除光标前的字符
+	Ctrl+k 删除光标后的字符
+	Ctrl+w 删除光标前空格为界线的单词
+	Ctrl+左右箭头 以单词为单位移动光标
+	Ctrl+r 搜索历史命令
+	查看虚拟机IP命令：ifconfig
+
+查看系统默认的shell
+	 echo    $SHELL
+
+查看是内部命令还是外部命令
+	type  mkdir
+	type  ls
+   """
+    print(bash_cmd)
+
