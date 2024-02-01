@@ -118,3 +118,49 @@ ip -n
    """
     print(ip_cmd)   
 
+def print_vim_cmd():
+    print("vim usage command:")
+    vim_cmd = """
+命令模式：
+        yy  复制当前行正行 	
+        nyy 复制从光标所在行开始的n行
+        dd  剪切当前光标所在行   	
+        ndd 剪切从光标所在行开始的n行
+        p   粘贴光标位置之后   
+        G   跳转至尾行
+        g   跳转至首行    
+        dw  删至词尾
+        ndw 删除后n个词
+        d$  删至行尾
+        nd$ 删除后n行（从光标当前处开始算起）        
+        u   撤销上一次修改
+        U   撤销一行内的所有修改
+
+末行模式
+        :r /etc/passwd  读文件内容进vim
+        :r! ls -l / 读命令结果保存到文件中
+        :set number 行号
+        :set nonumber   去除行号
+        :s/old/new/g    在当前行中查找到的所有字符串old替换为new
+        :2,6s/old/new/g 2-6行替换
+        :%s/old/new/g   在整个文件范围内替换
+        :X  加入密码
+        :q  不保存退出
+        :q! 强制退出不保存
+        :wq 保存退出，同x
+        :wq!    强制保存退出
+
+进入编辑模式
+        a   光标后插入
+        i   当前光标前插入
+        o   在当前光标下插入空行
+        A   在光标所在行尾插入 
+        I   在光标行首插入内容
+        O   在当前光标上插入空行
+
+设置行号
+    echo ":set number" >> /etc/vim/vimrc
+
+   """
+    print(vim_cmd)   
+

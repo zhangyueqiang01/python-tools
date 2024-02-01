@@ -148,7 +148,7 @@ def main():
     parser = argparse.ArgumentParser(description="designed by Michael")
     parser.add_argument("--show", choices=['ceph', 'docker','udp','tcp','icmp','ipv4','ipv6','ethernet2','vlan','vxlan','http',\
                                            'h3c','dp','huawei1','huawei2','zte','osp','ceph','docker','iptables','tcpdump','route',\
-                                            'ip','nmcli','bond','kvm','kcompose','git'], help="Display usage instance")
+                                            'ip','nmcli','bond','kvm','kcompose','git','vim'], help="Display usage instance")
 
 
     parser.add_argument("-i", "--install", action='store', dest="pkg",help="install packages on remote host")
@@ -221,6 +221,8 @@ def main():
        print_kernel_compose()
     elif args.show == 'git':
        print_git_cmd()
+    elif args.show == 'vim':
+       print_vim_cmd()
 
 
     elif args.pkg:
