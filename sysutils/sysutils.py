@@ -159,7 +159,7 @@ def print_vim_cmd():
         O   在当前光标上插入空行
 
 设置行号
-    echo ":set number" >> /etc/vim/vimrc
+    echo ":set number" >> /etc/vimrc
 
    """
     print(vim_cmd)   
