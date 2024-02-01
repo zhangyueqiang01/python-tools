@@ -187,8 +187,8 @@ def print_bash_cmd():
 	 echo    $SHELL
 
 查看是内部命令还是外部命令
-	type  mkdir
-	type  ls
+	type  cd
+	type  yum
    """
     print(bash_cmd)
 
