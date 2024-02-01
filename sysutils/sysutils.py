@@ -217,6 +217,8 @@ find [路径]  [参数] [表达式]  -exec  指令 {}  \；
     find /tmp/ -type f -exec rm -rf {} \;
 	{}代表find找到的文件
 	；命令结束标志，由于各个系统中的;会有不同的意义，所以前面加 \ 转义
+    以上命令更简便的操作方式：
+	rm -rf `find /tmp/ -type f`
    """
     print(find_cmd)   
 
