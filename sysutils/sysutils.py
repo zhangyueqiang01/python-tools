@@ -181,7 +181,7 @@ def print_bash_cmd():
 	Ctrl+w 删除光标前空格为界线的单词
 	Ctrl+左右箭头 以单词为单位移动光标
 	Ctrl+r 搜索历史命令
-	查看虚拟机IP命令：ifconfig
+	^tmp^mnt 替换上一个命令中的tmp为mnt
 
 查看系统默认的shell
 	 echo    $SHELL
