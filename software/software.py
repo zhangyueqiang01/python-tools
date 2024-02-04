@@ -54,6 +54,8 @@ neutron  quota-update  --loadbalancer=10  --tenant_id  tenantID
 
 [cinder]
 
+[Authentication]
+source set_env < <(echo  ;echo 1; echo FusionSphere123);TMOUT=0
 
    """
     print(osp_cmd)  
