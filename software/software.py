@@ -57,6 +57,37 @@ neutron  quota-update  --loadbalancer=10  --tenant_id  tenantID
 [Authentication]
 source set_env < <(echo  ;echo 1; echo FusionSphere123);TMOUT=0
 
+[CTCloud]
+1、kvm架构
+Internet——ECS_UI——APICom——级联层cascading——nova proxy——被级联层openstack（POD）——nova-compute——VM
+
+nova instance-action-list uuid
+根据req_id查看操作详情
+nova --service-type compute-ext instance-action uuid req_id
+nova-sheduler日志
+/var/log/fusionsphere/component/nova-scheduler/*
+如果调度到pod信息，但在被级联层未查到虚拟机创建信息，查看nova-proxy日志
+查询nova-proxy主节点：
+cps template-instance-list --service nova nova-proxy00H
+登录nova-proxy主节点，,查看nova-proxy日志nova-proxy日志
+/var/log/fusionsphere/component/nova proxy00H/*
+
+获取被级联层虚拟机uuid
+nova list --all-t [--deleted] --name uuid (级联层)
+//[--deleted]查询环境中已经删除的虚机
+获取操作的req_id
+nova instance-action-list uuid (被级联层)
+根据req_id获取操作详情
+nova --service-type compute-ext instance-action uuid (被级联层)  req_id
+
+日志
+/var/log/fusionsphere/component/nova-scheduler/*
+/var/log/fusionsphere/component/nova-conductor/*
+/var/log/fusionsphere/component/nova-compute/*
+
+过滤
+zgrep req-b2dc3cca-2177-4a4c-825d-144d4be17fba /var/log/fusionsphere/component/nova-*/*
+zgrep：专门用于搜索压缩的文件，通常是gzip压缩的文件（.gz 后缀），zgrep 也可以在未压缩的文件中过滤，并且语法与标准的 grep 命令非常相似
    """
     print(osp_cmd)  
 
