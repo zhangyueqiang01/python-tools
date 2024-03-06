@@ -156,7 +156,7 @@ def main():
     parser.add_argument('-d','--ihost',action='store',dest='host',help='combine with -i')
     parser.add_argument('-z','--zombie',action='store',dest='zombie',help='create a zombie process on loalhost machine')
     parser.add_argument('-P','--passwd',action='store',dest='passwd',help='input a number and create a random passwd')
-    parser.add_argument('-w','--web',action='store',dest='hport',help='such as python -m SimpleHTTPServer 8080')
+    parser.add_argument('-w','--web',action='store',dest='hport',help='such as python -m SimpleHTTPServer 8080 or python3 -m http.server 80')
     parser.add_argument('-t','--mytcpdump',action='store',dest='tport',help='such as tcpdump -i any tcp port 80 and host 8.8.8.8')
     parser.add_argument('-u','--udpdump',action='store',dest='uport',help='such as tcpdump -i any udp port 80 and host 8.8.8.8 -vv')
     parser.add_argument("--arpdump", action="store_true", help="such as tcpdump -i any arp -ennl -vv")
