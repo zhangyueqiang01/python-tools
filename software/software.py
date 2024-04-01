@@ -158,6 +158,94 @@ bzip2 -dc /root/sda.img.gz | dd of=/dev/sdb
    """
     print(dd_cmd)  
 
+def print_awk_cmd():
+    print("awk usage command:")
+    awk_cmd = """
+#例子
+awk '{print $0}' file    #打印所有列
+awk '{print $1}' file  #打印第一列
+awk '{print $1, $3}' file   #打印第一和第三列
+cat file | awk '{print $3, $1}'   #打印第三列和第一列，注意先后顺序。
+cat file | awk '{print $3, $NF}' #打印第三列和最后一列
+awk -F ":" '{print $1, $3}' /etc/passwd  #以“:”为分隔符分割列，然后打印第一列和第三列awk -F ":" '/root/ {print $0}' /etc/passwd #匹配有root的行 
+
+
+#打印某列：
+awk '{print $1}' filename
+
+#使用分隔符打印某列：
+awk -F',' '{print $2}' filename
+
+#打印特定行：
+awk 'NR==5' filename
+#这将打印filename文件的第5行。
+
+#打印特定行范围：
+awk 'NR>=3 && NR<=5' filename
+#这将打印filename文件的第3行到第5行。
+
+#根据条件过滤行：
+awk '$3 > 50 {print}' filename
+#这将打印filename文件中第三列大于50的行。
+
+#自定义输出格式：
+awk '{printf "%-10s %-10s\n", $1, $2}' filename
+#这将以指定的格式打印filename文件的第一列和第二列。
+
+#去掉第一行
+ps aux | awk 'NR >1 {print $0}'
+
+#执行脚本文件：
+awk -f script.awk filename
+#这将执行名为script.awk的脚本文件对filename进行处理。
+
+
+#awk语法格式
+‘BEGIN { cmd; ... cmd; }   #读取文件之前的操作
+            { cmd; ... cmd; }    #每一行都进行的操作
+            { cmd; ... cmd; }    #每一行执行的第二个操作，会换一行输出
+...                                      #以此类推
+条件判断 || /regex/ { cmd; ... cmd; }    #匹配到的行进行的操作
+...                                      #以此类推
+END { cmd; ... cmd; }’      #读取文件之后进行的操作
+   """
+    print(awk_cmd)  
+
+def print_sed_cmd():
+    print("sed usage command:")
+    sed_cmd = """
+#替换文本：
+sed 's/old_text/new_text/' filename
+
+#全局替换：
+sed 's/old_text/new_text/g' filename
+
+#从指定行开始替换：
+sed '3s/old_text/new_text/' filename
+
+#从指定行范围替换：
+sed '3,5s/old_text/new_text/' filename
+
+#保存修改到原文件：
+sed -i 's/old_text/new_text/' filename
+
+#仅打印替换后的文本：
+sed -n 's/old_text/new_text/p' filename
+
+#使用正则表达式进行替换：
+sed 's/regex_pattern/new_text/' filename
+
+#删除行：
+sed '/pattern_to_match/d' filename
+
+#插入行：
+sed '3i\New_line_text' filename
+
+#追加行：
+sed '3a\New_line_text' filename
+   """
+    print(sed_cmd)  
+
 def print_ovs_cmd():
     print("ovs usage command:")
     ovs_cmd = """

@@ -148,7 +148,7 @@ def main():
     parser = argparse.ArgumentParser(description="designed by Michael")
     parser.add_argument("--show", choices=['ceph', 'docker','udp','tcp','icmp','ipv4','ipv6','ethernet2','vlan','vxlan','http',\
                                            'h3c','dp','huawei1','huawei2','zte','osp','ceph','docker','iptables','tcpdump','route',\
-                                            'ip','nmcli','bond','kvm','kcompose','git','vim','bash','find','linuxbasic','dd'], help="Display usage instance")
+                                            'ip','nmcli','bond','kvm','kcompose','git','vim','bash','find','linuxbasic','dd','awk','sed'], help="Display usage instance")
 
 
     parser.add_argument("-i", "--install", action='store', dest="pkg",help="install packages on remote host")
@@ -231,6 +231,10 @@ def main():
        print_linuxbasic_cmd()
     elif args.show == 'dd':
        print_dd_cmd()
+    elif args.show == 'awk':
+       print_awk_cmd()
+    elif args.show == 'sed':
+       print_sed_cmd()
 
 
     elif args.pkg:
