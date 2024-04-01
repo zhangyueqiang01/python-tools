@@ -289,6 +289,52 @@ dpkg -S file_name
    """
     print(ubuntu_cmd)  
 
+def print_echo_cmd():
+    print("echo usage command:")
+    echo_cmd = """
+# 输出红色文本
+echo -e "\e[31mThis is red text\e[0m"
+
+# 输出绿色文本
+echo -e "\e[32mThis is green text\e[0m"
+
+# 输出黄色文本
+echo -e "\e[33mThis is yellow text\e[0m"
+
+# 输出蓝色文本
+echo -e "\e[34mThis is blue text\e[0m"
+
+# 输出洋红色文本
+echo -e "\e[35mThis is magenta text\e[0m"
+
+# 输出青色文本
+echo -e "\e[36mThis is cyan text\e[0m"
+
+# 输出白色文本
+echo -e "\e[37mThis is white text\e[0m"
+
+# 输出彩色文本
+echo -e "\e[91mThis is bright red text\e[0m"
+echo -e "\e[92mThis is bright green text\e[0m"
+echo -e "\e[93mThis is bright yellow text\e[0m"
+echo -e "\e[94mThis is bright blue text\e[0m"
+echo -e "\e[95mThis is bright magenta text\e[0m"
+echo -e "\e[96mThis is bright cyan text\e[0m"
+echo -e "\e[97mThis is bright white text\e[0m"
+
+# 输出背景色
+echo -e "\e[41mThis has red background\e[0m"
+echo -e "\e[42mThis has green background\e[0m"
+echo -e "\e[43mThis has yellow background\e[0m"
+echo -e "\e[44mThis has blue background\e[0m"
+echo -e "\e[45mThis has magenta background\e[0m"
+echo -e "\e[46mThis has cyan background\e[0m"
+echo -e "\e[47mThis has white background\e[0m"
+
+#在这些示例中，\e[xm 是ANSI转义码，其中x是数字，代表不同的颜色和样式。例如，31表示红色，32表示绿色，33表示黄色，依此类推。\e[0m 用于重置颜色设置，以确保后续输出不受影响。
+   """
+    print(echo_cmd)  
+
 def print_ovs_cmd():
     print("ovs usage command:")
     ovs_cmd = """
