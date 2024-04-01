@@ -335,6 +335,27 @@ echo -e "\e[47mThis has white background\e[0m"
    """
     print(echo_cmd)  
 
+def print_grub_cmd():
+    print("grub usage command:")
+    grub_cmd = """
+ovs -s
+   """
+    print(grub_cmd)  
+
+def print_initramfs_cmd():
+    print("initramfs usage command:")
+    initramfs_cmd = """
+ovs -s
+   """
+    print(initramfs_cmd)  
+
+def print_zip_cmd():
+    print("zip usage command:")
+    zip_cmd = """
+ovs -s
+   """
+    print(zip_cmd)  
+
 def print_ovs_cmd():
     print("ovs usage command:")
     ovs_cmd = """

@@ -149,7 +149,7 @@ def main():
     parser.add_argument("--show", choices=['ceph', 'docker','udp','tcp','icmp','ipv4','ipv6','ethernet2','vlan','vxlan','http',\
                                            'h3c','dp','huawei1','huawei2','zte','osp','ceph','docker','iptables','tcpdump','route',\
                                             'ip','nmcli','bond','kvm','kcompose','git','vim','bash','find','linuxbasic','dd','awk',\
-					   'sed','ubuntu','echo'], help="Display usage instance")
+					   'sed','ubuntu','echo','grub','initramfs','zip'], help="Display usage instance")
 
 
     parser.add_argument("-i", "--install", action='store', dest="pkg",help="install packages on remote host")
@@ -240,6 +240,12 @@ def main():
        print_ubuntu_cmd()
     elif args.show == 'echo':
        print_echo_cmd()
+    elif args.show == 'grub':
+       print_grub_cmd()
+    elif args.show == 'initramfs':
+       print_initramfs_cmd()
+    elif args.show == 'zip':
+       print_zip_cmd()
 
 
     elif args.pkg:
