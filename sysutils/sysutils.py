@@ -11,6 +11,23 @@ ip -n
 def print_bond_cmd():
     print("bond usage command:")
     ip_bond = """
+
+#加载内核模块bonding
+[root@node_04 network-scripts]# modprobe --first-time bonding
+
+# 配置系统启动时加载bonding模块
+[root@node_04 network-scripts]# vi /etc/sysconfig/modules/bonding.modules
+#!/bin/sh
+/sbin/modinfo -F /lib/modules/3.10.0-514.el7.x86_64/kernel/drivers/net/bonding/bonding.ko bonding > /dev/null 2>&1
+if [ $? -eq 0 ];then
+    /sbin/modprobe bonding
+fi
+ 
+ 
+# 设置执行权限
+[root@node_04 network-scripts]# chmod 755 /etc/sysconfig/modules/bonding.modules
+
+
 ***管理网网卡1***
 [root@cc-hnhyxzspj-x86-controller-1 network-scripts]# cat ifcfg-enp51s0f0
 SLAVE=yes
