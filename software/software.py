@@ -246,6 +246,49 @@ sed '3a\New_line_text' filename
    """
     print(sed_cmd)  
 
+def print_ubuntu_cmd():
+    print("ubuntu dpkg command usage:")
+    ubuntu_cmd = """
+#更新软件包列表：
+sudo apt update
+这会更新本地软件包索引，使系统能够获取到最新的软件包信息。
+
+#升级已安装的软件包：
+sudo apt upgrade
+这会升级系统中已安装的所有软件包到最新版本。
+
+#安装软件包：
+sudo apt install package_name
+用具体的软件包名称替换 package_name，可以安装指定的软件包。
+
+#删除软件包：
+sudo apt remove package_name
+这会从系统中删除指定的软件包，但保留其配置文件。
+
+#完全删除软件包：
+sudo apt purge package_name
+这会从系统中删除指定软件包及其相关的配置文件。
+
+#搜索软件包：
+apt search search_term
+用具体的搜索词替换 search_term，可以搜索软件包。
+
+#显示软件包信息：
+apt show package_name
+这会显示有关特定软件包的详细信息。
+
+#列出已安装的软件包：
+apt list --installed
+这会列出系统中已安装的所有软件包。
+
+#查看软件包中有哪些文件
+dpkg -L package_name
+
+#查看某个文件属于哪个软件包
+dpkg -S file_name
+   """
+    print(ubuntu_cmd)  
+
 def print_ovs_cmd():
     print("ovs usage command:")
     ovs_cmd = """
