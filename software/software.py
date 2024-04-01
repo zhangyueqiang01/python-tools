@@ -119,6 +119,45 @@ docker network inspect db
    """
     print(docker_cmd)  
 
+def print_dd_cmd():
+    print("dd usage command:")
+    dd_cmd = """
+
+#用 dd 命令备份 MBR
+dd if=/dev/sda of=/root/sda_mbr.img count=1 bs=512
+
+bs=N：设置单次读入或单次输出的数据块（block）的大小为 N 个字节。当然也可以使用 ibs 和 obs 选项来分别设置。
+ibs=N：单次读入的数据块（block）的大小为 N 个字节，默认为 512 字节。
+obs=N：单次输出的数据块（block）的大小为 N 个字节，默认为 512 字节。
+count=N：表示总共要复制 N 个数据块（block）
+
+
+#向磁盘上写一个大文件, 来看写性能
+dd if=/dev/zero bs=1024 count=1000000 of=/root/1Gb.file
+ 
+#从磁盘上读取一个大文件, 来看读性能
+dd if=/root/1Gb.file bs=64k | dd of=/dev/null
+time dd if=/dev/zero bs=1024 count=1000000 of=/root/1Gb.file
+
+#利用 /dev/urandom 进行格式化
+dd if=/dev/urandom of=/dev/sda
+
+#制作启动盘
+dd if=mycentos.iso of=/dev/sdb
+
+#备份 /dev/sda 盘
+dd if=/dev/sda of=./sda.img
+dd if=/root/sda.img of=/dev/sdb
+
+#使用 gzip 压缩算法配合 dd 命令来备份 /dev/sda 盘
+dd if=/dev/sda | gzip > of=./sda.img.gz
+
+#更换 bzip2 压缩算法配合 dd 命令再来实现一遍上面示例的效果
+dd if=/dev/sda | bzip2 > disk.img.bz2
+bzip2 -dc /root/sda.img.gz | dd of=/dev/sdb
+   """
+    print(dd_cmd)  
+
 def print_ovs_cmd():
     print("ovs usage command:")
     ovs_cmd = """
