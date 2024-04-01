@@ -224,7 +224,34 @@ sudo ip route del 目标网络/子网掩码
 def print_iptables_cmd():
     print("iptables usage command:")
     iptables_cmd = """
+
+#查看所有 iptables 策略
 iptables -L
+
+#拒绝所有 ICMP 协议数据包
+iptables -I INPUT -p icmp -j REJECT
+
+#只允许管理员从 202.13.0.0/16 网段使用 SSH 远程登录
+iptables -A INPUT -p tcp --dport 22 -s 202.13.0.0/16 -j ACCEPT
+iptables -A INPUT -p tcp --dport 22 -j DROP
+
+#删除 INPUT 中的第二条策略
+iptables -D INPUT 2           
+
+#删除所有策略，慎用
+iptables -F                 
+
+#备份iptabes rules
+iptables-save > ./iptables.bak  
+
+#恢复iptables rules
+iptables-restore < ./iptables.bak 
+
+#保存iptables
+yum install iptables-services
+service  iptables save
+systemctl enable iptables.service
+#其实是将策略写入到了/etc/sysconfig/iptables文件中
    """
     print(iptables_cmd)
 
