@@ -4,7 +4,129 @@
 def print_ip_cmd():
     print("ip usage command:")
     ip_cmd = """
-ip -n
+
+[root@huawei ~]# rpm -qf /usr/sbin/ip
+iproute-4.11.0-30.el7.x86_64
+
+
+#给网卡临时配置ip
+sudo ip addr add 192.168.1.100/24 dev eth0
+#也可以简写为sudo ip a a 192.168.1.1 dev eth0
+
+sudo ip link set eth0 up
+#ifup eth0 是通过配置文件启动网卡，通过ip命令启动不依赖配置文件
+
+ip a
+ip l
+#查看网卡配置
+
+
+#没有route命令时添加路由的方法
+sudo ip route add 目标网络/子网掩码 dev bond0.3021
+sudo ip route del 目标网络/子网掩码
+
+
+
+[root@node9 ~]# ifconfig eth3 2.2.2.2
+[root@node9 ~]# which ifconfig 
+/usr/sbin/ifconfig
+[root@node9 ~]# rpm -qf /usr/sbin/ifconfig
+net-tools-2.0-0.25.20131004git.el7.x86_64
+[root@node9 ~]# 
+#ifconfig也可以临时配置网卡，但是需要单独安装软件包
+
+
+# 创建 tap 
+ip tuntap add dev tap0 mode tap 
+# 创建 tun
+ip tuntap add dev tun0 mode tun 
+ 
+# 删除 tap
+ip tuntap del dev tap0 mode tap
+# 删除 tun
+ip tuntap del dev tun0 mode tun 
+
+# 例如使用ip link命令也可以删除tun/tap设备
+ip link del tap0
+ip link del tun0
+
+
+# 添加并启动虚拟网卡tap设备
+ip tuntap add dev tap0 mode tap 
+ip tuntap add dev tap1 mode tap 
+ip link set tap0 up
+ip link set tap1 up
+# 配置IP
+ip addr add 10.0.0.1/24 dev tap0
+ip addr add 10.0.0.2/24 dev tap1
+# 添加netns
+ip netns add ns0
+ip netns add ns1
+# 将虚拟网卡tap0，tap1分别移动到ns0和ns1中
+ip link set tap0 netns ns0
+ip link set tap1 netns ns1
+
+[root@node01 ~]# ip netns exec ns0 ip a
+[root@node01 ~]# ip netns exec ns0 ping 10.0.0.1
+#这里代表进入ns0后执行命令，可以查看ip a，route -n等效果
+
+# 创建一对veth
+ip link add veth0 type veth peer name veth1
+# 将veth移动到netns中
+ip link set veth0 netns ns0
+ip link set veth1 netns ns1
+# 启动
+ip netns exec ns0 ip link set veth0 up
+ip netns exec ns1 ip link set veth1 up
+
+
+[root@node9 ~]# ip help
+Usage: ip [ OPTIONS ] OBJECT { COMMAND | help }
+       ip [ -force ] -batch filename
+where  OBJECT := { link | address | addrlabel | route | rule | neigh | ntable |
+                   tunnel | tuntap | maddress | mroute | mrule | monitor | xfrm |
+                   netns | l2tp | macsec | tcp_metrics | token }
+       OPTIONS := { -V[ersion] | -s[tatistics] | -d[etails] | -r[esolve] |
+                    -h[uman-readable] | -iec |
+                    -f[amily] { inet | inet6 | ipx | dnet | bridge | link } |
+                    -4 | -6 | -I | -D | -B | -0 |
+                    -l[oops] { maximum-addr-flush-attempts } |
+                    -o[neline] | -t[imestamp] | -ts[hort] | -b[atch] [filename] |
+                    -rc[vbuf] [size] | -n[etns] name | -a[ll] }
+   
+[root@node9 ~]# ip link help
+Usage: ip link add [link DEV] [ name ] NAME
+                   [ txqueuelen PACKETS ]
+                   [ address LLADDR ]
+                   [ broadcast LLADDR ]
+                   [ mtu MTU ]
+                   [ numtxqueues QUEUE_COUNT ]
+                   [ numrxqueues QUEUE_COUNT ]
+                   type TYPE [ ARGS ]
+       ip link delete { DEVICE | dev DEVICE | group DEVGROUP } type TYPE [ ARGS ]
+
+       ip link set { DEVICE | dev DEVICE | group DEVGROUP }
+	                  [ { up | down } ]
+	                  [ type TYPE ARGS ]
+	                  [ arp { on | off } ]
+...
+
+[root@node9 ~]# ip route help
+Usage: ip route { list | flush } SELECTOR
+       ip route save SELECTOR
+       ip route restore
+       ip route showdump
+       ip route get ADDRESS [ from ADDRESS iif STRING ]
+                            [ oif STRING ]  [ tos TOS ]
+                            [ mark NUMBER ]
+       ip route { add | del | change | append | replace } ROUTE
+
+
+#简短的方式显示网卡配置信息
+[root@huawei ~]# ip -br a
+lo               UNKNOWN        127.0.0.1/8 ::1/128 
+eth0             UP             192.168.6.165/20 fe80::f816:3eff:fe0c:6a09/64 
+# 此选项在iproute-4.11.0-30.el7.x86_64以上才支持
    """
     print(ip_cmd)   
 
