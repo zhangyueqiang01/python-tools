@@ -25,7 +25,11 @@ ip l
 sudo ip route add 目标网络/子网掩码 dev bond0.3021
 sudo ip route del 目标网络/子网掩码
 
-
+[root@node9 ~]# ip neigh
+192.168.122.254 dev eth1 lladdr 52:54:00:dc:37:d8 DELAY
+192.168.4.254 dev eth2 lladdr 52:54:00:a6:5a:f8 STALE
+192.168.2.254 dev eth0 lladdr 52:54:00:71:71:68 DELAY
+#查看对端网卡MAC地址
 
 [root@node9 ~]# ifconfig eth3 2.2.2.2
 [root@node9 ~]# which ifconfig 
