@@ -335,6 +335,58 @@ echo -e "\e[47mThis has white background\e[0m"
    """
     print(echo_cmd)  
 
+def print_pam_cmd():
+    print("pam usage :")
+    pam_cmd = """
+#########################
+#模块类型（module-type）#
+#########################
+auth： 主要负责用户身份验证，包括检查用户名和密码是否匹配等。但是，并非仅限于用户名和密码，它还可以执行其他验证方式，如基于证书、指纹等。
+account： 这一部分主要处理用户账号的状态，例如检查账号是否被禁用、过期等。
+password： 负责用户密码的管理，包括密码的修改、过期策略等。
+session： 这部分控制用户登录会话的行为，包括在用户登录时设置环境变量、挂载文件系统等。
+-type： 表示因为缺失而不能加载的模块将不记录到系统日志,对于那些不总是安装在系统上的模块有用
+
+#############
+#control字段#
+#############
+required：如果模块返回失败，整个身份验证链将立即失败。这是最常见的控制字段，表示该模块的成功是必要的，如果失败则认证失败。
+requisite：与required类似，但如果此模块失败，PAM会立即终止身份验证链，而不会执行后续的模块。如果模块成功，则身份验证链继续。
+sufficient：
+如果模块返回成功，PAM将立即返回成功，不会再执行后续的模块。
+如果sufficient模块失败，就继续。
+optional：此模块的成功或失败不会影响最终的身份验证结果。通常用于附加功能或日志记录。
+include：允许在当前配置中包含其他PAM配置文件。这允许模块的重用和模块的共享。（auth对auth；account对account）
+substack ：用于包含其他PAM配置文件中的规则。（auth对auth；account对account）
+
+#######################
+#required  VS  request#
+#######################
+required：
+如果模块返回失败，整个身份验证链将立即失败，但是会继续执行后续的模块。
+如果 required 模块成功，则身份验证链继续。
+
+requisite：与 required 类似，
+如果此模块失败，PAM 会立即终止身份验证链，而不会执行后续的模块。
+如果模块成功，则身份验证链继续。
+
+######################
+#include VS  substack#
+######################
+处理方式：
+substack：它将其他配置文件的规则插入到当前位置，并继续处理当前文件中的规则。
+include：它将其他配置文件的规则完全替换当前位置的规则，并且不会再处理当前文件中的规则。
+适用场景：
+substack：适用于需要在当前位置插入其他规则，并且仍然需要继续处理当前文件中的规则的情况。常用于将常用的认证规则或会话规则模块化，并在多个 PAM 配置文件中共享和重用。
+include：适用于完全替换当前位置的规则，通常用于将整个模块的规则替换为另一个文件中的规则，或者在不同的环境中切换不同的规则集。
+
+##############
+#密码安全策略#
+##############
+password   required      pam_cracklib.so try_first_pass retry=6 minlen=8 dcredit=-1 ucredit=-1 ocredit=-1 lcredit=-1 enforce_for_root
+   """
+    print(pam_cmd)  
+
 def print_grub_cmd():
     print("grub usage command:")
     grub_cmd = """
