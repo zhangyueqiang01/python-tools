@@ -56,6 +56,9 @@ virsh reboot ct7_node09
 virsh destroy ct7_node09
 virsh start ct7_node09
 
+# 从kvm系统重删除虚拟机，但是虚拟机的磁盘文件不会一并删除
+virsh undefine ct7_node09
+
    """
     print(kvm_cmd)  
 
