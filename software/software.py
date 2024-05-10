@@ -390,7 +390,28 @@ password   required      pam_cracklib.so try_first_pass retry=6 minlen=8 dcredit
 def print_grub_cmd():
     print("grub usage command:")
     grub_cmd = """
-ovs -s
+
+#gurb映像的构成
+
+
+#在MBR与MBR后面的空闲空间中安装grub，安装grub1与grub1.5 stage
+grub2-install --boot-directory=/disk/boot /dev/vdb
+
+#grub设置密码
+[root@node09 ~]# grub2-setpassword 
+Enter password: 
+Confirm password: 
+[root@node09 ~]# 
+
+#创建grub.cfg文件
+grub2-mkconfig -o /boot/grub2/grub.cfg
+
+#grub.cfg文件丢失后进行修复，相关文件可以自动补全
+ls
+set root='hd0,msdos1'
+linux16 /vmlinuz-3.10.0-514.el7.x86_64 root=/dev/mapper/cl-root
+initrd16 /initramfs-3.10.0-514.el7.x86_64.img
+
    """
     print(grub_cmd)  
 
