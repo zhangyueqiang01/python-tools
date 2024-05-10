@@ -438,16 +438,16 @@ Confirm password:
 def print_initramfs_cmd():
     print("initramfs usage command:")
     initramfs_cmd = """
-查看initramfs
+#查看initramfs
 lsinitrd initramfs
 
-解压initramfs
+#解压initramfs
 /usr/lib/dracut/skipcpio initramfs-3.10.0-229.el7.x86_64.img | zcat | cpio -ivd
 
-手动创建initramfs
+#手动创建initramfs
 find . | cpio -o -H newc | gzip -9 > /tmp/test.img
 
-创建一个最基本的initramfs
+#创建一个最基本的initramfs
 [root@ct7_node02 initramfs]# ll
 total 4
 drwxr-xr-x 2 root root 18 Aug  2 15:14 bin
@@ -471,6 +471,14 @@ exec /bin/bash
  
 2 directories, 6 files
 [root@ct7_node02 initramfs]# 
+
+#向initram中添加驱动
+vi /etc/dracut.conf
+# additional kernel modules to the default  
+add_drivers+="xen-blkfront xen-netfront virtio_blk virtio_scsi virtio_net virtio_pci virtio_ring virtio"  
+……     
+
+dracut -f /boot/initramfs-2.6.32-573.8.1.el6.x86_64.img
 
    """
     print(initramfs_cmd)  
