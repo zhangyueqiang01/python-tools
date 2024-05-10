@@ -394,21 +394,22 @@ def print_grub_cmd():
 #gurb映像的构成
 grub1
 +-----------------------------------------------------------------------+
-|  boot.img  |    core.img  |  |    | modules  |   | modules   |        |
-|  (stage1)  |   (stage1.5) |  |    | (stage2) |   | (stage2)  |        |
+| boot.img   |   core.img   |  |   |  modules   |   |  modules  |       |
+| (stage1)   |  (stage1.5)  |  |   | (stage2)   |   |  (stage2) |       |
 +-----------------------------------------------------------------------+
-|  1 sector  |   2043 sectors  |		 Partion 1             |
-|   (MBR)    |                 |                               |
+| 1 sector   | 2043 sectors    |           Partion 1            | 
+|            |                 |                                |
 
 
 core.img
-+-----------------------------------------------------------------------------------------------------------------------+
-| bootloader | decompression | compressed kernel image |  disk      |    mbr	  |	filesystem  | secondary bootloader  |
-| stage1.5   |     code		 |						   | drivers	| partition	  |	  module    |                       |
-|			 |				 |						   |  module	|   module	  |		        |                       |
-+-----------------------------------------------------------------------------------------------------------------------+
-|1 sector    | uncompressed  |                               compressed                         | bootloader stage2     |
-|            |               |                                                                  |                       |  
++---------------------------------------------------------------------------------------------------------------------------+
+| bootloader |  decompression  | compressed kernel image |   disk    |     mbr     |   filesystem  |  secondary bootloader  |
+| stage1.5   |    code         |                         | drivers   |   partition |     module    |                        |
+|            |                 |                         |  module   |    module   |               |                        |
++---------------------------------------------------------------------------------------------------------------------------+
+|1 sector    |   uncompressed  |                         |      compressed                         |    bootloader stage2   |
+|            |                 |                         |                                         |                        |
+
 
 #查看mbr
 dd if=/dev/sda of=/tmp/sda_mbr.img count=1 bs=512
