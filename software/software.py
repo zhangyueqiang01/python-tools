@@ -438,7 +438,40 @@ Confirm password:
 def print_initramfs_cmd():
     print("initramfs usage command:")
     initramfs_cmd = """
-ovs -s
+查看initramfs
+lsinitrd initramfs
+
+解压initramfs
+/usr/lib/dracut/skipcpio initramfs-3.10.0-229.el7.x86_64.img | zcat | cpio -ivd
+
+手动创建initramfs
+find . | cpio -o -H newc | gzip -9 > /tmp/test.img
+
+创建一个最基本的initramfs
+[root@ct7_node02 initramfs]# ll
+total 4
+drwxr-xr-x 2 root root 18 Aug  2 15:14 bin
+-rwxr-xr-x 1 root root 49 Aug  2 15:13 init
+drwxr-xr-x 2 root root 90 Aug  2 15:17 lib64
+[root@ct7_node02 initramfs]# cat init 
+#!/bin/bash
+ 
+echo "Hello Michael"
+exec /bin/bash
+[root@ct7_node02 initramfs]# tree ./ 
+./
+|-- bin
+|   `-- bash
+|-- init
+`-- lib64
+    |-- ld-linux-x86-64.so.2
+    |-- libc.so.6
+    |-- libdl.so.2
+    `-- libtinfo.so.5
+ 
+2 directories, 6 files
+[root@ct7_node02 initramfs]# 
+
    """
     print(initramfs_cmd)  
 
