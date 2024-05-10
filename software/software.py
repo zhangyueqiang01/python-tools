@@ -392,16 +392,30 @@ def print_grub_cmd():
     grub_cmd = """
 
 #gurb映像的构成
+grub1
++-----------------------------------------------------------------------+
+|  boot.img  |    core.img  |  |    | modules  |   | modules   |        |
+|  (stage1)  |   (stage1.5) |  |    | (stage2) |   | (stage2)  |        |
++-----------------------------------------------------------------------+
+|  1 sector  |   2043 sectors  |		 Partion 1             |
+|   (MBR)    |                 |                               |
 
+
+core.img
++-----------------------------------------------------------------------------------------------------------------------+
+| bootloader | decompression | compressed kernel image |  disk      |    mbr	  |	filesystem  | secondary bootloader  |
+| stage1.5   |     code		 |						   | drivers	| partition	  |	  module    |                       |
+|			 |				 |						   |  module	|   module	  |		        |                       |
++-----------------------------------------------------------------------------------------------------------------------+
+|1 sector    | uncompressed  |                               compressed                         | bootloader stage2     |
+|            |               |                                                                  |                       |  
+
+#查看mbr
+dd if=/dev/sda of=/tmp/sda_mbr.img count=1 bs=512
+hexdump -C /tmp/sda_mbr.img
 
 #在MBR与MBR后面的空闲空间中安装grub，安装grub1与grub1.5 stage
 grub2-install --boot-directory=/disk/boot /dev/vdb
-
-#grub设置密码
-[root@node09 ~]# grub2-setpassword 
-Enter password: 
-Confirm password: 
-[root@node09 ~]# 
 
 #创建grub.cfg文件
 grub2-mkconfig -o /boot/grub2/grub.cfg
@@ -412,6 +426,11 @@ set root='hd0,msdos1'
 linux16 /vmlinuz-3.10.0-514.el7.x86_64 root=/dev/mapper/cl-root
 initrd16 /initramfs-3.10.0-514.el7.x86_64.img
 
+#grub设置密码
+[root@node09 ~]# grub2-setpassword 
+Enter password: 
+Confirm password: 
+[root@node09 ~]# 
    """
     print(grub_cmd)  
 
