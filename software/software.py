@@ -488,6 +488,93 @@ dracut -f /boot/initramfs-2.6.32-573.8.1.el6.x86_64.img
    """
     print(initramfs_cmd)  
 
+def print_nova_cmd():
+    print("nova usage command:")
+    nova_cmd = """
+# 磁盘挂载卸载
+nova volume-detach ECS_ID DISK_ID
+nova volume-attach NEW_ECS_ID DISK_ID
+
+# 冷迁移虚拟机
+nova migrate VM_ID
+
+# 手动选择一台主机
+nova migrate VM_ID --host dsthost
+
+# 热迁移虚拟机
+nova live-migration VM_ID
+
+# 查看虚拟机信息
+nova show VM_ID
+openstack server show VM_ID
+
+# 查看主机操作记录
+nova instance-action-list VM_ID
+
+# 为虚拟机分配vnc连接
+nova get-vnc-console VM_ID novnc
+
+# 关闭虚拟机
+nova stop VM_ID
+
+# 调整虚拟机规格
+nova resize-confirm VM_ID
+   """
+    print(nova_cmd)  
+
+def print_cinder_cmd():
+    print("cinder usage command:")
+    cinder_cmd = """
+ovs -s
+   """
+    print(cinder_cmd)  
+
+def print_glance_cmd():
+    print("glance usage command:")
+    glance_cmd = """
+# 创建私有镜像
+glance --debug image-create --name "Michael_test" \
+--container-format bare \
+--disk-format raw \
+--visibility private \
+--protected False \
+--property hw_qemu_guest_agent=yes \
+--property os_type="linux" \
+--property os_distro="Redhat" \
+--property os_version="7.4" \
+--property hw_vif_multiqueue_enabled=true \
+--property ctcm_enabled=true \
+--architecture x86_64 \
+--property image_version="R1" \
+--owner TEST_OWNER_ID \
+--progress
+
+# 给用户删除镜像的权利
+glance image-update --protected False IMAGE_ID
+
+# 上传镜像到后端存储中
+glance image-upload --file CentOS7-40G.raw --progress --backend ceph_ssd 0b53da25-8f5a-435e-87a0-5fce0caf0987
+
+
+# 修改镜像的标签
+glance image-update --property __support_xen=true IMAGE_ID
+glance image-update --property __support_kvm=true IMAGE_ID
+glance image-update --property __support_highperformance=true 4IMAGE_ID
+
+# 修改镜像拥有者
+glance image-update --owner USER_ID IMAGE_ID
+
+   """
+    print(glance_cmd)  
+
+def print_neutron_cmd():
+    print("neutron usage command:")
+    neutron_cmd = """
+# 查看eip的属性信息
+neutron floatingip-show EIP_ID
+   """
+    print(neutron_cmd)  
+
 def print_zip_cmd():
     print("zip usage command:")
     zip_cmd = """

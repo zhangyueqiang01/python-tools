@@ -149,7 +149,7 @@ def main():
     parser.add_argument("--show", choices=['ceph', 'docker','udp','tcp','icmp','ipv4','ipv6','ethernet2','vlan','vxlan','http',\
                                            'h3c','dp','huawei1','huawei2','zte','osp','ceph','docker','iptables','tcpdump','route',\
                                             'ip','nmcli','bond','kvm','kcompose','git','vim','bash','find','linuxbasic','dd','awk',\
-					   'sed','ubuntu','echo','grub','initramfs','zip','pam'], help="Display usage instance")
+					   'sed','ubuntu','echo','grub','initramfs','zip','pam','nova','cinder','neutron','glance'], help="Display usage instance")
 
 
     parser.add_argument("-i", "--install", action='store', dest="pkg",help="install packages on remote host")
@@ -248,6 +248,14 @@ def main():
        print_zip_cmd()
     elif args.show == 'pam':
        print_pam_cmd()
+    elif args.show == 'nova':
+       print_nova_cmd()
+    elif args.show == 'cinder':
+       print_cinder_cmd()
+    elif args.show == 'neutron':
+       print_neutron_cmd()
+    elif args.show == 'glance':
+       print_glance_cmd()
 
 
     elif args.pkg:
