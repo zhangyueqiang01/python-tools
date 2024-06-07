@@ -26,6 +26,7 @@ from network.header import *
 from databases.databases import *
 from program.program import *
 from kernel.kernel import *
+from troubleshooting.troubleshooting import *
 from git.git import *
 
 
@@ -149,7 +150,8 @@ def main():
     parser.add_argument("--show", choices=['ceph', 'docker','udp','tcp','icmp','ipv4','ipv6','ethernet2','vlan','vxlan','http',\
                                            'h3c','dp','huawei1','huawei2','zte','osp','ceph','docker','iptables','tcpdump','route',\
                                             'ip','nmcli','bond','kvm','kcompose','git','vim','bash','find','linuxbasic','dd','awk',\
-					   'sed','ubuntu','echo','grub','initramfs','zip','pam','nova','cinder','neutron','glance'], help="Display usage instance")
+					   'sed','ubuntu','echo','grub','initramfs','zip','pam','nova','cinder','neutron','glance',\
+					   'diskio','netio','cputop10','memtop10'], help="Display usage instance")
 
 
     parser.add_argument("-i", "--install", action='store', dest="pkg",help="install packages on remote host")
@@ -256,6 +258,15 @@ def main():
        print_neutron_cmd()
     elif args.show == 'glance':
        print_glance_cmd()
+    elif args.show == 'diskio':
+       print_diskio_cmd()
+    elif args.show == 'netio':
+       print_netio_cmd()
+    elif args.show == 'cputop10':
+       print_cputop10_cmd()
+    elif args.show == 'memtop10':
+       print_memtop10_cmd()
+
 
 
     elif args.pkg:
