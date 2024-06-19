@@ -35,6 +35,15 @@ show ip interface brief
 show ntp status
 show board-power
 show environment
+
+#查看接口详情
+show interface gigabitEthernet 1/0/23
+
+# 看当前时间
+show clock
+
+# 看日志闪断频率 
+show logging | include 1/0/23
    """
     print(dp_cmd)   
 
