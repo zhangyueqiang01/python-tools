@@ -50,6 +50,15 @@ show temperature
 show version
 show fan
 show power
+
+#查看接口详情
+show interface gigabitEthernet 1/0/23
+
+# 看当前时间
+show clock
+
+# 看日志闪断频率 
+show logging | include 1/0/23
    """
     print(zte_cmd)   
 
