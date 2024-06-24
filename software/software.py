@@ -575,6 +575,14 @@ neutron floatingip-show EIP_ID
    """
     print(neutron_cmd)  
 
+def print_login_cmd():
+    print("login usage command:")
+    login_cmd = """
+# 快速进行登录方法
+source set_env < <(echo  ;echo 1; echo FusionSphere123);TMOUT=0
+   """
+    print(login_cmd)  
+
 def print_zip_cmd():
     print("zip usage command:")
     zip_cmd = """
