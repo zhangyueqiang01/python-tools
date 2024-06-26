@@ -38,9 +38,11 @@ awk -v param="$new_param" '
     }
 }' mytool.py.bak > mytool.py
 
+cp templet.txt tmp.txt
+sed -i "s/xxxx/$new_param/g" tmp.txt
 
 echo "新功能添加完毕: $new_param"
+echo "请继续完善当前目录下的tmp.txt文件"
 
 # 脚本结束
 exit 0
-
