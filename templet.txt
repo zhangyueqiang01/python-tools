@@ -1,0 +1,7 @@
+def print_xxxx_cmd():
+    print("xxxx usage command:")
+    xxxx_cmd = """
+xxxx -n
+   """
+    print(xxxx_cmd) 
+

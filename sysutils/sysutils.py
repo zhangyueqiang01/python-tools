@@ -443,3 +443,25 @@ ps aux | sort -k4rn | head
 { ps aux | head -1 ; ps aux | sort -k4rn | head ; }
    """
     print(linuxbasic_cmd)   
+
+def print_gpt_cmd():
+    print("gpt usage command:")
+    gpt_cmd = """
+# 在执行这些操作时，请确保您已经备份了重要数据
+
+parted /dev/vdb
+(parted) mklabel gpt  
+# mkpart后跟分区名称、文件系统类型、起始位置和结束位置
+(parted) mkpart primary ext4 1MB 100%  
+(parted) print
+(parted) quit
+sudo mkfs.ext4 /dev/vdb1
+
+
+# 创建多个分区的方法
+mkpart primary ext4 1MB 10GB
+mkpart primary ext4 10GB 20GB
+mkpart primary ext4 20GB 100%
+   """
+    print(gpt_cmd) 
+
