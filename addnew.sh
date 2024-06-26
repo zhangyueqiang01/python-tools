@@ -13,7 +13,7 @@ new_param="$1"
 echo "添加新的功能是: $new_param"
 
 # modify parser.add_argument
-sed -i "154s/'xxxx'/'$new_param','xxxx'/g" ./mytool.py
+sed -i "s/,'xxxx'/,'$new_param','xxxx'/g" ./mytool.py
 
 # 备份原文件
 cp mytool.py mytool.py.bak
