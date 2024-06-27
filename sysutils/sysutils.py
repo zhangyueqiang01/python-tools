@@ -512,3 +512,60 @@ svctm：全称是 “The average service time”，即服务时间。这个指�
    """
     print(iostat_cmd) 
 
+def print_vmstat_cmd():
+    print("vmstat usage command:")
+    vmstat_cmd = """
+vmstat 是一个在类Unix系统中使用的监控工具，用于报告虚拟内存统计信息。
+vmstat 命令可以提供关于进程、内存、分页、块IO、中断和CPU活动的信息。
+
+vmstat 2 3
+每2秒更新一次，更新3次
+
+vmstat -s
+
+查看包括内存单元大小的详细内存统计：
+
+
+[root@node07 ~]# vmstat 
+procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----
+ r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st
+ 2  0      0 607744   1012 290104    0    0    59    29   21   48  0  0 100  0  0
+
+
+
+### 参数解释
+
+`vmstat` 的输出分为几个部分，每部分代表系统不同方面的性能指标：
+
+#### procs（进程）
+- `r`：等待运行的进程数。
+- `b`：在不可中断睡眠状态的进程数。
+
+#### memory（内存）
+- `swpd`：使用的虚拟内存（swap）大小。
+- `free`：空闲的内存大小。
+- `buff`：用于缓冲的内存大小。
+- `cache`：用于缓存的内存大小。
+
+#### swap（交换）
+- `si`：从交换区到主存的交换页数量（每秒）。
+- `so`：从主存到交换区的交换页数量（每秒）。
+
+#### io（块设备IO）
+- `bi`：从块设备接收的块数（每秒）。
+- `bo`：发送到块设备的块数（每秒）。
+
+#### system（系统）
+- `in`：每秒中断数，包括时钟中断。
+- `cs`：每秒上下文切换数。
+
+#### cpu（CPU）
+- `us`：用户态时间（百分比）。
+- `sy`：系统态时间（百分比）。
+- `id`：空闲时间（百分比）。
+- `wa`：等待IO时间（百分比）。
+- `st`：从虚拟机偷取的时间（百分比）（仅当系统是虚拟机时适用）。
+
+   """
+    print(vmstat_cmd) 
+
