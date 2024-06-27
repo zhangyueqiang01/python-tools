@@ -6,6 +6,11 @@ if [ -z "$1" ]; then
     exit 1
 fi
 
+if [ "$1" == "-h" ]; then
+    echo "请提供一个参数。"
+    exit 0
+fi
+
 # 将命令行参数保存到变量new_param中
 new_param="$1"
 
