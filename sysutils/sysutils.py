@@ -465,3 +465,50 @@ mkpart primary ext4 20GB 100%
    """
     print(gpt_cmd) 
 
+def print_iostat_cmd():
+    print("iostat usage command:")
+    iostat_cmd = """
+[root@node07 ~]# iostat -x vda -d 1
+#######
+每隔一秒查看一下vda的IO详情
+
+[root@node07 ~]# iostat -x
+Linux 3.10.0-514.el7.x86_64 (node07) 	06/27/2024 	_x86_64_	(1 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           0.56    0.00    0.19    0.21    0.00   99.04
+
+Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util
+vda               0.01     0.23    4.53    2.48   160.90    76.94    67.90     0.04    5.33    0.76   13.71   0.69   0.48
+vdb               0.00     0.00    0.21    0.00     1.60     0.00    15.10     0.00    0.09    0.09    0.00   0.07   0.00
+dm-0              0.00     0.00    0.11    0.00     0.90     0.00    16.69     0.00    0.05    0.05    0.00   0.05   0.00
+dm-1              0.00     0.00    3.17    2.06   139.18    75.19    81.97     0.04    8.18    1.04   19.18   0.91   0.47
+
+#########
+以下字段可以通过man进行查看
+Device：磁盘设备的名称。dm-0，dm-1对应的逻辑卷，可以通过ls -l /dev/mapper进行查看
+rrqm/s：全称是 “The number of read requests merged per second”，即每秒合并的读请求数。
+wrqm/s：每秒合并的写请求次数。
+r/s：每秒完成的读请求次数。
+w/s：每秒完成的写请求次数。
+rkB/s：每秒读取的数据量（千字节）。
+wkB/s：每秒写入的数据量（千字节）。
+avgrq-sz：全称是 “Average Request Size”，即平均每次请求的数据量（扇区）。
+avgqu-sz：全称是 “Average Queue Length”，即平均请求队列长度。
+await：平均每次请求的等待时间（毫秒）。
+r_await：平均每次读请求的等待时间（毫秒）。
+w_await：平均每次写请求的等待时间（毫秒）。
+svctm：全称是 “The average service time”，即服务时间。这个指标表示磁盘平均每次请求的服务时间（毫秒）。服务时间是指从磁盘接收到一个 I/O 请求到请求被完全服务的时间，包括寻道时间、旋转延迟和数据传输时间。
+%util：磁盘 I/O 使用率。
+
+
+`avg-cpu` 部分展示了 CPU 使用情况的平均值，这些值是基于 `iostat` 命令指定的时间间隔内所有 CPU 的总体表现。下面是每个参数的说明：
+- `%user`：显示在用户空间（应用程序）运行的进程所占用的 CPU 百分比时间。这包括常规用户进程和应用程序的执行时间。如果这个值很高，说明系统正在积极地处理应用程序的任务。
+- `%nice`：显示运行在较低优先级（通过 `nice` 值调整）的进程所占用的 CPU 百分比时间。如果这个值很高，说明系统正在执行很多被调整为较低优先级的任务。
+- `%system`：显示在内核空间运行的进程所占用的 CPU 百分比时间。这包括系统调用和内核进程的执行时间。如果这个值很高，说明系统可能在处理大量的系统调用或内核级别的任务。
+- `%iowait`：显示 CPU 等待 I/O 完成的百分比时间。这个值高表示 CPU 经常在等待磁盘 I/O 操作完成，可能是 I/O 子系统成为性能瓶颈的迹象。
+- `%steal`：在虚拟化环境中，这个值显示被虚拟机管理器（如 hypervisor）偷走的 CPU 时间百分比。当物理 CPU 被其他虚拟机使用时，这个值会升高。
+- `%idle`：显示 CPU 空闲时间的百分比。如果这个值很高，说明 CPU 很少被使用，系统可能比较空闲或者 CPU 资源充足。如果这个值很低，说明 CPU 非常繁忙，系统可能需要更多的 CPU 资源来处理负载。
+   """
+    print(iostat_cmd) 
+
