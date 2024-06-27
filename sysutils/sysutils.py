@@ -565,3 +565,72 @@ procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----
    """
     print(vmstat_cmd) 
 
+def print_iotop_cmd():
+    print("iotop usage command:")
+    iotop_cmd = """
+iotop 是Linux系统上一个用来监视磁盘I/O使用状况的命令行工具，它以类似 top 命令的界面显示进程的磁盘读写情况。
+iotop 需要管理员权限才能运行，因为它需要访问到 /proc 文件系统中的敏感信息。
+
+[root@node07 ~]# sudo iotop -b 
+Total DISK READ :       0.00 B/s | Total DISK WRITE :       0.00 B/s
+Actual DISK READ:       0.00 B/s | Actual DISK WRITE:       0.00 B/s
+  TID  PRIO  USER     DISK READ  DISK WRITE  SWAPIN      IO    COMMAND
+    1 be/4 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % systemd --switched-root --system --deserialize 21
+    2 be/4 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [kthreadd]
+    3 be/4 root        0.00 B/s    0.00 B/s  0.00 %  0.00 % [ksoftirqd/0]
+
+
+iotop 以非交互方式每2秒刷新一次，总共刷新5次
+sudo iotop -b -d 2 -n 5
+
+iotop 以非交互方式每2秒刷新一次，总共刷新5次，查看进程的IO使用情况，默认是线程。
+sudo iotop -b -d 2 -n 5 -P
+
+
+1. **输出内容解读**：
+Total DISK READ/WRITE: 显示总的磁盘读/写速度，单位是字节每秒（B/s）。
+Actual DISK READ/WRITE: 显示实际的磁盘读/写速度，这也是字节每秒（B/s）。这个值表示实际发生的数据传输速率，可能因为缓存或其他因素而与Total DISK READ/WRITE不同。
+TID: 线程ID，这是Linux内核中的一个概念，用于标识线程。
+PID: 进程ID。
+PRIO: 进程的优先级。
+USER: 运行进程的用户。
+DISK READ/WRITE: 分别显示每个进程或线程的磁盘读/写速度，单位是字节每秒（B/s）。
+SWAPIN: 表示进程在交换区（swap）中的时间百分比。
+IO: 表示进程的I/O等待时间百分比。
+COMMAND: 进程的命令名称或命令行。
+
+
+2. **使用 `iotop` 的交互命令**：
+   - 在 `iotop` 运行时，你可以使用以下按键进行交互：
+     - `q`：退出 `iotop`。
+     - `o`：改变排序方式，在进程和总I/O之间切换。
+     - `a`：使用所有进程，而不是仅限于当前线程。
+     - `r`：反向排序，默认情况下，iotop 是根据进程的磁盘写速度进行排序的。
+     - `P`：只显示进程，不显示线程。
+     - `1`：在进程和线程之间切换。
+	 
+3. **使用参数运行 `iotop`**：
+   - `-o`：只显示有实际I/O操作的进程或线程。
+   - `-b`：批量模式输出，不进行交互式显示。
+   - `-n`：指定 `iotop` 的刷新次数。
+   - `-d`：指定 `iotop` 的刷新间隔，单位是秒。
+   - `-P`：查看进程的IO使用情况，默认是线程。
+
+
+找到磁盘读取速度最高的进程
+sudo iotop -b -n 1 | grep -v 'Total' | grep -v 'Actual' | awk '{print $12 " "$4}' | sort -nr | head -1
+
+找到磁盘写入速度最高的进程
+sudo iotop -b -n 1 | grep -v 'Total' | grep -v 'Actual' | awk '{print $12 " "$6}' | sort -nr | head -1
+
+
+####命令解读###
+sudo iotop -b -n 1：以批处理模式运行 iotop，并且只输出最新的1次数据。
+grep -v 'Total'：使用 grep 过滤掉包含 “Total” 的行。
+grep -v 'Actual'：使用 grep 过滤掉包含 “Actual” 的行。
+awk '{print $12 " "$3}'：使用 awk 打印出进程名称（COMMAND）和磁盘读速度（DISK READ）。
+sort -nr：对读速度进行数值排序，-n 表示按数值排序，-r 表示逆序排序。
+head -1：只输出排序后的第一行，即读速度最高的进程。
+   """
+    print(iotop_cmd) 
+
