@@ -242,12 +242,6 @@ sed 's/regex_pattern/new_text/' filename
 
 #删除行：
 sed '/pattern_to_match/d' filename
-
-#插入行：
-sed '3i\New_line_text' filename
-
-#追加行：
-sed '3a\New_line_text' filename
    """
     print(sed_cmd)  
 
