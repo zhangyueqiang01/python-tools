@@ -522,7 +522,6 @@ vmstat 2 3
 每2秒更新一次，更新3次
 
 vmstat -s
-
 查看包括内存单元大小的详细内存统计：
 
 
@@ -530,8 +529,6 @@ vmstat -s
 procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----
  r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st
  2  0      0 607744   1012 290104    0    0    59    29   21   48  0  0 100  0  0
-
-
 
 ### 参数解释
 
@@ -565,7 +562,6 @@ procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----
 - `id`：空闲时间（百分比）。
 - `wa`：等待IO时间（百分比）。
 - `st`：从虚拟机偷取的时间（百分比）（仅当系统是虚拟机时适用）。
-
    """
     print(vmstat_cmd) 
 
