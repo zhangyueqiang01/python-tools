@@ -634,3 +634,45 @@ head -1：只输出排序后的第一行，即读速度最高的进程。
    """
     print(iotop_cmd) 
 
+def print_systemd_cmd():
+    print("systemd usage command:")
+    systemd_cmd = """
+基本语法
+Unit 文件由多个部分组成，每部分以一个方括号包围的段名开始。
+每个部分包含一系列 Key=Value 形式的配置选项。
+注释以 # 或 ; 开头。
+
+
+常见的部分
+[Unit]：描述 unit 本身的元数据和依赖关系。
+[Service]：定义服务的行为（仅用于 service 类型的 unit）。
+[Install]：定义如何安装该 unit，例如是否在系统启动时启用。
+
+
+[Unit] 部分
+Description=：对 unit 的简短描述。
+Documentation=：指向有关该 unit 的文档的 URL。
+After=：定义该 unit 应该在另一个 unit 之后启动。
+Requires=：定义该 unit 运行所需的其他 unit。如果所需的 unit 没有启动，该 unit 也不会启动。
+Wants=：定义该 unit 运行时希望启动的其他 unit，但不强制要求。
+
+[Service] 部分
+Type=：定义服务的启动类型，常见值有：
+simple：默认类型，ExecStart 启动的进程为主进程。
+forking：ExecStart 启动的进程会派生一个子进程，并且子进程成为主进程。
+oneshot：用于短暂运行的进程。
+notify：服务在启动过程中会向 systemd 发送通知。
+idle：服务会在其他任务完成后再启动。
+ExecStart=：定义启动服务的命令。
+ExecStop=：定义停止服务的命令。
+ExecReload=：定义重新加载服务的命令。
+Restart=：定义服务在失败时的重启策略，例如 on-failure。
+User=：以哪个用户身份运行服务。
+Group=：以哪个用户组身份运行服务。
+
+[Install] 部分
+WantedBy=：定义该 unit 所依赖的 target（目标），通常用于 enable/disable。
+RequiredBy=：类似于 WantedBy，但更严格，表示必须有。
+   """
+    print(systemd_cmd) 
+
