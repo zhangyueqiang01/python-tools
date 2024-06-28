@@ -673,6 +673,15 @@ Group=：以哪个用户组身份运行服务。
 [Install] 部分
 WantedBy=：定义该 unit 所依赖的 target（目标），通常用于 enable/disable。
 RequiredBy=：类似于 WantedBy，但更严格，表示必须有。
+
+unit文件路径
+/lib/systemd/system/：这是主要的系统级 unit 文件存放目录。
+/etc/systemd/system/：这个目录用于存放管理员自定义的 unit 文件和配置覆盖文件。
+/run/systemd/system/：这个目录用于存放运行时生成的 unit 文件，优先级高于以上两个
+/usr/lib/systemd/user/：系统级用户服务的默认目录。
+/etc/systemd/user/：管理员自定义的用户服务目录。
+/run/systemd/user/：运行时用户服务目录。
+~/.config/systemd/user/：每个用户的自定义 unit 文件目录。
    """
     print(systemd_cmd) 
 
