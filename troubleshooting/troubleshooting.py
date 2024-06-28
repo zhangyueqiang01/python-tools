@@ -154,3 +154,43 @@ css -s
    """
     print(memtop10_cmd)  
 
+def print_sar_cmd():
+    print("sar usage command:")
+    sar_cmd = """
+在 Linux 中，sar 是 System Activity Reporter 的缩写，是一个系统性能监控工具。
+sar 工具可以收集、报告和保存系统活动的信息，包括 CPU 使用率、内存和交换空间的利用率、I/O 和网络性能等。sar 通常是 sysstat 软件包的一部分。
+
+# 查看 CPU 使用情况：
+sar -u
+
+# 查看内存使用情况：
+sar -r
+
+# 查看设备 I/O 活动：
+sar -b
+
+# 查看磁盘I/O的详细信息
+sar -d
+这个命令下的dev对应的设备可以通过lsblk第二列的输出MAJ:MIN进行匹配
+
+# 查看网络活动：
+sar -n DEV
+
+# 指定时间间隔和次数：
+sar -u 5 3
+这个命令每隔 5 秒报告一次 CPU 使用情况，总共报告 3 次。
+
+# 查看历史数据：
+sar -f /var/log/sa/sa10
+这个命令从指定的历史文件中读取数据。通常，/var/log/sa/ 目录中存储着 sar 的历史数据文件。
+
+
+# 在centos7中配置sar服务
+sudo yum install sysstat
+sudo systemctl start sysstat
+sudo systemctl enable sysstat
+
+# sysstat 套件的其他工具，例如 iostat、mpstat 和 pidstat，也用于不同方面的系统监控，可以与 sar 配合使用以提供更全面的系统性能分析。
+   """
+    print(sar_cmd) 
+
