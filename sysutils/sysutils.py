@@ -685,3 +685,19 @@ unit文件路径
    """
     print(systemd_cmd) 
 
+def print_mod_cmd():
+    print("mod usage command:")
+    mod_cmd = """
+# 内核模块可以依赖于其他内核模块，但通常不直接依赖于用户空间中的库文件
+
+
+# 查看模块的依赖关系
+[root@node07 ~]# modinfo -F depends xfs
+libcrc32c
+
+[root@node07 ~]# modinfo -F depends virtio_pci
+virtio_ring,virtio
+
+   """
+    print(mod_cmd) 
+
