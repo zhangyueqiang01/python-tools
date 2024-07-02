@@ -451,6 +451,10 @@ nopti：禁用页表隔离（Page Table Isolation，PTI）功能，用于缓解M
 crashkernel=auto：为崩溃转储保留内存。通常在发生系统崩溃时，用于转储内存内容以便于分析崩溃原因。
 spectre_v2=retpoline：启用Retpoline（“Return Trampoline”）缓解措施来防止Spectre v2漏洞攻击。
 init：参数指定内核启动后要运行的初始化程序（init process）。这个程序负责启动和管理系统的各个服务和进程。通常情况下，这个初始化程序是 init 或 systemd。
+rd.break: 此参数回在启动过程中，中断chroot到真正的根文件系统，停留在初始的initramfs文件系统中，对于修复系统非常有用，如下所示，就可以进行系统修复操作了。
+    mount -o remount,rw /sysroot
+    mount --bind /dev /sysroot/dev (sys、proc等目录)
+    chroot /sysroot
    """
     print(grub_cmd)  
 
