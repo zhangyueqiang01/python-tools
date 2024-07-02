@@ -479,7 +479,7 @@ mount -t sysfs none /sys
 /bin/mount --bind /dev /sysroot/dev
 /bin/mount --bind /sys /sysroot/sys
 exec chroot /sysroot/ /bin/bash
-
+# 真实环境真正的根文件系统从grub cmdline中的root变量中读取
 
 # mount 选项解读：
 mount: 挂载一个文件系统。
