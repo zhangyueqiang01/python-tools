@@ -434,6 +434,22 @@ initrd16 /initramfs-3.10.0-514.el7.x86_64.img
 Enter password: 
 Confirm password: 
 [root@node09 ~]# 
+
+# grub cmdline 向内核传递的常见相关参数解读
+root=：指定根文件系统的位置。
+ro：以只读方式挂载根文件系统。
+quiet：禁用大部分启动信息输出。
+splash：启用启动屏幕。
+nomodeset：禁用内核模式设置（KMS）。
+acpi=off：禁用ACPI（高级配置和电源接口）。
+net.ifnames=0：禁用基于设备路径的网络接口命名规则，使网络接口使用传统的命名方式（例如 eth0、eth1），而不是基于硬件位置的名称（例如 enp0s3）。
+consoleblank=600：设置控制台空闲600秒（10分钟）后屏幕变黑。
+console=tty0：将内核消息输出到第一个虚拟控制台（通常是显示器上的文本控制台）。
+console=ttyS0,115200n8：将内核消息输出到串行端口 ttyS0，波特率为115200，8个数据位，无校验位，1个停止位（115200n8）。
+spectre_v2=off：禁用对Spectre v2漏洞的缓解措施。这些缓解措施通常用于防止通过分支预测漏洞进行的攻击。
+nopti：禁用页表隔离（Page Table Isolation，PTI）功能，用于缓解Meltdown漏洞。这可能会提高性能，但会增加系统的安全风险。
+crashkernel=auto：为崩溃转储保留内存。通常在发生系统崩溃时，用于转储内存内容以便于分析崩溃原因。
+spectre_v2=retpoline：启用Retpoline（“Return Trampoline”）缓解措施来防止Spectre v2漏洞攻击。
    """
     print(grub_cmd)  
 
