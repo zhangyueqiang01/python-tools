@@ -449,30 +449,6 @@ lsinitrd initramfs
 #手动创建initramfs
 find . | cpio -o -H newc | gzip -9 > /tmp/test.img
 
-#创建一个最基本的initramfs
-[root@ct7_node02 initramfs]# ll
-total 4
-drwxr-xr-x 2 root root 18 Aug  2 15:14 bin
--rwxr-xr-x 1 root root 49 Aug  2 15:13 init
-drwxr-xr-x 2 root root 90 Aug  2 15:17 lib64
-[root@ct7_node02 initramfs]# cat init 
-#!/bin/bash
- 
-echo "Hello Michael"
-exec /bin/bash
-[root@ct7_node02 initramfs]# tree ./ 
-./
-|-- bin
-|   `-- bash
-|-- init
-`-- lib64
-    |-- ld-linux-x86-64.so.2
-    |-- libc.so.6
-    |-- libdl.so.2
-    `-- libtinfo.so.5
- 
-2 directories, 6 files
-[root@ct7_node02 initramfs]# 
 
 #向initram中添加驱动
 vi /etc/dracut.conf
@@ -482,6 +458,36 @@ add_drivers+="xen-blkfront xen-netfront virtio_blk virtio_scsi virtio_net virtio
 
 dracut -f /boot/initramfs-2.6.32-573.8.1.el6.x86_64.img
 
+# initramfs 中的init是载入initramfs文件并解压后自动执行的程序
+# initramfs文件中的init实例:
+[root@node07 tmp]# cat init 
+#!/bin/bash
+ 
+export PATH=/bin:/usr/bin:/usr/sbin
+mount -n -t devtmpfs udev /dev
+mount -t proc none /proc
+mount -t sysfs none /sys
+/bin/insmod /lib/virtio.ko
+/bin/insmod /lib/virtio_ring.ko
+/bin/insmod /lib/virtio_pci.ko
+/bin/insmod /lib/virtio_blk.ko
+/bin/insmod /lib/libcrc32c.ko
+/bin/insmod /lib/xfs.ko
+
+/bin/mount /dev/vdb2 /sysroot/
+/bin/mount --bind /proc /sysroot/proc
+/bin/mount --bind /dev /sysroot/dev
+/bin/mount --bind /sys /sysroot/sys
+exec chroot /sysroot/ /bin/bash
+
+
+# mount 选项解读：
+mount: 挂载一个文件系统。
+-t sysfs: 指定要挂载的文件系统类型为 sysfs。
+none: 表示没有特定的设备需要挂载，因为 sysfs 是一个虚拟文件系统，不依赖于物理设备。
+/sys: 挂载点，表示将 sysfs 文件系统挂载到 /sys 目录。
+真正的根挂载dev proc sys等内存文件系统之前需要先进行这些文件系统的挂载
+init中的二进制文件建议写绝对路径（虽然导入PATH环境变量后也可以直接总变量中搜索二进制程序）
    """
     print(initramfs_cmd)  
 
