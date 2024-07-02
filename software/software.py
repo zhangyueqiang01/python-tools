@@ -450,6 +450,7 @@ spectre_v2=off：禁用对Spectre v2漏洞的缓解措施。这些缓解措施�
 nopti：禁用页表隔离（Page Table Isolation，PTI）功能，用于缓解Meltdown漏洞。这可能会提高性能，但会增加系统的安全风险。
 crashkernel=auto：为崩溃转储保留内存。通常在发生系统崩溃时，用于转储内存内容以便于分析崩溃原因。
 spectre_v2=retpoline：启用Retpoline（“Return Trampoline”）缓解措施来防止Spectre v2漏洞攻击。
+init：参数指定内核启动后要运行的初始化程序（init process）。这个程序负责启动和管理系统的各个服务和进程。通常情况下，这个初始化程序是 init 或 systemd。
    """
     print(grub_cmd)  
 
