@@ -735,3 +735,50 @@ dracut -f /boot/initramfs-2.6.32-573.8.1.el6.x86_64.img
    """
     print(dracut_cmd) 
 
+def print_mount_cmd():
+    print("mount usage command:")
+    mount_cmd = """
+# 基本语法：
+mount [-t 文件系统类型] [-o 选项] 设备文件名 挂载点
+
+# -t 文件系统类型：指定要挂载的文件系统类型，如ext4、ntfs等。如果不指定，默认根据设备文件自动识别。
+# -o 选项：指定挂载时的选项，比如读写权限、挂载类型等。常见选项包括rw（读写权限，默认）、ro（只读权限）、remount（重新挂载已经挂载的文件系统）等。
+
+# 重新已读写的方式进行挂载
+mount -o remount,rw /sysroot
+
+
+# 绑定挂载一个目录到另一个目录，即两个目录将共享相同的内容
+mount --bind /dev /sysroot/dev
+
+
+# 挂载NFS服务器192.168.1.100上的/exported/share目录到本地的/mnt/nfs_share目录：
+sudo mount -t nfs <服务器IP或主机名>:<远程目录> <本地挂载点>
+sudo mount -t nfs 192.168.1.100:/exported/share /mnt/nfs_share
+
+# 添加到/etc/fstab文件中自动挂载
+192.168.1.100:/exported/share /mnt/nfs_share nfs defaults 0 0
+
+# 使用mount命令将镜像文件挂载为loop设备：
+sudo mount -o loop /path/to/imagefile.iso /mnt
+
+
+# /etc/fstab 文件格式
+<file system> <mount point> <type> <options> <dump> <pass>
+
+<file system>：设备名称或UUID，通常是磁盘分区、LVM逻辑卷、网络文件系统路径、或者swap文件。
+<mount point>：挂载点，表示设备将被挂载到的目录。如果是swap分区或文件，这个字段应为 none。
+<type>：文件系统类型。常见类型包括 ext4、xfs、vfat、ntfs、swap、nfs 等
+<options>：挂载选项，逗号分隔。常见选项包括 defaults、ro（只读）、rw（读写）、noexec（不允许执行）、nosuid（不允许set-user-ID或set-group-ID）、nodev（不解译字符或块设备）、noatime（不更新访问时间）等。
+<dump>：dump字段用于指定是否使用dump程序对文件系统进行备份。dump是一个传统的UNIX备份工具，它可以创建文件系统的备份。虽然在现代Linux系统中使用dump进行备份的情况较少，但该字段仍然存在于/etc/fstab文件中。0：不需要备份。1：需要备份。
+<pass>：指定文件系统在系统启动时是否需要进行一致性检查以及检查的顺序。
+	0：不检查。表示该文件系统在启动时不需要进行一致性检查。通常用于虚拟文件系统（如proc、sysfs）或不需要检查的挂载点（如网络文件系统）。
+	1：首先检查。通常只为根文件系统（/）指定这个值，以确保根文件系统在其他文件系统之前被检查和修复。
+	2：检查顺序在根文件系统之后。对其他非根文件系统进行检查。可以为多个文件系统指定这个值，检查顺序按照它们在/etc/fstab文件中的出现顺序进行。
+
+instance:
+UUID=323e4567-e89b-12d3-a456-426614174002 /var            xfs     defaults          1       2
+/dev/mapper/rhel-swap   swap                    swap    defaults        0 0
+   """
+    print(mount_cmd) 
+
