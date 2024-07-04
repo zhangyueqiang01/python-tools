@@ -701,3 +701,37 @@ virtio_ring,virtio
    """
     print(mod_cmd) 
 
+def print_dracut_cmd():
+    print("dracut usage command:")
+    dracut_cmd = """
+# 生成默认 initramfs 文件：
+dracut
+# 这将在 /boot 目录下生成一个新的 initramfs 文件，通常命名为 initramfs-<kernel_version>.img。
+
+# 指定生成的 initramfs 文件名：
+dracut /path/to/initramfs.img
+
+# 指定内核版本：
+dracut --kver <kernel_version>
+# 生成特定内核版本的 initramfs 文件。
+
+# 显示帮助信息：
+dracut --help
+
+# 生成特定内核模块的 initramfs 文件：
+dracut --add <module_name> /path/to/initramfs.img
+
+# 列出所有可能的模块：
+dracut --list-modules
+
+# 假设你需要为一个特定的内核版本生成 initramfs 文件，可以使用以下命令：
+dracut --kver 5.4.0-74-generic /boot/initramfs-5.4.0-74-generic.img
+
+# 通过配置修改文件生成initramfs文件
+vi /etc/dracut.conf  
+# additional kernel modules to the default  
+add_drivers+="xen-blkfront xen-netfront virtio_blk virtio_scsi virtio_net virtio_pci virtio_ring virtio"
+dracut -f /boot/initramfs-2.6.32-573.8.1.el6.x86_64.img
+   """
+    print(dracut_cmd) 
+
