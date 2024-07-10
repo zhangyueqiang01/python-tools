@@ -515,6 +515,23 @@ init中的二进制文件建议写绝对路径（虽然导入PATH环境变量后
 def print_nova_cmd():
     print("nova usage command:")
     nova_cmd = """
+			####################
+			# nova相关组件简介 #
+			####################
+			
+nova-api：用户通过 API 请求创建云主机。nova-api 接收请求并进行初步处理。
+nova-scheduler：nova-api 将请求传递给 nova-scheduler。nova-scheduler 根据可用资源和调度策略选择一个合适的计算节点（compute node）来运行云主机。
+nova-conductor：nova-scheduler 选择计算节点后，将任务信息传递给 nova-conductor。nova-conductor 负责与数据库交互，记录云主机的状态和其他相关信息，并将操作请求传递给相应的计算节点。
+nova-compute：被选中的计算节点上的 nova-compute 组件接收到 nova-conductor 的请求，负责管理虚拟机的生命周期，如创建、删除、停止、启动等。它直接与虚拟化技术（如KVM、Xen等）进行交互，执行实际的虚拟机操作。
+nova-network（已被Neutron取代）：负责管理网络资源，如分配IP地址、创建虚拟网络等。目前，大多数网络管理功能已经被更先进和灵活的Neutron组件所取代。
+nova-novncproxy 和 nova-spicehtml5proxy：分别提供基于VNC和SPICE协议的远程控制台访问，允许用户通过浏览器远程管理虚拟机。
+nova-consoleauth：负责验证和管理远程控制台访问的身份验证令牌。
+nova-cert：处理与X.509证书相关的操作（例如EC2接口中的签名），目前已逐步被弃用。
+nova-placement：跟踪和管理计算资源的分配和使用情况，为调度器提供资源信息和决策支持。
+
+			################
+			# nova常用指令 #
+			################
 # 磁盘挂载卸载
 nova volume-detach ECS_ID DISK_ID
 nova volume-attach NEW_ECS_ID DISK_ID
