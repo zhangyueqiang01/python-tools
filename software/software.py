@@ -543,6 +543,44 @@ nova stop VM_ID
 
 # 调整虚拟机规格
 nova resize-confirm VM_ID
+
+					##################################
+					# 合营资源池主机创建失败排障方法 #
+					##################################
+
+# 查看虚拟机 action 对应的 req_id
+nova instance-action-list uuid 
+
+# 根据 req_id 查看操作详情
+nova –service-type compute-ext instance-action uuid req_id 
+
+# nova-sheduler日志路径：
+/var/log/fusionsphere/component/nova-scheduler/*
+
+# 如果调度到pod信息，但在被级联层未查到虚拟机创建信息，查看nova-proxy日志：
+
+#查询nova-proxy主节点：
+cps template-instance-list --service nova nova-proxy00H
+
+# nova-proxy日志路径:
+/var/log/fusionsphere/component/nova proxy00H/*
+
+#获取被级联层虚拟机uuid：
+nova list --all-t [--deleted] --name uuid (级联层)
+//[--deleted]查询环境中已经删除的虚机
+
+#获取操作的req_id：
+nova instance-action-list uuid (被级联层)
+
+# 根据req_id获取操作详情：
+nova --service-type compute-ext instance-action uuid (被级联层)  req_id
+
+# 如果未调度到CNA节点，需要查看nova-scheduler或nova-conductor日志：
+/var/log/fusionsphere/component/nova-scheduler/*
+/var/log/fusionsphere/component/nova-conductor/*
+
+# 如果调度到CAN节点，查看nova-compute日志：
+/var/log/fusionsphere/component/nova-compute/*
    """
     print(nova_cmd)  
 
