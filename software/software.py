@@ -423,6 +423,8 @@ grub2-mkconfig -o /boot/grub2/grub.cfg
 # 设置50秒的倒计时
 set timeout=50
 
+# 默认按照menuentry的顺序启动对应的内核
+
 # 设置默认启动条目
 sudo grub2-set-default 'Linux Kernel 4.19.0'
 # 对应grub.cfg中menuentry后面的引号中的内容
