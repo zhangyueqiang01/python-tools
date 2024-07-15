@@ -420,6 +420,14 @@ grub2-install --boot-directory=/disk/boot /dev/vdb
 # 创建grub.cfg文件
 grub2-mkconfig -o /boot/grub2/grub.cfg
 
+# 设置50秒的倒计时
+set timeout=50
+
+# 设置默认启动条目
+sudo grub2-set-default 'Linux Kernel 4.19.0'
+# 对应grub.cfg中menuentry后面的引号中的内容
+# 不能在menuentry中直接使用default来设置默认启动项
+
 # efi模式下(GPT分区)grub.cfg文件存放路径
 /boot/efi/EFI/redhat/grub.cfg
 
