@@ -495,6 +495,8 @@ dracut -f /boot/initramfs-2.6.32-573.8.1.el6.x86_64.img
 [root@novlm mnt]# cat init 
 #!/bin/bash
  
+/bin/echo 'Welcome to self defined initramfs (Initramfs)!'
+
 export PATH=/bin:/usr/bin:/usr/sbin
 mount -n -t devtmpfs udev /dev
 mount -t proc none /proc
@@ -505,6 +507,8 @@ mount -t sysfs none /sys
 /bin/insmod /lib/virtio_blk.ko
 /bin/insmod /lib/libcrc32c.ko
 /bin/insmod /lib/xfs.ko
+
+echo 'Starting Switch Root...'
 
 /bin/mount /dev/vda3 /sysroot/
 /bin/mount --bind /proc /sysroot/proc
