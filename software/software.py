@@ -490,8 +490,9 @@ add_drivers+="xen-blkfront xen-netfront virtio_blk virtio_scsi virtio_net virtio
 dracut -f /boot/initramfs-2.6.32-573.8.1.el6.x86_64.img
 
 # initramfs 中的init是载入initramfs文件并解压后自动执行的程序
+
 # initramfs文件中的init实例:
-[root@node07 tmp]# cat init 
+[root@novlm mnt]# cat init 
 #!/bin/bash
  
 export PATH=/bin:/usr/bin:/usr/sbin
@@ -505,11 +506,13 @@ mount -t sysfs none /sys
 /bin/insmod /lib/libcrc32c.ko
 /bin/insmod /lib/xfs.ko
 
-/bin/mount /dev/vdb2 /sysroot/
+/bin/mount /dev/vda3 /sysroot/
 /bin/mount --bind /proc /sysroot/proc
 /bin/mount --bind /dev /sysroot/dev
 /bin/mount --bind /sys /sysroot/sys
-exec chroot /sysroot/ /bin/bash
+exec chroot /sysroot/ /usr/lib/systemd/systemd
+# 只需要补充完相关的驱动命令以及库文件，即可通过这段脚本启动我们真正的根文件系统
+
 # 真实环境真正的根文件系统从grub cmdline中的root变量中读取
 
 # mount 选项解读：
