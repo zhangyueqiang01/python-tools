@@ -140,3 +140,33 @@ display mpls ldp lsp statistics
    """
     print(huawei2_cmd)   
 
+
+def print_pnet_cmd():
+    print("合营物理网络设备相关命令:")
+    pnet_cmd = """
+		#####
+		#IPS#
+		#####
+
+##################流统##################
+写规则----->应用规则------>查看规则
+
+实例：
+acl number 3000
+ description "Acl for Quintuple Packet Capture"
+ rule 0 permit udp source 117.136.64.106 0 destination 36.112.134.24 0 
+ rule 1 permit udp source 36.112.134.24 0 destination 117.136.64.106 0
+
+
+##################查看会话##################
+display firewall session table source global 1.203.115.195
+
+
+
+		######
+		#NE40#
+		######
+
+   """
+    print(pnet_cmd) 
+
