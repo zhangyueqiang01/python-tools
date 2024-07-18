@@ -153,9 +153,16 @@ def print_pnet_cmd():
 
 实例：
 acl number 3000
- description "Acl for Quintuple Packet Capture"
- rule 0 permit udp source 117.136.64.106 0 destination 36.112.134.24 0 
- rule 1 permit udp source 36.112.134.24 0 destination 117.136.64.106 0
+  description "test"
+  rule 5 permit icmp source 192.168.1.1 0 destination 192.168.2.1 0
+interface GigabitEthernet 0/0/0
+traffic-filter inbound acl 3000
+display acl 3000
+
+[Huawei-GigabitEthernet0/0/0]display acl 3000
+Advanced ACL 3000, 1 rule
+Acl's step is 5
+ rule 5 permit icmp source 192.168.1.1 0 destination 192.168.2.1 0 (5 matches)
 
 
 ##################查看会话##################
