@@ -177,3 +177,117 @@ display firewall session table source global 1.203.115.195
    """
     print(pnet_cmd) 
 
+
+def print_iperf_cmd():
+    print("iperf usage command:")
+    iperf_cmd = """
+					########
+					#iperf3#
+					########
+
+###########################################iper3 VS iperf################################
+iPerf: 最初由National Laboratory for Applied Network Research (NLANR)开发，后来不再维护
+iPerf3: 由ESnet (Energy Sciences Network)接管并重新开发和维护，增加了许多新功能和改进。
+iPerf3在功能、性能、稳定性和可维护性方面都比iPerf有显著的改进和提升。如果你需要进行网络性能测试，建议使用iPerf3。
+
+###########################################启动服务器端##################################
+iperf3 -s
+
+
+###########################################启动客户端#####################################
+iperf3 -c <server_ip>
+
+	客户端选项
+		-c, --client <host>: 指定服务器IP地址。
+		-p, --port <port>: 指定服务器端口（默认5201）。
+		-u, --udp: 使用UDP而不是默认的TCP。
+		-b, --bandwidth <n>[KMG]: 设置带宽，仅用于UDP模式（例如：-b 10M）。
+		-t, --time <n>: 测试时长，单位为秒（默认10秒）。
+		-P, --parallel <n>: 使用并行流的数量（例如：-P 4）。
+		-R, --reverse: 反向测试模式（服务器向客户端发送数据）。
+		-i, --interval <n>: 报告间隔时间，单位为秒（默认1秒）。
+		--json: 以JSON格式输出结果。
+
+	服务器端选项
+		-s, --server: 启动服务器模式。
+		-p, --port <port>: 指定监听端口（默认5201）。
+		-1, --one-off: 在一个客户端测试后退出。
+	通用选项
+		-V, --version: 显示版本信息并退出。
+		-h, --help: 显示帮助信息并退出。
+		
+###########################################示例###########################################
+
+##################基本TCP测试:##############
+服务器端：
+iperf3 -s
+客户端：
+[root@docker1 ~]# iperf3 -c 192.168.2.254
+Connecting to host 192.168.2.254, port 5201
+[  4] local 192.168.2.1 port 48338 connected to 192.168.2.254 port 5201
+[ ID] Interval           Transfer     Bandwidth       Retr  Cwnd
+[  4]   0.00-1.00   sec  5.30 GBytes  45.5 Gbits/sec    0   3.01 MBytes       
+[  4]   1.00-2.00   sec  5.84 GBytes  50.1 Gbits/sec    0   3.01 MBytes       
+[  4]   2.00-3.00   sec  5.54 GBytes  47.6 Gbits/sec    0   3.01 MBytes       
+[  4]   3.00-4.00   sec  5.42 GBytes  46.5 Gbits/sec    0   3.01 MBytes       
+[  4]   4.00-5.00   sec  5.52 GBytes  47.4 Gbits/sec    0   3.01 MBytes       
+[  4]   5.00-6.00   sec  5.58 GBytes  48.0 Gbits/sec    0   3.01 MBytes       
+[  4]   6.00-7.00   sec  5.54 GBytes  47.6 Gbits/sec    0   3.01 MBytes       
+[  4]   7.00-8.00   sec  5.65 GBytes  48.5 Gbits/sec    0   3.01 MBytes       
+[  4]   8.00-9.00   sec  5.64 GBytes  48.5 Gbits/sec    0   3.01 MBytes       
+[  4]   9.00-10.00  sec  5.41 GBytes  46.5 Gbits/sec    0   3.01 MBytes       
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bandwidth       Retr
+[  4]   0.00-10.00  sec  55.4 GBytes  47.6 Gbits/sec    0             sender
+[  4]   0.00-10.00  sec  55.4 GBytes  47.6 Gbits/sec                  receiver
+
+每秒传输统计
+	[ ID]: 流ID，标识此次测试的会话。
+	Interval: 时间间隔（秒）。
+	Transfer: 在该时间间隔内传输的数据量。
+	Bandwidth: 在该时间间隔内的平均带宽。
+	Retr: TCP重传次数（UDP不适用）。
+	Cwnd: 拥塞窗口大小（单位为字节），是TCP协议中控制流量的一个参数。
+总结统计
+	最后三行是统计值，显示的是发送端和接收端的最终的统计平均值
+
+
+
+##################UDP测试:##################
+服务器端：
+iperf3 -s
+客户端：
+[root@docker1 ~]# iperf3 -c 192.168.2.254 -u -b 10M
+Connecting to host 192.168.2.254, port 5201
+[  4] local 192.168.2.1 port 53458 connected to 192.168.2.254 port 5201
+[ ID] Interval           Transfer     Bandwidth       Total Datagrams
+[  4]   0.00-1.00   sec  1.07 MBytes  9.01 Mbits/sec  778  
+[  4]   1.00-2.00   sec  1.19 MBytes  10.0 Mbits/sec  863  
+[  4]   2.00-3.00   sec  1.19 MBytes  10.0 Mbits/sec  864  
+[  4]   3.00-4.00   sec  1.19 MBytes  10.0 Mbits/sec  863  
+[  4]   4.00-5.00   sec  1.19 MBytes  10.0 Mbits/sec  863  
+[  4]   5.00-6.00   sec  1.19 MBytes  10.0 Mbits/sec  863  
+[  4]   6.00-7.00   sec  1.19 MBytes  10.0 Mbits/sec  864  
+[  4]   7.00-8.00   sec  1.19 MBytes  9.99 Mbits/sec  863  
+[  4]   8.00-9.00   sec  1.19 MBytes  10.0 Mbits/sec  863  
+[  4]   9.00-10.00  sec  1.19 MBytes  9.99 Mbits/sec  863  
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bandwidth       Jitter    Lost/Total Datagrams
+[  4]   0.00-10.00  sec  11.8 MBytes  9.90 Mbits/sec  0.001 ms  0/8547 (0%)  
+[  4] Sent 8547 datagrams
+
+每秒传输统计
+	Interval: 时间间隔
+	Transfer: 传输的数据量
+	Bandwidth: 实际带宽
+	Total Datagrams: 传输的数据报数量
+总结统计
+	Interval: 总时间
+	Transfer: 总传输数据量
+	Bandwidth: 平均带宽
+	Jitter: 抖动，指的是延迟变化，值越小越好
+	Lost/Total Datagrams: 丢失的数据报数量和总数据报数量，以及丢包率
+
+   """
+    print(iperf_cmd) 
+
