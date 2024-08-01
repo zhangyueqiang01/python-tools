@@ -28,6 +28,7 @@ from program.program import *
 from kernel.kernel import *
 from troubleshooting.troubleshooting import *
 from git.git import *
+from cmd.cmd import *
 
 
 
@@ -151,7 +152,7 @@ def main():
                                            'h3c','dp','huawei1','huawei2','zte','osp','ceph','docker','iptables','tcpdump','route',\
                                             'ip','nmcli','bond','kvm','kcompose','git','vim','bash','find','linuxbasic','dd','awk',\
 					   'sed','ubuntu','echo','grub','initramfs','zip','pam','nova','cinder','neutron','glance',\
-					   'diskio','netio','cputop10','memtop10','login','gpt','iostat','vmstat','iotop','sar','parted','systemd','mod','dracut','mount','pnet','iperf','ascii','xxxx'], help="Display usage instance")
+					   'diskio','netio','cputop10','memtop10','login','gpt','iostat','vmstat','iotop','sar','parted','systemd','mod','dracut','mount','pnet','iperf','ascii','hexdump','xxxx'], help="Display usage instance")
 
 
     parser.add_argument("-i", "--install", action='store', dest="pkg",help="install packages on remote host")
@@ -294,6 +295,8 @@ def main():
        print_iperf_cmd()
     elif args.show == 'ascii':
        print_ascii_cmd()
+    elif args.show == 'hexdump':
+       print_hexdump_cmd()
     elif args.show == 'xxxx':
        print_xxxx_cmd()
 
