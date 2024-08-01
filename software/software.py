@@ -131,6 +131,12 @@ ibs=N：单次读入的数据块（block）的大小为 N 个字节，默认为 
 obs=N：单次输出的数据块（block）的大小为 N 个字节，默认为 512 字节。
 count=N：表示总共要复制 N 个数据块（block）
 
+# 使用dd命令直接修改MBR最后两个字节(备份MBR后操作)
+dd if=/dev/zero of=/dev/vda bs=1 seek=510 count=2 conv=notrunc
+	seek=510：从输出文件的第510字节开始，即写入MBR的倒数两个字节。
+	count=2：指定写入两个字节。
+	conv=notrunc：表示不截断输出文件，这样 dd 命令在写入两个字节时不会影响文件的其他部分。
+
 # 将grub中的core.img替换为全0
 dd if=/dev/zero of=/dev/vda bs=512 seek=1 count=2023
 
