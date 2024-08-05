@@ -28,3 +28,32 @@ def print_git_cmd():
     print(git_cmd)  
 
 
+def print_lamp_cmd():
+    print("lamp 快速搭建方法:")
+    lamp_cmd = """
+
+[root@node07 html]#yum install httpd mariadb-server
+
+[root@node07 html]# rpm -qa | grep -i php
+php-pdo-5.4.16-43.el7_4.x86_64
+php-common-5.4.16-43.el7_4.x86_64
+php-5.4.16-43.el7_4.x86_64
+php-mysql-5.4.16-43.el7_4.x86_64
+php-cli-5.4.16-43.el7_4.x86_64
+
+
+[root@node07 html]# cat /var/www/html/index.php 
+<?php
+phpinfo();
+?>
+
+
+#设置mqriadb账号密码
+mysql_secure_installation
+
+
+#数据库
+
+   """
+    print(lamp_cmd) 
+
