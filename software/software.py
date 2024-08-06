@@ -137,6 +137,11 @@ dd if=/dev/zero of=/dev/vda bs=1 seek=510 count=2 conv=notrunc
 	count=2：指定写入两个字节。
 	conv=notrunc：表示不截断输出文件，这样 dd 命令在写入两个字节时不会影响文件的其他部分。
 
+#替换MBR中最后两字节的标志位
+dd if=/dev/zero of=/dev/vda bs=1 seek=510 count=2 conv=notrunc
+  seek=510：从输出文件的第510字节开始（0索引），即写入MBR的倒数两个字节。
+  conv=notrunc：表示不截断输出文件，这样 dd 命令在写入两个字节时不会影响文件的其他部分。
+
 # 将grub中的core.img替换为全0
 dd if=/dev/zero of=/dev/vda bs=512 seek=1 count=2023
 
