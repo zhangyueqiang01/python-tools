@@ -183,7 +183,7 @@ def print_dline_cmd():
 #先在cloudscope上通过客户邮箱找到专线对应的vlan号
 
 //通过接入网关找到对应的pop
-网关							pop
+网关					pop
 169.254.195.11 				10.255.223.191
 
 Info: The max number of VTY users is 5, the number of current VTY users online is 2, and total number of terminal users online is 2.
