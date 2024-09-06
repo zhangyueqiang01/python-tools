@@ -185,6 +185,7 @@ def print_dline_cmd():
 //通过接入网关找到对应的pop
 网关					pop
 169.254.195.11 				10.255.223.191
+169.254.195.10 				老68
 
 Info: The max number of VTY users is 5, the number of current VTY users online is 2, and total number of terminal users online is 2.
       The current login time is 2024-09-04 10:44:06+08:00.
