@@ -356,6 +356,61 @@ reboot
 #新的内核不是默认启动选项，手动选择即可
 uname -r
 
+		  	    ##################
+			    #编译相关内容说明#
+			    ##################
+
+###########################################内核功能选择##################################
+Arrow keys navigate the menu: 使用箭头键可以在菜单中上下左右移动。
+<Enter> selects submenus ---> (or empty submenus ----): 按下回车键可以选择一个子菜单（如果有子菜单的话），或者选择一个没有子菜单的选项。
+Highlighted letters are hotkeys: 在菜单选项中，某些字母会被高亮显示，按下相应的字母键可以快速选择该选项。
+Pressing <Y> includes, <N> excludes, <M> modularizes features:
+	1、按下 Y 键可以将某个功能包括在内核中，标记为 [*] built-in。
+	2、按下 N 键可以排除某个功能，不包括在内核中，标记为 [ ] excluded。
+	3、按下 M 键可以将某个功能作为模块编译，标记为 <M> module。
+Press <Esc><Esc> to exit: 按两次 Esc 键可以退出菜单配置界面。
+<? for Help: 按 ? 键可以查看帮助信息。
+</ for Search: 按 / 键可以进行搜索。
+Legend: [*] built-in [ ] excluded <M> module < > module capable:
+	1、[ ] excluded 表示该功能被排除，不会编译进内核。
+	2、[*] built-in 表示该功能会被编译进内核，成为内核的一部分。
+	3、<M> module 表示该功能会被编译为模块，可以在需要时加载。
+	4、< > module capable 表示该功能可以被编译为模块。
+
+
+###########################################任务类型##################################
+CALL：表示调用脚本，例如 CALL scripts/checksyscalls.sh 表示正在调用脚本 checksyscalls.sh 来检查系统调用。
+DESCEND：进入一个子目录进行处理，例如 DESCEND objtool 表示进入 objtool 子目录进行编译。
+CC：表示使用 C 编译器（通常是 gcc）编译某个 .c 源文件，例如 CC init/main.o 表示正在编译 init/main.c 文件，生成 main.o。
+LD：表示链接操作，通常将多个目标文件链接成一个可执行文件，例如 LD /tmp/linux-5.16.14/tools/objtool/libsubcmd-in.o 表示在链接 libsubcmd-in.o。
+AR：表示创建静态库（归档操作），例如 AR libsubcmd.a 表示创建归档文件 libsubcmd.a，通常是将多个目标文件打包成一个静态库。
+MKDIR：表示创建目录，例如 MKDIR /tmp/linux-5.16.14/tools/objtool/arch/x86/lib/ 表示正在创建目标目录。
+GEN：表示生成某个文件，通常通过脚本或工具自动生成的文件，例如 GEN inat-tables.c。
+CHK：检查生成的文件是否需要更新，例如 CHK include/generated/compile.h。
+UPD：更新生成的文件，例如 UPD include/generated/compile.h。
+LINK：表示生成最终的可执行文件，例如 LINK objtool 表示正在链接生成 objtool 可执行文件。
+WRAP：表示包装（wrap）某个工具或命令，通常是在编译过程中对某些工具进行包装，方便调用。例如，某些编译工具可能通过 WRAP 处理来生成特定功能的封装脚本。
+SHIPPED：表示某个文件是预先准备好的，不需要重新生成，直接使用已经存在的文件。通常是在内核编译过程中，某些资源是以“已交付”（shipped）形式存在的，避免重复生成。
+SYSHDR：表示系统头文件（System Header）。这一操作通常涉及系统头文件的处理或生成，可能是复制或创建特定的系统头文件。
+SYNC：表示同步操作。在内核编译中，有时需要确保某些文件或过程与其他部分保持同步，例如与主机系统或其他编译步骤同步。
+HOSTCC：表示使用主机的 C 编译器来编译目标文件。由于内核可能是为不同的架构编译的，因此主机（编译服务器或本地开发机器）上的编译工具可能与目标系统不同。HOSTCC 表示在主机环境下进行的编译。
+HOSTLD：表示使用主机的链接器（Linker）。与 HOSTCC 类似，HOSTLD 负责在主机系统上进行的链接操作。
+MKELF：表示创建 ELF 文件格式（Executable and Linkable Format）。ELF 是一种可执行文件和目标文件格式，常用于 Linux 和类 Unix 系统。MKELF 通常涉及将目标文件打包成 ELF 文件。
+AS：汇编器（Assembler），用于将汇编代码编译成目标代码。例如，AS arch/x86/kernel/entry_32.o 表示使用汇编器处理汇编代码并生成 entry_32.o。
+CPP：C 预处理器（C PreProcessor），用于处理宏定义、头文件包含等预处理操作。例如，CPP somefile.i 表示预处理某个 C 文件生成中间文件 .i。
+CXX：C++ 编译器，用于编译 C++ 源文件。例如，CXX somefile.o 表示正在使用 C++ 编译器编译 somefile.cpp。
+HOSTAR：用于创建静态库文件的归档操作，与主机系统相关联。例如，HOSTAR 用于主机上的归档操作，类似于 AR，但适用于本地（主机）环境。
+INSTALL：表示安装某个目标文件或模块。例如，INSTALL modules 表示将编译好的模块安装到指定目录中。
+MODPOST：模块后处理（Module Postprocessing）。在编译完内核模块后，MODPOST 用于检查和处理内核模块，确保其可以在内核中正确加载和使用。
+CCLD：链接 C 编译后的文件。CCLD 是 CC 和 LD 的组合，用于处理 C 语言编译的最终链接步骤。
+VDSO：表示编译和链接与用户空间有关的可执行代码（虚拟动态共享对象），通常出现在特定的架构代码中。例如，VDSO arch/x86/entry/vdso/vdso.so。
+GENHDR：生成头文件（Generate Header），表示通过某个工具或脚本自动生成头文件。例如，GENHDR include/generated/autoconf.h。
+HOSTCXX：主机 C++ 编译器，用于在主机系统上编译 C++ 文件，类似于 HOSTCC 但适用于 C++。
+DTB：设备树二进制文件（Device Tree Blob），用于嵌入式系统和硬件设备的信息描述。通常用于将设备树文件 .dts 编译为 .dtb。
+OBJCOPY：对象文件复制工具，用于将目标文件从一种格式转换为另一种格式。例如，OBJCOPY vmlinux vmlinux.bin。
+STRIP：用于去除二进制文件中的符号表和调试信息，生成更小的可执行文件。例如，STRIP vmlinux。
+CLEAN：清理生成的文件。执行 make clean 或者其他类似命令时，CLEAN 会删除编译生成的文件，以便重新编译时不产生冲突。
+DEPMOD：依赖模块（Dependency Modules），在模块编译之后用于生成模块的依赖信息。
    """
     print(ckernel_cmd) 
 
