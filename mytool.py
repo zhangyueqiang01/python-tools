@@ -152,7 +152,7 @@ def main():
                                            'h3c','dp','huawei1','huawei2','zte','osp','ceph','docker','iptables','tcpdump','route',\
                                             'ip','nmcli','bond','kvm','kcompose','git','vim','bash','find','linuxbasic','dd','awk',\
 					   'sed','ubuntu','echo','grub','initramfs','zip','pam','nova','cinder','neutron','glance',\
-					   'diskio','netio','cputop10','memtop10','login','gpt','iostat','vmstat','iotop','sar','parted','systemd','mod','dracut','mount','pnet','iperf','ascii','hexdump','lamp','objdump','assembly','dline','xxxx'], help="Display usage instance")
+					   'diskio','netio','cputop10','memtop10','login','gpt','iostat','vmstat','iotop','sar','parted','systemd','mod','dracut','mount','pnet','iperf','ascii','hexdump','lamp','objdump','assembly','dline','ckernel','xxxx'], help="Display usage instance")
 
 
     parser.add_argument("-i", "--install", action='store', dest="pkg",help="install packages on remote host")
@@ -305,6 +305,8 @@ def main():
        print_assembly_cmd()
     elif args.show == 'dline':
        print_dline_cmd()
+    elif args.show == 'ckernel':
+       print_ckernel_cmd()
     elif args.show == 'xxxx':
        print_xxxx_cmd()
 
