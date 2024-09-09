@@ -152,11 +152,11 @@ dd if=/dev/zero of=/dev/vda bs=512 seek=1 count=2023
 dd if=/dev/vda of=/core.img bs=512 skip=1 count=2023
 
 # 向磁盘上写一个大文件, 来看写性能
-dd if=/dev/zero bs=1024 count=1000000 of=/root/1Gb.file
+dd if=/dev/zero of=testfile bs=1G count=2 oflag=direct 
+  oflag=direct：绕过文件系统缓存，直接写入磁盘。
  
 # 从磁盘上读取一个大文件, 来看读性能
-dd if=/root/1Gb.file bs=64k | dd of=/dev/null
-time dd if=/dev/zero bs=1024 count=1000000 of=/root/1Gb.file
+dd if=testfile of=/dev/null bs=1G count=2 iflag=direct 
 
 # 利用 /dev/urandom 进行格式化
 dd if=/dev/urandom of=/dev/sda
