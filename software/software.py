@@ -157,6 +157,7 @@ dd if=/dev/zero of=testfile bs=1G count=2 oflag=direct
  
 # 从磁盘上读取一个大文件, 来看读性能
 dd if=testfile of=/dev/null bs=1G count=2 iflag=direct 
+  iflag=direct：绕过缓存，直接从磁盘读取。
 
 # 利用 /dev/urandom 进行格式化
 dd if=/dev/urandom of=/dev/sda
