@@ -414,3 +414,62 @@ DEPMOD：依赖模块（Dependency Modules），在模块编译之后用于生�
    """
     print(ckernel_cmd) 
 
+def print_mysql_cmd():
+    print("mysql basic operate:")
+    mysql_cmd = """
+
+		  	    ###############
+			    #mysql基础操作#
+			    ###############
+
+####################################基础操作################################
+
+mysql -u your_username -p
+CREATE DATABASE 数据库名;
+SHOW DATABASES;
+USE your_database;
+SHOW TABLES;
+DROP DATABASE <database_name>;
+
+
+CREATE TABLE table_name (
+    column1 datatype,
+    column2 datatype,
+    ...
+);
+
+DROP TABLE table_name;
+
+
+INSERT INTO table_name (column1, column2, column3, ...)
+VALUES (value1, value2, value3, ...);
+
+#####################################查询操作################################
+
+SELECT column1, column2, ...
+FROM table_name
+[WHERE condition]
+[ORDER BY column_name [ASC | DESC]]
+[LIMIT number];
+
+
+-- 选择所有列的所有行
+SELECT * FROM users;
+
+-- 选择特定列的所有行
+SELECT username, email FROM users;
+
+-- 添加 WHERE 子句，选择满足条件的行
+SELECT * FROM users WHERE is_active = TRUE;
+
+-- 添加 ORDER BY 子句，按照某列的升序排序
+SELECT * FROM users ORDER BY birthdate;
+
+-- 添加 ORDER BY 子句，按照某列的降序排序
+SELECT * FROM users ORDER BY birthdate DESC;
+
+-- 添加 LIMIT 子句，限制返回的行数
+SELECT * FROM users LIMIT 10;
+   """
+    print(mysql_cmd) 
+
