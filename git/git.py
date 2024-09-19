@@ -473,3 +473,80 @@ SELECT * FROM users LIMIT 10;
    """
     print(mysql_cmd) 
 
+def print_nginx_cmd():
+    print("nginx usage:")
+    nginx_cmd = """
+# 客户端通过域名访问服务器时会将域名与被解析的ip一同放在请求中。当请求到了nginx中时。nginx会先去匹配ip，如果listen中
+# 没有找到对应的ip，就会通过域名进行匹配，匹配成功以后，再匹配端口。当这三步完成，就会找到对应的server的location对应的资源。
+
+server {
+        listen       ip:端口;
+        # 当listen出现了ip时，server_name就失去了意义。所以不配置也罢了。
+        #server_name  域名;
+ 
+        access_log   日志地址1;
+        error_log    日志地址2;
+ 
+        location / {
+            root   /data/www/151;
+            index  index.html index.htm;
+        }
+    }
+	
+
+# 在测试机本地上监听8080、8081、8082三个端口，模拟三台主机分别处理来自客户端访问picture、video、text的请求
+
+[root@node9 ~]# vim /etc/nginx/nginx.conf
+server {
+        listen       80;
+        server_name  192.168.2.19;
+ 
+        access_log   /usr/local/nginx/test/data/logs/www.test151.com.log;
+        error_log    /usr/local/nginx/test/data/logs/www.test151.com.error.log;
+ 
+        # Load configuration files for the default server block.
+        include /etc/nginx/default.d/*.conf;
+ 
+        location / {
+            root   /usr/share/nginx/html;
+            index  index.html index.htm;
+        }
+ 
+        location ~ /picture/ {
+            proxy_pass  http://127.0.0.1:8080;
+        }
+       
+        location ~ /video/ {
+            proxy_pass  http://127.0.0.1:8081;
+        }
+       
+        location ~ /text/ {
+	    proxy_pass http://127.0.0.1:8082;
+        }
+ 
+        error_page 404 /404.html;
+        location = /404.html {
+        }
+ 
+        error_page 500 502 503 504 /50x.html;
+        location = /50x.html {
+        }
+   }
+}
+
+
+# location 指令说明
+# 该指令用于匹配 URL， 语法如下：
+
+location [ = | ~ | ~* | ^~] uri {
+ 
+}
+
+= ：用于不含正则表达式的 uri 前，要求请求字符串与 uri 严格匹配， 如果匹配成功，就停止继续向下搜索并立即处理该请求。
+~：用于表示 uri 包含正则表达式，并且区分大小写。
+~*：用于表示 uri 包含正则表达式，并且不区分大小写。
+^~：用于不含正则表达式的 uri 前，要求 Nginx 服务器找到标识 uri 和请求
+
+   """
+    print(nginx_cmd) 
+
