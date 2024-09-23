@@ -134,13 +134,9 @@ count=N：表示总共要复制 N 个数据块（block）
 # 使用dd命令直接修改MBR最后两个字节(备份MBR后操作)
 dd if=/dev/zero of=/dev/vda bs=1 seek=510 count=2 conv=notrunc
 	seek=510：从输出文件的第510字节开始，即写入MBR的倒数两个字节。
+	  seek=510K,如果这么写代表从文件的第510K字节开始
 	count=2：指定写入两个字节。
 	conv=notrunc：表示不截断输出文件，这样 dd 命令在写入两个字节时不会影响文件的其他部分。
-
-#替换MBR中最后两字节的标志位
-dd if=/dev/zero of=/dev/vda bs=1 seek=510 count=2 conv=notrunc
-  seek=510：从输出文件的第510字节开始（0索引），即写入MBR的倒数两个字节。
-  conv=notrunc：表示不截断输出文件，这样 dd 命令在写入两个字节时不会影响文件的其他部分。
 
 #替换MBR中的分区表
 dd if=/dev/zero of=/dev/vda bs=1 seek=446 count=64 conv=notrunc
