@@ -1,4 +1,4 @@
-#!/usr/bin/python2.7
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 
 from __future__ import absolute_import
@@ -93,6 +93,8 @@ def arpdump():
     except subprocess.CalledProcessError as e:
         print("Error executing command: {}".format(e))
  
+#def healthchk():
+
 
 def send_large_message(host, port, size, num_packets):
     logging.basicConfig(filename='udp_logs.txt', level=logging.INFO, format='%(asctime)s - %(message)s')
@@ -163,6 +165,8 @@ def main():
     parser.add_argument('-w','--web',action='store',dest='hport',help='such as python -m SimpleHTTPServer 8080 or python3 -m http.server 80')
     parser.add_argument('-t','--mytcpdump',action='store',dest='tport',help='such as tcpdump -i any tcp port 80 and host 8.8.8.8')
     parser.add_argument('-u','--udpdump',action='store',dest='uport',help='such as tcpdump -i any udp port 80 and host 8.8.8.8 -vv')
+    parser.add_argument('-H', '--healthchk', action='store_true', help='Run Linux health check')
+    parser.add_argument('-e', '--SecureEn', action='store_true', help='protect your Linux')
     parser.add_argument("--arpdump", action="store_true", help="such as tcpdump -i any arp -ennl -vv")
     parser.add_argument('--host', default=' ', help='send UDP packages to Host name or IP address, default is NUll')
     parser.add_argument('--port', type=int, default=12345, help='send UDP packages to Port number, default is 12345')
@@ -362,6 +366,25 @@ def main():
 
     elif args.arpdump:
         arpdump()
+
+    elif args.healthchk:
+        try:
+            # 运行位于当前目录下的 bash 脚本
+            subprocess.call(['bash', './bash/CentOS_Check_Script.sh'])
+        except subprocess.CalledProcessError as e:
+            print("Error running health check script: {}".format(e))
+        except OSError:
+            print("The script 'bash/CentOS_Check_Script.sh' was not found or cannot be executed.")
+
+    elif args.SecureEn:
+        try:
+            # 运行位于当前目录下的 bash 脚本
+            subprocess.call(['bash', './bash/CentOS_Protective_Script.sh'])
+        except subprocess.CalledProcessError as e:
+            print("Error running secure Enhance script: {}".format(e))
+        except OSError:
+            print("The script 'bash/CentOS_Protective_Script.sh' was not found or cannot be executed.")
+
 
     elif args.host:
         run_threads(args)
