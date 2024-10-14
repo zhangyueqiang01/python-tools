@@ -169,6 +169,7 @@ def main():
     parser.add_argument('-H', '--healthchk', action='store_true', help='Run Linux health check')
     parser.add_argument('-e', '--SecureEn', action='store_true', help='protect your Linux')
     parser.add_argument("--arpdump", action="store_true", help="such as tcpdump -i any arp -ennl -vv")
+    parser.add_argument("--top10", action="store_true", help="{ ps aux | head -1 ; ps aux | sort -k3rn | head ; }")
     parser.add_argument('--host', default=' ', help='send UDP packages to Host name or IP address, default is NUll')
     parser.add_argument('--port', type=int, default=12345, help='send UDP packages to Port number, default is 12345')
     parser.add_argument('--size', type=int, default=1024, help='send UDP packages Message size in bytes, default is 1024 Kb')
@@ -386,6 +387,14 @@ def main():
         except OSError:
             print("The script 'bash/CentOS_Protective_Script.sh' was not found or cannot be executed.")
 
+    elif args.top10:
+        try:
+            # 运行位于当前目录下的 bash 脚本
+            subprocess.call(['bash', './bash/top10.sh'])
+        except subprocess.CalledProcessError as e:
+            print("Error running top10 script: {}".format(e))
+        except OSError:
+            print("The script 'bash/top10' was not found or cannot be executed.")
 
     elif args.host:
         run_threads(args)
