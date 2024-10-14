@@ -43,7 +43,8 @@ def ping(host):
         print('%s: up' % host)
 
 def gen_pass(n=16):
-    all_chs = string.ascii_letters + string.digits  
+    special_chars = "!@#$%^&*()_+-=[]{}|;:',.<>?/"
+    all_chs = string.ascii_letters + string.digits + special_chars
     result = ''
     for i in range(n):
         ch = choice(all_chs)
