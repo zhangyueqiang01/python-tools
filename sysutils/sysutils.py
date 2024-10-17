@@ -863,3 +863,27 @@ def print_ascii_cmd():
    """
     print(ascii_cmd) 
 
+
+def print_chntpw_cmd():
+    chntpw_cmd = """
+yum install ntfe-3g -y
+	wget https://tuxera.com/opensource/ntfs-3g_ntfsprogs-2017.3.23.tgz
+	tar -zxf ntfs-3g_ntfsprogs-2017.3.23.tgz
+	cd ntfs-3g_ntfsprogs-2017.3.23
+	./configure make&&make install 
+
+wget http://li.nux.ro/download/nux/dextop/el7/x86_64//chntpw-0.99.6-22.110511.el7.nux.x86_64.rpm
+rpm -ivh chntpw-0.99.6-22.110511.el7.nux.x86_64.rpm
+mkdir /win
+mount -t ntfs-3g /dev/vdb2 /win
+cd /win/Windows/System32/config/
+cp SAM{,.bak}
+chntpw SAM 
+	Select: [q] > 1
+	Write hive files? (y/n) [n] : y
+
+nova volume-attach centos系统的id win系统盘ID
+nova volume-detach centos系统的id win系统盘id
+   """
+    print(chntpw_cmd) 
+
