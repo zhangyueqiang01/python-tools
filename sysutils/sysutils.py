@@ -887,3 +887,10 @@ nova volume-detach centos系统的id win系统盘id
    """
     print(chntpw_cmd) 
 
+def print_time_cmd():
+    print("time usage command:")
+    time_cmd = """
+timedatectl set-timezone Asia/Shanghai
+   """
+    print(time_cmd) 
+
