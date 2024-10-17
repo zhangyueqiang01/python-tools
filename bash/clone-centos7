@@ -9,9 +9,9 @@ IMG_DIR=/var/lib/libvirt/images
 BASEVM=ct7_template
 ROOM=01
 IP=1
-read -p "Enter VM number: " VMNUM
-if [ $VMNUM -le 9 ];then
-VMNUM=0$VMNUM
+read -p "Enter VM number: " RVMNUM
+if [ $RVMNUM -le 9 ];then
+VMNUM=0$RVMNUM
 fi
 
 
@@ -62,3 +62,11 @@ sed -i "/mac /s/d3/${VMNUM}/" /tmp/myvm.xml
 echo -en "Defining new virtual machine......\t\t"
 virsh define /tmp/myvm.xml &> /dev/null
 echo -e "\e[32;1m[OK]\e[0m"
+
+guestmount -a $IMG_DIR/${NEWVM}.img -i --rw /mnt
+echo $NEWVM > /mnt/etc/hostname 
+sed -i  s/250/$RVMNUM/ /mnt/etc/sysconfig/network-scripts/ifcfg-eth1
+umount /mnt/
+virsh start $NEWVM
+
+echo -e "\e[32;1m[VM $NEWVM running]\e[0m"
