@@ -61,3 +61,20 @@ echo 'hello world' | hexdump -C
    """
     print(hexdump_cmd) 
 
+def print_yum_cmd():
+    print("yum usage command:")
+    yum_cmd = """
+# create ftp repo
+/etc/fstab
+...
+/ISO/rhel-server-7.4-x86_64-dvd.iso /var/ftp/rhel74 iso9660 defaults 0 0
+...
+
+[rhel74]
+name=rhel74
+baseurl=ftp://192.168.2.254/rhel74/
+enabled=1
+gpgcheck=0
+   """
+    print(yum_cmd) 
+
