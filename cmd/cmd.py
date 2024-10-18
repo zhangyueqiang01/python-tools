@@ -78,3 +78,26 @@ gpgcheck=0
    """
     print(yum_cmd) 
 
+def print_nic_cmd():
+    print("nic usage command:")
+    nic_cmd = """
+[root@ct7_node01 network-scripts]# cat ifcfg-eth1
+TYPE=Ethernet
+PROXY_METHOD=none
+BROWSER_ONLY=no
+BOOTPROTO=none
+IPADDR=192.168.2.1
+NETMASK=255.255.255.0
+FROUTE=yes
+IPV4_FAILURE_FATAL=no
+IPV6INIT=yes
+IPV6_AUTOCONF=yes
+IPV6_DEFROUTE=yes
+IPV6_FAILURE_FATAL=no
+IPV6_ADDR_GEN_MODE=stable-privacy
+NAME=eth1
+DEVICE=eth1
+ONBOOT=yes
+   """
+    print(nic_cmd) 
+
