@@ -894,3 +894,19 @@ timedatectl set-timezone Asia/Shanghai
    """
     print(time_cmd) 
 
+def print_newline_cmd():
+    print("换行符简介:")
+    newline_cmd = """
+Linux的换行符是 \\n ，它的ASCII码值是10
+Windows系统的换行符 \\r\\n ，Windows使用回车符（\\r，ASCII值13）和换行符（\\n）的组合来表示行结束
+
+例子：
+\\n：表示换行符。
+\\t：表示制表符（tab）。
+\\\：表示实际的反斜杠字符 \。
+
+# Windows文本文件转换成Linux文本文件
+sed -i 's/\\r$//' windowsfile.txt
+   """
+    print(newline_cmd) 
+
