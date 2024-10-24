@@ -958,3 +958,85 @@ https?://(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+
    """
     print(regularExp_cmd) 
 
+def print_nfs_cmd():
+    print("nfs build cookbook")
+    nfs_cmd = """
+
+		  	    ##################
+			    # NFS 搭建和挂载 #
+			    ##################
+
+
+在CentOS上搭建网络文件系统（NFS），并让客户端进行挂载，具体步骤如下：
+
+#####################################服务器端操作################################
+
+
+1、安装NFS服务器软件包： 执行以下命令安装NFS服务：
+sudo yum install nfs-utils -y
+
+
+2、启动并启用NFS服务： 运行以下命令来启动NFS服务，并配置为开机自动启动：
+sudo systemctl start nfs-server
+sudo systemctl enable nfs-server
+
+
+3、创建NFS共享目录： 假设要共享的目录为/mnt/nfs_share，创建该目录并配置相应的权限：
+sudo mkdir -p /mnt/nfs_share
+sudo chown -R nfsnobody:nfsnobody /mnt/nfs_share
+sudo chmod 755 /mnt/nfs_share
+
+
+4、编辑NFS配置文件： 编辑/etc/exports文件，添加共享目录的配置。假设允许客户端IP范围192.168.1.0/24进行挂载：
+sudo nano /etc/exports
+添加如下行：
+/mnt/nfs_share 192.168.1.0/24(rw,sync,no_root_squash,no_subtree_check)
+	参数说明：
+	rw：读写权限。
+	sync：同步写入数据。
+	no_root_squash：允许客户端的root用户拥有root权限。
+	no_subtree_check：不检查子目录。
+
+
+5、导出共享目录： 保存并关闭文件后，运行以下命令使更改生效：
+sudo exportfs -r
+
+
+6、配置防火墙： 允许NFS服务通过防火墙（如果防火墙处于启用状态）：
+sudo firewall-cmd --permanent --add-service=nfs
+sudo firewall-cmd --reload
+
+#####################################客户端操作################################
+
+
+1、安装NFS客户端软件包： 在客户端安装NFS客户端工具：
+sudo yum install nfs-utils -y
+
+
+2、创建挂载目录： 创建本地用于挂载NFS共享目录的挂载点：
+sudo mkdir -p /mnt/nfs_client
+
+
+3、挂载NFS共享目录： 使用以下命令将NFS服务器上的共享目录挂载到本地挂载点，假设NFS服务器IP为192.168.1.100：
+sudo mount 192.168.1.100:/mnt/nfs_share /mnt/nfs_client
+
+
+4、验证挂载： 使用df -h命令查看是否挂载成功：
+df -h
+
+#####################################配置开机自动挂载################################
+
+1、如果需要在客户端机器开机时自动挂载NFS共享目录，可以编辑/etc/fstab文件。
+
+2、编辑/etc/fstab文件：
+sudo nano /etc/fstab
+
+3、添加如下行：
+192.168.1.100:/mnt/nfs_share /mnt/nfs_client nfs defaults 0 0
+
+4、保存并关闭文件后，运行以下命令来测试挂载：
+sudo mount -a
+
+   """
+    print(nfs_cmd) 
+
