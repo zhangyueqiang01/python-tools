@@ -987,10 +987,10 @@ sudo chown -R nfsnobody:nfsnobody /mnt/nfs_share
 sudo chmod 755 /mnt/nfs_share
 
 
-4、编辑NFS配置文件： 编辑/etc/exports文件，添加共享目录的配置。假设允许客户端IP范围192.168.1.0/24进行挂载：
+4、编辑NFS配置文件： 编辑/etc/exports文件，添加共享目录的配置。假设允许客户端IP范围192.168.2.0/24进行挂载：
 sudo nano /etc/exports
 添加如下行：
-/mnt/nfs_share 192.168.1.0/24(rw,sync,no_root_squash,no_subtree_check)
+/mnt/nfs_share 192.168.2.0/24(rw,sync,no_root_squash,no_subtree_check)
 	参数说明：
 	rw：读写权限。
 	sync：同步写入数据。
@@ -1017,8 +1017,8 @@ sudo yum install nfs-utils -y
 sudo mkdir -p /mnt/nfs_client
 
 
-3、挂载NFS共享目录： 使用以下命令将NFS服务器上的共享目录挂载到本地挂载点，假设NFS服务器IP为192.168.1.100：
-sudo mount 192.168.1.100:/mnt/nfs_share /mnt/nfs_client
+3、挂载NFS共享目录： 使用以下命令将NFS服务器上的共享目录挂载到本地挂载点，假设NFS服务器IP为192.168.2.1：
+sudo mount 192.168.2.1:/mnt/nfs_share /mnt/nfs_client
 
 
 4、验证挂载： 使用df -h命令查看是否挂载成功：
@@ -1032,7 +1032,7 @@ df -h
 sudo nano /etc/fstab
 
 3、添加如下行：
-192.168.1.100:/mnt/nfs_share /mnt/nfs_client nfs defaults 0 0
+192.168.2.1:/mnt/nfs_share /mnt/nfs_client nfs defaults 0 0
 
 4、保存并关闭文件后，运行以下命令来测试挂载：
 sudo mount -a
