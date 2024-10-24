@@ -176,7 +176,9 @@ bzip2 -dc /root/sda.img.gz | dd of=/dev/sdb
 echo -n  "66666" | dd if=/dev/stdin of=/root/disk.img bs=1024 count=1 seek=513 conv=notrunc
 	# 如果是向文件系统的data block中写入数据，需要重新挂载文件系统，或者执行以下命令查看效果
 	sync
+	  # 将修改同步到磁盘上
 	echo 3 > /proc/sys/vm/drop_caches
+	    # 本指令为清除内存中的缓存，包括页缓存（实际文件内容）、inode 缓存和目录项缓存,重新从磁盘读取数据
 		1：清除页缓存（Page Cache），即文件的实际内容缓存。
 		2：清除目录项和 inode 缓存（dentry 和 inode cache），即文件系统的元数据缓存。
 		3：同时清除页缓存和目录项、inode 缓存。
