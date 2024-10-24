@@ -171,6 +171,15 @@ dd if=/dev/sda | gzip > of=./sda.img.gz
 # 更换 bzip2 压缩算法配合 dd 命令再来实现一遍上面示例的效果
 dd if=/dev/sda | bzip2 > disk.img.bz2
 bzip2 -dc /root/sda.img.gz | dd of=/dev/sdb
+
+# 向磁盘指定的位置写入指定的数据
+echo -n  "66666" | dd if=/dev/stdin of=/root/disk.img bs=1024 count=1 seek=513 conv=notrunc
+	# 如果是向文件系统的data block中写入数据，需要重新挂载文件系统，或者执行以下命令查看效果
+	sync
+	echo 3 > /proc/sys/vm/drop_caches
+		1：清除页缓存（Page Cache），即文件的实际内容缓存。
+		2：清除目录项和 inode 缓存（dentry 和 inode cache），即文件系统的元数据缓存。
+		3：同时清除页缓存和目录项、inode 缓存。
    """
     print(dd_cmd)  
 
