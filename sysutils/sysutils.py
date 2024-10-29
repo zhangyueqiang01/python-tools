@@ -1040,3 +1040,19 @@ sudo mount -a
    """
     print(nfs_cmd) 
 
+def print_kdump_cmd():
+    print("kdump usage command:")
+    kdump_cmd = """
+# 测试kdump服务及配置是否真正生效
+echo c > /proc/sysrq-trigger
+# 如果kdump配置正确/var/crash目录下产生新的文件
+
+wget http://debuginfo.centos.org/7/x86_64/kernel-debuginfo-common-x86_64-`uname -r`.rpm
+wget http://debuginfo.centos.org/7/x86_64/kernel-debuginfo-`uname -r`.rpm
+rpm -ivh kernel-debuginfo*.rpm
+rpm -ql kernel-debuginfo | grep vmlinux
+yum install crash
+crash /usr/lib/debug/lib/modules/3.10.0-1160.el7.x86_64/vmlinux /var/crash/127.0.0.1-2023-01-09-16\:16\:49/vmcore
+   """
+    print(kdump_cmd) 
+
