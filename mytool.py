@@ -155,7 +155,7 @@ def main():
                                            'h3c','dp','huawei1','huawei2','zte','osp','ceph','docker','iptables','tcpdump','route',\
                                             'ip','nmcli','bond','kvm','kcompose','git','vim','bash','find','linuxbasic','dd','awk',\
 					   'sed','ubuntu','echo','grub','initramfs','zip','pam','nova','cinder','neutron','glance',\
-					   'diskio','netio','cputop10','memtop10','login','gpt','iostat','vmstat','iotop','sar','parted','systemd','mod','dracut','mount','pnet','iperf','ascii','hexdump','lamp','objdump','assembly','dline','ckernel','mysql','nginx','virsh','chntpw','time','yum','nic','newline','regularExp','nfs','kdump','xxxx'], help="Display usage instance")
+					   'diskio','netio','cputop10','memtop10','login','gpt','iostat','vmstat','iotop','sar','parted','systemd','mod','dracut','mount','pnet','iperf','ascii','hexdump','lamp','objdump','assembly','dline','ckernel','mysql','nginx','virsh','chntpw','time','yum','nic','newline','regularExp','nfs','kdump','losetup','xxxx'], help="Display usage instance")
 
 
     parser.add_argument("-i", "--install", action='store', dest="pkg",help="install packages on remote host")
@@ -335,6 +335,8 @@ def main():
        print_nfs_cmd()
     elif args.show == 'kdump':
        print_kdump_cmd()
+    elif args.show == 'losetup':
+       print_losetup_cmd()
     elif args.show == 'xxxx':
        print_xxxx_cmd()
 

@@ -1056,3 +1056,32 @@ crash /usr/lib/debug/lib/modules/3.10.0-1160.el7.x86_64/vmlinux /var/crash/127.0
    """
     print(kdump_cmd) 
 
+def print_losetup_cmd():
+    print("losetup usage command:")
+    losetup_cmd = """
+# 创建环回设备并将 disk.img 文件关联上去：
+losetup -fP disk.img
+
+
+# 查找设备名称。使用 losetup 确认设备分配情况：
+losetup -l | grep disk.img
+
+
+# 挂载分区：
+mkdir /mnt/disk_img1
+mount /dev/loop0p1 /mnt/disk_img1
+# 按此方法可以依次挂载 /dev/loop0p2 和 /dev/loop0p3：
+
+
+# 卸载和清理（完成挂载后）：
+umount /mnt/disk_img1
+umount /mnt/disk_img2
+umount /mnt/disk_img3
+losetup -d /dev/loop0
+
+
+# 释放所有环回设备
+losetup -D
+   """
+    print(losetup_cmd) 
+
