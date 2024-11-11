@@ -721,3 +721,54 @@ sudo virt-top
    """
     print(virsh_cmd) 
 
+def print_xxd_cmd():
+    print("xxd usage command:")
+    xxd_cmd = """
+		  	    ##################
+			    # xxd 命令的使用 #
+			    ##################
+
+
+# xxd 是一个非常实用的命令行工具，用于在十六进制格式和二进制格式之间转换数据。
+# 它通常用于查看和编辑二进制文件内容，也可以用作调试工具来分析文件的底层数据结构。
+
+#####################################基本功能################################
+1、十六进制转储
+将二进制文件以十六进制和ASCII的可视化形式显示，方便分析文件内容。
+
+2、生成可编辑的十六进制文本
+将二进制文件转换为十六进制文本（hexdump），可以用文本编辑器修改后再转换回二进制。
+
+3、反转转换
+将编辑后的十六进制文件重新转换为二进制文件。
+
+
+#####################################常见选项################################
+选项	功能
+-p	仅显示纯十六进制，不带偏移量和ASCII部分（“plain hexdump”）。
+-r	将十六进制转储文本恢复成二进制文件（与 -p 通常一起使用）。
+-s <offset>	从指定偏移量处开始显示内容。
+-l <length>	显示指定长度的数据。
+-c <columns>	每行显示的字节数（默认为 16）。
+-u	将十六进制显示为大写（默认是小写）。
+
+
+#####################################示例################################
+
+# 将bitmap中的0修改为全1
+# 假设 Block Bitmap 位于 block 122
+dd if=/root/disk.img bs=1024 count=1 skip=122 of=bitmap.bin
+xxd bitmap.bin > bitmap.hex
+
+
+# 修改bitmap.hex中的相应位
+sed -i s/0000/ffff/g bitmap.hex
+sed -i s/ffff/0000/ bitmap.hex
+
+
+# 写回修改
+xxd -r bitmap.hex bitmap.bin
+dd if=bitmap.bin of=/root/disk.img bs=1024 count=1 seek=122 conv=notrunc
+   """
+    print(xxd_cmd) 
+
