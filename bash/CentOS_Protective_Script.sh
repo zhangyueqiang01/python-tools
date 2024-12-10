@@ -354,7 +354,7 @@ function main(){
 #                                        Menu                                           #
 #         1:ALL protective                                                              #
 #         2:Set Password Complexity Requirements                                        #
-#         3:Create openroot account                                                       #
+#         3:Create openroot account                                                     #
 #         4:Set Remote Login Configuration(SSH)                                         #
 #         5:Set Shell History and TMOUT                                                 #
 #         6:Set SSH Port                                                                #
