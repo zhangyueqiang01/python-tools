@@ -688,6 +688,65 @@ glance image-update --property __support_highperformance=true 4IMAGE_ID
 # 修改镜像拥有者
 glance image-update --owner USER_ID IMAGE_ID
 
+# 合营修改私有镜像磁盘属性
+glance image-update  --min-disk 300 49431953-eabf-4d63-af49-d62e41635c47 
+
+# 合营修改私有镜像写保护
+glance image-update --protected=false <IMAGE_ID>
+
+
+###############
+#合营镜像制作示例#
+###############
+export OS_IMAGE_API_VERSION=1
+glance image-create --owner eda9b53213884b49b3b96fc5f6a33730 --name "Anolis" --disk-format zvhd2 --container-format bare --min-disk 100 --min-ram 0 --is-public False --property __image_location=10.203.45.130:443:bj1-uds-public-image-bucket-001:Anolis --property __image_source_type=uds --property __os_type=Anolis --property __os_version="8" --property __lazyloading=true --property virtual_env_type=FusionCompute
+glance image-create --owner eda9b53213884b49b3b96fc5f6a33730 --name "GPU Centos7-Gpu20220914 for G5" --disk-format zvhd2 --container-format bare --min-disk 40 --min-ram 0 --property __image_location=10.203.45.130:443:bj1-uds-public-image-bucket-001:Centos-Gpu20220914 --property __image_source_type=uds --property __os_type=Linux --property __platform="Linux" --property __os_version="Centos7" --property virtual_env_type=FusionCompute --property __imagetype=private --property __os_bit=64 --property __isregistered=true --property __os_feature_list='{"onekey_resetpasswd": "true"}' --property __support_kvm_gpu_type=V100_vGPU --property __account_code=Linux --property __lazyloading=true
+
++--------------------------------+----------------------------------------------------------+
+| Property                       | Value                                                    |
++--------------------------------+----------------------------------------------------------+
+| Property '__image_location'    | 10.203.45.130:443:bj1-uds-public-image-bucket-001:Anolis |
+| Property '__image_source_type' | uds                                                      |
+| Property '__isregistered'      | false                                                    |
+| Property '__lazyloading'       | true                                                     |
+| Property '__os_type'           | Anolis                                                   |
+| Property '__os_version'        | 8                                                        |
+| Property 'virtual_env_type'    | FusionCompute                                            |
+| checksum                       | None                                                     |
+| container_format               | bare                                                     |
+| created_at                     | 2023-04-15T04:54:07.259802                               |
+| deleted                        | False                                                    |
+| deleted_at                     | None                                                     |
+| disk_format                    | zvhd2                                                    |
+| id                             | 417b24ec-6479-49dd-8839-a7620bb19713                     |
+| is_public                      | False                                                    |
+| min_disk                       | 100                                                      |
+| min_ram                        | 0                                                        |
+| name                           | Anolis                                                   |
+| owner                          | eda9b53213884b49b3b96fc5f6a33730                         |
+| protected                      | False                                                    |
+| size                           | 0                                                        |
+| status                         | queued                                                   |
+| updated_at                     | 2023-04-15T04:54:07.259814                               |
+| virtual_size                   | None                                                     |
++--------------------------------+----------------------------------------------------------+
+
+export OS_IMAGE_API_VERSION=2
+touch 417b24ec-6479-49dd-8839-a7620bb19713.zvhd2
+glance image-upload 417b24ec-6479-49dd-8839-a7620bb19713 --file 417b24ec-6479-49dd-8839-a7620bb19713.zvhd2 
+glance image-update --protected false --property __platform=linux --property __imagetype=private --property __os_bit=64 --property __isregistered=true 417b24ec-6479-49dd-8839-a7620bb19713
+glance image-update --property __support_xen=true 417b24ec-6479-49dd-8839-a7620bb19713
+glance image-update --property __support_kvm=true 417b24ec-6479-49dd-8839-a7620bb19713
+glance image-update --property __support_highperformance=true 417b24ec-6479-49dd-8839-a7620bb19713
+
+glance image-update --owner 08faa3231302a07f2f76c01101619dd2 417b24ec-6479-49dd-8839-a7620bb19713
+glance image-update --owner eda9b53213884b49b3b96fc5f6a33730 417b24ec-6479-49dd-8839-a7620bb19713
+
+
+BJ-AZ01-SRV-CascadingOpenstack-001:/home/fsp # glance image-show fc86f110-c36a-4c69-aba9-698f7ee30209
+BJ-AZ01-SRV-CascadingOpenstack-001:/home/fsp # glance image-show 417b24ec-6479-49dd-8839-a7620bb19713
+BJ-AZ01-SRV-CascadingOpenstack-001:~ # glance image-show 417b24ec-6479-49dd-8839-a7620bb19713
+
    """
     print(glance_cmd)  
 
