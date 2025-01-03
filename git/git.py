@@ -187,29 +187,135 @@ def print_dline_cmd():
 169.254.195.11 				10.255.223.191
 169.254.195.10 				老68
 
-<YZYHB214JF-6-8-1&6-6-2-CE6851-1U42-1U43>display ip interface brief | include  10.101.212.34
-<YZYHB214JF-6-8-1&6-6-2-CE6851-1U42-1U43>display ip routing-table
-<YZYHB214JF-6-8-1&6-6-2-CE6851-1U42-1U43>display ip routing-table vpn-instance DLine21
-<YZYHB214JF-6-8-1&6-6-2-CE6851-1U42-1U43>display ip interface brief
-<BJYZB-B214-8_A4_8_B5-ASW-HCE68-1U41>display interface brief 
-<YZYHB214JF-6-8-1&6-6-2-CE6851-1U42-1U43>display interface Eth-Trunk main 
-<BJYZB-B214-8_A4_8_B5-ASW-HCE68-1U41>display interface Eth-Trunk 
-<YZYHB214JF-6-8-1&6-6-2-CE6851-1U42-1U43>display interface Eth-Trunk 26
-<YZYHB214JF-6-8-1&6-6-2-CE6851-1U42-1U43>display interface 10GE 1/0/21                      
-<YZYHB214JF-6-8-1&6-6-2-CE6851-1U42-1U43>display current-configuration interface 10GE 1/0/21
+Info: The max number of VTY users is 5, the number of current VTY users online is 2, and total number of terminal users online is 2.
+      The current login time is 2024-09-04 10:44:06+08:00.
+      The last login time is 2024-09-04 10:41:25+08:00 from 10.77.51.125 through SSH.
+<YZYHB214JF-6-8-1&6-6-2-CE6851-1U42-1U43>display current-configuration | section include 3763		//通过vlan找到vpn-instance
+#
+ip vpn-instance DLine13
+ ipv4-family
+  route-distinguisher 3763:3763
+  vpn-target 3763:3763 export-extcommunity
+  vpn-target 3763:3763 import-extcommunity
+#
+interface Eth-Trunk1.13
+ ip binding vpn-instance DLine13
+ ip address 169.254.195.11 255.255.255.0
+ dot1q termination vid 3763
+<YZYHB214JF-6-8-1&6-6-2-CE6851-1U42-1U43>
+<YZYHB214JF-6-8-1&6-6-2-CE6851-1U42-1U43>display ip interface brief | include DLine13		//查看本客户的互联地址，以下均为客户的专线互联地址
+*down: administratively down
+!down: FIB overload down
+^down: standby
+(l): loopback
+(s): spoofing
+(d): Dampening Suppressed
+The number of interface that is UP in Physical is 1169
+The number of interface that is DOWN in Physical is 10
+The number of interface that is UP in Protocol is 1159
+The number of interface that is DOWN in Protocol is 20
+Interface                   IP Address/Mask    Physical Protocol VPN           
+10GE1/0/12                  10.103.0.2/30      up       up       DLine13       
+Eth-Trunk1.13               169.254.195.11/24  up       up       DLine13       
+Eth-Trunk1.130              169.254.195.11/24  up       up       DLine130      
+Eth-Trunk1.131              169.254.195.11/24  up       up       DLine131      
+Eth-Trunk1.132              169.254.195.11/24  up       up       DLine132      
+Eth-Trunk1.133              169.254.195.11/24  up       up       DLine133      
+Eth-Trunk1.134              169.254.195.11/24  up       up       DLine134      
+Eth-Trunk1.135              169.254.195.11/24  up       up       DLine135      
+Eth-Trunk1.136              169.254.195.11/24  up       up       DLine136      
+Eth-Trunk1.137              169.254.195.11/24  up       up       DLine137      
+Eth-Trunk1.138              169.254.195.11/24  up       up       DLine138      
+Eth-Trunk1.139              169.254.195.11/24  up       up       DLine139      
+Eth-Trunk26.2705            10.101.0.13/30     up       up       DLine13       
+Eth-Trunk26.2714            10.101.0.9/30      up       up       DLine13       
+Eth-Trunk26.2723            10.101.0.18/30     up       up       DLine13       
+Eth-Trunk26.2734            10.101.0.26/30     up       up       DLine13       
+Eth-Trunk26.2735            10.101.0.22/30     up       up       DLine13       
+Eth-Trunk26.2736            10.101.0.6/30      up       up       DLine13       
+Eth-Trunk26.2737            10.101.0.34/30     up       up       DLine13       
+Eth-Trunk26.2738            10.101.0.46/30     up       up       DLine13       
+Eth-Trunk26.2739            10.101.0.42/30     up       up       DLine13       
+Eth-Trunk26.2741            10.103.0.29/30     up       up       DLine13       
+<YZYHB214JF-6-8-1&6-6-2-CE6851-1U42-1U43>
+<YZYHB214JF-6-8-1&6-6-2-CE6851-1U42-1U43>
+<YZYHB214JF-6-8-1&6-6-2-CE6851-1U42-1U43>display ip routing-table vpn-instance DLine13 protocol static 			//查看本客户专线的路由条目                  
+Proto: Protocol        Pre: Preference
+Route Flags: R - relay, D - download to fib, T - to vpn-instance, B - black hole route
+------------------------------------------------------------------------------
+DLine13 Routing Table : Static
+         Destinations : 58       Routes : 60       Configured Routes : 60        
 
-<BJYZB-B214-8_A3_8_B4-ASW-HCE68-1U41>dis current-configuration configuration vpn-instance 
-<BJYZB-B214-8_A3_8_B4-ASW-HCE68-1U41>display interface GigabitEthernet 0/0/1
-<YZYHB214JF-6-8-1&6-6-2-CE6851-1U42-1U43>display interface Eth-Trunk main
-<YZYHB214JF-6-8-1&6-6-2-CE6851-1U42-1U43>ping -vpn-instance DLine2 -a 10.101.212.34 10.101.212.33
+Static routing table status : <Active>
+         Destinations : 58       Routes : 60        
 
-<BJYZB-B214-3_31_4_18-HSW-HCE128-16U06>display interface Eth-Trunk 40               
-<BJYZB-B214-3_31_4_18-HSW-HCE128-16U06>display interface description | include CNA09
-BJMJQ-208-E10_E11-ASW-RGS6510-M2-01U45#show logging | include 0/7
+Destination/Mask    Proto   Pre  Cost        Flags NextHop         Interface
 
-<BJYZB-F238-3_10_3_11-HSW-HCE88-2U43>display interface 40GE 1/1/13 transceiver verbose 
-<BJYZB-B214-8_A7_8_B8-CSW-HCE128-16U06>display device  
-<BJYZB-B214-8_A7_8_B8-CSW-HCE128-16U06>display device board 
+        0.0.0.0/0   Static  60   0             RD  169.254.195.201 Eth-Trunk1.13			//专线访问互联网的路由
+       10.1.0.0/16  Static  60   0             RD  10.101.0.5      Eth-Trunk26.2736			//以下是访问专线内部网络路由条目
+                    Static  60   0             RD  10.103.0.1      10GE1/0/12
+       10.2.0.0/16  Static  60   0             RD  10.103.0.1      10GE1/0/12
+       10.3.0.0/16  Static  50   0             RD  10.103.0.1      10GE1/0/12
+       10.5.0.0/16  Static  50   0             RD  10.103.0.1      10GE1/0/12
+       10.6.2.0/24  Static  50   0             RD  10.103.0.1      10GE1/0/12
+       10.6.4.0/24  Static  50   0             RD  10.103.0.1      10GE1/0/12
+       10.7.0.0/16  Static  50   0             RD  10.103.0.1      10GE1/0/12
+       10.9.0.0/16  Static  50   0             RD  10.103.0.1      10GE1/0/12
+      10.10.0.0/16  Static  50   0             RD  10.103.0.1      10GE1/0/12
+      10.13.0.0/16  Static  50   0             RD  10.103.0.1      10GE1/0/12
+      10.14.0.0/16  Static  50   0             RD  10.103.0.1      10GE1/0/12
+      10.21.0.0/24  Static  60   0             RD  10.101.0.33     Eth-Trunk26.2737
+      10.21.2.0/23  Static  60   0             RD  10.101.0.33     Eth-Trunk26.2737
+      10.21.3.0/24  Static  50   0             RD  10.103.0.1      10GE1/0/12
+      10.21.5.0/24  Static  60   0             RD  10.101.0.33     Eth-Trunk26.2737
+      10.21.6.0/23  Static  60   0             RD  10.101.0.33     Eth-Trunk26.2737
+     10.21.10.0/23  Static  50   0             RD  10.103.0.1      10GE1/0/12
+     10.21.11.0/24  Static  60   0             RD  10.101.0.33     Eth-Trunk26.2737
+     10.21.12.0/23  Static  50   0             RD  10.103.0.1      10GE1/0/12
+      10.24.0.0/16  Static  50   0             RD  10.103.0.1      10GE1/0/12
+      10.30.0.0/24  Static  50   0             RD  10.103.0.1      10GE1/0/12
+      10.30.2.0/24  Static  50   0             RD  10.103.0.1      10GE1/0/12
+      10.30.3.0/24  Static  50   0             RD  10.103.0.1      10GE1/0/12
+      10.30.4.0/24  Static  50   0             RD  10.103.0.1      10GE1/0/12
+      10.30.6.0/24  Static  50   0             RD  10.103.0.1      10GE1/0/12
+     10.30.11.0/24  Static  50   0             RD  10.103.0.1      10GE1/0/12
+     10.30.12.0/24  Static  50   0             RD  10.103.0.1      10GE1/0/12
+     10.30.13.0/24  Static  50   0             RD  10.103.0.1      10GE1/0/12
+     10.30.14.0/24  Static  50   0             RD  10.103.0.1      10GE1/0/12
+     10.30.15.0/24  Static  50   0             RD  10.103.0.1      10GE1/0/12
+     10.30.21.0/24  Static  50   0             RD  10.103.0.1      10GE1/0/12
+     10.30.22.0/24  Static  50   0             RD  10.103.0.1      10GE1/0/12
+     10.30.23.0/24  Static  50   0             RD  10.103.0.1      10GE1/0/12
+     10.30.24.0/24  Static  50   0             RD  10.103.0.1      10GE1/0/12
+     10.30.25.0/24  Static  50   0             RD  10.103.0.1      10GE1/0/12
+      10.33.0.0/22  Static  50   0             RD  10.103.0.1      10GE1/0/12
+      10.34.0.0/22  Static  50   0             RD  10.103.0.1      10GE1/0/12
+      10.70.0.1/32  Static  60   0             RD  10.101.0.41     Eth-Trunk26.2739
+      10.71.2.1/32  Static  60   0             RD  10.103.0.30     Eth-Trunk26.2741
+      10.71.3.1/32  Static  60   0             RD  10.103.0.30     Eth-Trunk26.2741
+     10.71.10.1/32  Static  60   0             RD  10.103.0.30     Eth-Trunk26.2741
+     10.71.11.1/32  Static  60   0             RD  10.103.0.30     Eth-Trunk26.2741
+     10.71.12.1/32  Static  60   0             RD  10.103.0.30     Eth-Trunk26.2741
+     10.71.20.1/32  Static  60   0             RD  10.103.0.30     Eth-Trunk26.2741
+     10.71.21.1/32  Static  60   0             RD  10.103.0.30     Eth-Trunk26.2741
+     10.71.30.1/32  Static  60   0             RD  10.103.0.30     Eth-Trunk26.2741
+     10.100.0.0/16  Static  60   0             RD  169.254.195.201 Eth-Trunk1.13
+    192.168.0.0/24  Static  60   0             RD  10.101.0.21     Eth-Trunk26.2735
+                    Static  60   0             RD  10.103.0.1      10GE1/0/12
+    192.168.1.0/24  Static  50   0             RD  10.101.0.21     Eth-Trunk26.2735
+   192.168.70.0/24  Static  60   0             RD  10.101.0.25     Eth-Trunk26.2734
+   192.168.90.0/24  Static  60   0             RD  10.101.0.25     Eth-Trunk26.2734
+    192.169.0.0/16  Static  60   0             RD  10.103.0.1      10GE1/0/12
+    192.169.1.0/24  Static  60   0             RD  10.101.0.25     Eth-Trunk26.2734
+    192.169.3.0/24  Static  60   0             RD  10.101.0.25     Eth-Trunk26.2734
+    192.169.8.0/24  Static  60   0             RD  10.101.0.21     Eth-Trunk26.2735
+   192.169.21.0/24  Static  60   0             RD  10.101.0.21     Eth-Trunk26.2735
+  198.152.254.0/24  Static  60   0             RD  10.103.0.1      10GE1/0/12
+                
+Static routing table status : <Inactive>
+         Destinations : 0        Routes : 0         
+<YZYHB214JF-6-8-1&6-6-2-CE6851-1U42-1U43>
+<YZYHB214JF-6-8-1&6-6-2-CE6851-1U42-1U43>
 
    """
     print(dline_cmd) 
