@@ -16,6 +16,16 @@ display fan
 display power
 display clock
 display interface brief
+
+
+# 显示该接口的当前配置
+display current-configuration interface Bridge-Aggregation 145
+
+# 显示该接口的实时状态和统计信息。
+display interface Bridge-Aggregation 145
+
+# 查看聚合口下有哪些接口
+display link-aggregation verbose Bridge-Aggregation 145
    """
     print(h3c_cmd)   
 
