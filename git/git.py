@@ -175,9 +175,9 @@ def print_assembly_cmd():
 def print_dline_cmd():
     print("合营客户专线信息查看方法:")
     dline_cmd = """
-##############################
-#合营专线客户相关信息查看方法#
-##############################
+################################
+# 合营专线客户相关信息查看方法 #
+################################
 
 #专线（dedicated line）
 #先在cloudscope上通过客户邮箱找到专线对应的vlan号
@@ -210,6 +210,18 @@ show logging | include 0/7
 display interface 40GE 1/1/13 transceiver verbose 
 display device  
 display device board 
+
+#####################
+# pop上查看带宽方法 #
+#####################
+查看专线接口上出方向和入方向是否配置了流量策略
+display current-configuration interface Eth-Trunk 3
+
+查看流量策略
+display current-configuration configuration trafficpolicy BJALA-B17577618&B17577619
+
+查看流量策略的具体行为
+display current-configuration configuration behavior BJALA-B17577618&B17577619
 
    """
     print(dline_cmd) 
