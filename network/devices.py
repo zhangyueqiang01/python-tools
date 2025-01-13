@@ -110,6 +110,9 @@ dis this
 destination-address  mask 255.255.255.255
 undo destination-address  mask 255.255.255.255
 
+# 查看聚合口2下有哪些接口
+display interface Eth-Trunk 2
+
    """
     print(huawei1_cmd)   
 
