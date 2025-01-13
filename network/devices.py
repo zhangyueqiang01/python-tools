@@ -113,6 +113,11 @@ undo destination-address  mask 255.255.255.255
 # 查看聚合口2下有哪些接口
 display interface Eth-Trunk 2
 
+# 显示聚合接3口的当前配置
+display current-configuration interface Eth-Trunk 3
+
+# 查看聚合3口下有哪些接口和实时信息
+display interface Eth-Trunk 3
    """
     print(huawei1_cmd)   
 
