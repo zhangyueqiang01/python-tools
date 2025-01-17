@@ -211,6 +211,9 @@ display interface 40GE 1/1/13 transceiver verbose
 display device  
 display device board 
 
+# 查看接口收发光
+display interface 10GE 2/0/13 transceiver verbose
+
 #####################
 # pop上查看带宽方法 #
 #####################
