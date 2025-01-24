@@ -313,3 +313,61 @@ Connecting to host 192.168.2.254, port 5201
    """
     print(iperf_cmd) 
 
+def print_ethtool_cmd():
+    print("ethtool usage command:")
+    ethtool_cmd = """
+#############################查询类操作################################
+
+# 查看ethtool指令的版本
+ethtool --version
+
+# 展示网卡设备的标准信息	
+ethtool DEVNAME	
+
+# 查询RX/TX ring parameters
+ethtool -g|--show-ring DEVNAME
+
+# Show driver information
+ethtool -i|--driver DEVNAME	
+# 显示设备的诊断信息
+ethtool -d|--register-dump DEVNAME	
+
+# dump 寄存器信息
+ethtool -d|--register-dump DEVNAME
+
+# dump (Electrically Erasable Programmable Read-Only Memory)网卡电可擦编程只读存储器中的信息
+ethtool -e|--eeprom-dump DEVNAME	Do a EEPROM dump
+
+# 重启网卡的自协商功能
+ethtool -r|--negotiate DEVNAME
+		
+# 让网卡的端口灯进行闪烁
+ethtool -p|--identify DEVNAME
+
+# 显示适配器统计信息
+ethtool -S|--statistics DEVNAME
+
+# 查看网卡MAC地址
+ethtool -P|--show-permaddr DEVNAME
+
+
+##############################修改类操作##################################
+
+# 设置网卡的速率为 1000 Mbps，并启用自动协商
+ethtool -s eth0 speed 1000 duplex full autoneg on
+
+# 禁用网卡的 GSO（Generic Segmentation Offload）
+ethtool -K eth0 gso off
+
+# 设置 RX/TX ring parameters 
+ethtool -G <interface> rx <RX_size> tx <TX_size> [other options]
+	rx：设置接收缓冲区的大小。
+	tx：设置发送缓冲区的大小。
+	rx-mini：设置迷你帧接收缓冲区的大小（如果支持的话）。
+	rx-jumbo：设置巨帧接收缓冲区的大小（如果支持的话）。
+
+# 修改网卡存储器中的信息
+ethtool -E|--change-eeprom DEVNAME	
+   """
+    print(ethtool_cmd) 
+
