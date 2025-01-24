@@ -336,7 +336,7 @@ ethtool -d|--register-dump DEVNAME
 ethtool -d|--register-dump DEVNAME
 
 # dump (Electrically Erasable Programmable Read-Only Memory)网卡电可擦编程只读存储器中的信息
-ethtool -e|--eeprom-dump DEVNAME	Do a EEPROM dump
+ethtool -e|--eeprom-dump DEVNAME
 
 # 重启网卡的自协商功能
 ethtool -r|--negotiate DEVNAME
