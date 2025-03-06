@@ -217,6 +217,9 @@ sudo ip route add 目标网络/子网掩码 dev bond0.3021
  
 #没有route命令时临时删除路由的方法
 sudo ip route del 目标网络/子网掩码
+
+#查看bond0是否生效
+cat /proc/net/bonding/bond0
    """
     print(ip_bond)  
 
