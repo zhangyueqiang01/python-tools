@@ -767,3 +767,41 @@ grep -e "pattern1" -v -e "pattern2" filename
    """
     print(grep_cmd) 
 
+def print_dmesg_cmd():
+    print("dmesg usage command:")
+    dmesg_cmd = """
+##############################dmesg基本操作##################################
+
+
+/bin/dmesg --decode --nopager --color --ctime
+alias dmesg='/bin/dmesg --decode --nopager --color --ctime'
+
+#--decode：解码输出中的二进制数据。
+#--nopager：取消分页显示，所有输出一次性显示。
+#--color：启用彩色输出，便于阅读。
+#--ctime：将时间戳转换为当前时间。
+#这条命令的作用是显示经过解码的内核日志信息，取消分页并使用颜色高亮，同时显示易于理解的时间格式。
+
+
+echo "test_script: msg 1" > /dev/kmsg
+# 将消息 "test_script: msg 1" 写入到 Linux 内核日志（kernel log）中
+
+
+echo "<6>test_script: test msg at KERN_INFO" > /dev/kmsg
+echo "<5>test_script: test msg at KERN_INFO" > /dev/kmsg
+echo "<4>test_script: test msg at KERN_INFO" > /dev/kmsg
+# 将带有优先级信息的日志消息写入到 Linux 内核日志中
+# <6>：这是一个日志优先级标记，表示该日志的严重级别（日志优先级）。数字 6 表示 KERN_INFO 级别的信息，通常用于普通的系统信息，优先级从 0 到 7，数值越小优先级越高。
+
+
+#0	KERN_EMERG	紧急（Emergency），系统不可用，如内核崩溃
+#1	KERN_ALERT	警报（Alert），需要立即处理，如磁盘故障
+#2	KERN_CRIT	严重（Critical），严重错误，如硬件故障
+#3	KERN_ERR	错误（Error），常规错误，如驱动问题
+#4	KERN_WARNING	警告（Warning），可能影响系统运行但未导致错误
+#5	KERN_NOTICE	注意（Notice），需要关注但不是错误
+#6	KERN_INFO	信息（Informational），普通运行信息
+#7	KERN_DEBUG	调试（Debug），用于开发和调试的信息
+   """
+    print(dmesg_cmd) 
+
