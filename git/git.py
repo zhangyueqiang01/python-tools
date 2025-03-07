@@ -775,6 +775,24 @@ zgrep -E "正则表达式" file.gz
 
 # 忽略大小写
 zgrep -i "关键字" file.gz
+
+
+##############################egrep基本操作##################################
+
+# 匹配多个模式（| 表示 OR）
+egrep "apple|banana|cherry" file.txt
+grep -E "apple|banana|cherry" file.txt
+
+# 匹配 ac, abc, abbc, abbbc 等(0 次或多次)
+egrep "ab*c" file.txt
+
+# 匹配 abc, abbc, abbbc，但不匹配 ac(1 次或多次)
+egrep "ab+c" file.txt
+
+# 匹配 color 和 colour(0 次或 1 次)
+egrep "colou?r" file.txt
+
+# egrep 是 grep -E 的别名，但在新版本的 Linux 中 egrep 已被弃用，因此建议使用 grep -E
    """
     print(grep_cmd) 
 
