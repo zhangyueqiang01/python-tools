@@ -764,6 +764,17 @@ grep -P "pattern1|pattern2" filename
 # 查找包含 "pattern1" 但不包含 "pattern2" 的行
 grep -e "pattern1" -v -e "pattern2" filename
 
+
+##############################zgrep基本操作##################################
+
+# zgrep 直接对 .gz 文件执行 grep，无需手动解压
+zgrep "pattern1" file.gz
+
+# 支持正则表达式
+zgrep -E "正则表达式" file.gz
+
+# 忽略大小写
+zgrep -i "关键字" file.gz
    """
     print(grep_cmd) 
 
