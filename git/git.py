@@ -757,6 +757,8 @@ def print_grep_cmd():
 
 # 查找包含 "pattern1" 或 "pattern2" 的行,\| 是正则表达式中表示“或”的符号。
 grep "pattern1\|pattern2" filename
+grep -E "pattern1|pattern2" filename
+
 
 # 更复杂的正则表达式，可以使用 -P 选项启用 Perl 正则表达式，它支持更高级的匹配语法。 
 grep -P "pattern1|pattern2" filename
