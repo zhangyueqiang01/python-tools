@@ -643,6 +643,9 @@ nova --service-type compute-ext instance-action uuid (被级联层)  req_id
 
 # 如果调度到CAN节点，查看nova-compute日志：
 /var/log/fusionsphere/component/nova-compute/*
+
+# 查看专属云主机id对应的物理服务器主机名称
+nova dec-host-list | grep 3fb888b6-7907-483e-bff9-79e94e7773e7（专属云主机ID）
    """
     print(nova_cmd)  
 
