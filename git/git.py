@@ -767,6 +767,17 @@ grep -P "pattern1|pattern2" filename
 grep -e "pattern1" -v -e "pattern2" filename
 
 
+# 常用的选项 rnw
+grep -rnw "U8_MAX" ./*
+
+-r (recursive)
+递归搜索目录中的所有文件，即当前目录及其所有子目录。
+-n (line number)
+显示匹配行的行号，方便定位。
+-w (word match)
+仅匹配完整的单词 UINT8_MAX，避免匹配到 MY_UINT8_MAX 这种情况。
+
+
 ##############################zgrep基本操作##################################
 
 # zgrep 直接对 .gz 文件执行 grep，无需手动解压
