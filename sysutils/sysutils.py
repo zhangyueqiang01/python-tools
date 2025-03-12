@@ -1088,3 +1088,53 @@ losetup -D
    """
     print(losetup_cmd) 
 
+def print_trace_cmd():
+    print("trace usage command:")
+    trace_cmd = """
+##############################常用的网络跟踪指令##################################
+
+
+# tracepath：适合普通用户快速检查路径，能自动探测 MTU，输出简洁。
+# traceroute：更适合网络管理员进行详细排查，可选多种协议（如 ICMP、UDP、TCP），输出更丰富。
+# mtr（My Traceroute）结合了 ping 和 traceroute 的功能，能动态更新丢包率和 RTT
+
+			  
+# The default probes method is udp
+traceroute 39.156.66.10
+
+# Use ICMP ECHO for probes
+sudo traceroute -I 39.156.66.10
+
+# Use TCP SYN for probes
+sudo traceroute -T 39.156.66.10
+
+# Only support UDP probes in Linux
+tracepath 39.156.66.10
+
+# 默认情况下，它会持续发送数据包并更新网络路径信息
+mtr 39.156.66.10
+# 输出字段说明：
+	Loss%：该跳的丢包率
+	Snt：发送的探测包数量
+	Last：最近一次探测的延迟（ms）
+	Avg：平均延迟（ms）
+	Best：最低延迟（ms）
+	Wrst：最高延迟（ms）
+	StDev：延迟的标准偏差（抖动）
+	
+# 只发送 10 组探测包后自动退出（默认是无限运行）
+mtr -c 10 example.com
+
+# 以 traceroute 样式一次性输出完整结果，不动态更新
+mtr -r example.com
+
+# 以 JSON 方式输出
+mtr -j example.com
+
+# 指定协议 icmp(default)、udp、tcp
+mtr example.com
+mtr -u example.com
+mtr -T example.com
+   """
+    print(trace_cmd) 
+
