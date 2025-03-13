@@ -52,6 +52,35 @@ int main() {
     print(printf_cmd)  
 
 
+def print_cmacron_cmd():
+    print("macron usage")
+    macron_cmd = """
+1. 常量定义
+#define PI 3.14159
+#define MAX_BUFFER_SIZE 1024
+
+
+2. 宏函数
+#define SQUARE(x) ((x) * (x))
+SQUARE(3 + 2)  // 这个宏会被替换成 ((3 + 2) * (3 + 2))，所以得到正确的结果 25
+
+
+3. 条件编译
+#define DEBUG 1
+
+#ifdef DEBUG
+    printf("Debugging mode enabled\n");
+#endif
+
+
+4. 取消宏定义
+#define MAX 100
+#undef MAX
+
+   """
+    print(macron_cmd)  
+
+
 def print_git_cmd():
     print("git usage command:")
     git_cmd = """

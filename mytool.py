@@ -159,7 +159,7 @@ def main():
 					   'diskio','netio','cputop10','memtop10','login','gpt','iostat','vmstat','iotop','sar','parted','systemd','mod','dracut','mount','pnet','iperf','ascii','hexdump','lamp','objdump','assembly','dline','ckernel','mysql','nginx','virsh','chntpw','time','yum','nic','newline','regularExp','nfs','kdump','losetup','xxd','dline2','ethtool','grep','dmesg','gcc','trace','c','xxxx'], help="Display usage instance")
 
 
-    parser.add_argument('--item', choices=['var', 'printf'], help="Specify which definition to show ('var' or 'print')")
+    parser.add_argument('--item', choices=['var', 'printf','macron'], help="Specify which definition to show ('var' or 'print')")
 
     parser.add_argument("-i", "--install", action='store', dest="pkg",help="install packages on remote host")
     parser.add_argument("-p", "--ping", action="store", dest='ping', help="ping a net such as ping 8.8.8")
@@ -356,6 +356,8 @@ def main():
        print_trace_cmd()
     elif args.show == 'c' and args.item == 'printf':
        print_cprintf_cmd()
+    elif args.show == 'c' and args.item == 'macron':
+       print_cmacron_cmd()
     elif args.show == 'xxxx':
        print_xxxx_cmd()
 
