@@ -5,6 +5,12 @@
 def print_cprintf_cmd():
     print("printf usage:")
     printf_cmd = """
+
+# 函数原型
+int printf(const char *format, ...);
+
+
+# instance
 #include <stdio.h>
 
 int main() {
