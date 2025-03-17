@@ -1138,3 +1138,39 @@ mtr -T example.com
    """
     print(trace_cmd) 
 
+def print_lvm_cmd():
+    print("lvm usage command:")
+    lvm_cmd = """
+##############################lvm扩容方法##################################
+
+
+# 给新磁盘分区
+fdisk /dev/vdb
+
+# 创建pv物理卷
+pvcreate /dev/vdb1
+
+# 查看新创建的物理卷
+pvdisplay
+
+# 查看VG
+vgdisplay
+
+# 扩展VG
+vgextend cl /dev/vdb1
+
+# 查看VG
+vgdisplay
+
+# 查看LV
+lvs
+
+# 扩展LV
+lvextend -L +19G /dev/cl/root
+
+# 扩容逻辑卷的文件系统
+xfs_growfs /dev/cl/root
+resize2fs /dev/cl/root
+   """
+    print(lvm_cmd) 
+
