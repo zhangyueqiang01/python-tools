@@ -94,3 +94,105 @@ def print_git_cmd():
    """
     print(git_cmd)  
 
+def print_struct_cmd():
+    struct_cmd= """
+
+##############################定义一个结构体类型##################################
+struct Student {
+    char name[50];  // 学生姓名
+    int age;        // 学生年龄
+    float score;    // 学生成绩
+};
+
+int main() {
+    struct Student stu1 = {"张三", 20, 88.5};	// 定义结构体变量
+    printf("姓名: %s\\n", stu1.name);		// 访问结构体成员
+    return 0;
+}
+
+##############################结构体的别名（typedef）##################################
+typedef struct {
+    char name[50];
+    int age;
+    float score;
+} Student;  // 结构体别名
+
+int main() {
+    Student stu1 = {"李四", 22, 90.0};  // 直接使用别名
+    printf("姓名: %s, 年龄: %d, 成绩: %.2f\\n", stu1.name, stu1.age, stu1.score);
+    return 0;
+}
+
+##############################结构体指针##################################
+typedef struct {
+    char name[50];
+    int age;
+} Person;
+
+void printPerson(const Person *p) {  // 使用指针避免拷贝，提高效率
+    printf("姓名: %s, 年龄: %d\\n", p->name, p->age);
+}
+
+int main() {
+    Person p1 = {"王五", 25};
+    printPerson(&p1);  // 传递结构体地址
+    return 0;
+}
+
+
+##############################结构体嵌套##################################
+typedef struct {
+    int year, month, day;
+} Date;
+
+typedef struct {
+    char name[50];
+    Date birthDate;  // 结构体嵌套
+} Student;
+
+int main() {
+    Student stu = {"赵六", {2000, 5, 20}};
+    printf("姓名: %s, 生日: %d-%d-%d\\n", stu.name, stu.birthDate.year, stu.birthDate.month, stu.birthDate.day);
+    return 0;
+}
+
+
+##############################结构体数组##################################
+typedef struct {
+    char name[50];
+    int age;
+} Student;
+
+int main() {
+    Student students[3] = {
+        {"张三", 20},
+        {"李四", 21},
+        {"王五", 22}
+    };
+
+    for (int i = 0; i < 3; i++) {
+        printf("姓名: %s, 年龄: %d\\n", students[i].name, students[i].age);
+    }
+
+    return 0;
+}
+
+##############################结构体在函数中的应用##################################
+typedef struct {
+    char brand[50];
+    float price;
+} Car;
+
+void printCar(Car c) {  // 结构体传参（按值传递）
+    printf("品牌: %s, 价格: %.2f\\n", c.brand, c.price);
+}
+
+int main() {
+    Car car1 = {"Tesla", 350000.0};
+    printCar(car1);
+    return 0;
+}
+
+   """
+    print(struct_cmd) 
+

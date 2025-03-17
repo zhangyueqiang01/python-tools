@@ -267,6 +267,9 @@ sed '/pattern_to_match/d' filename
 
 # Win文本文件转换成Linux文本文件
 sed -i 's/\\r$//' windowsfile.txt
+
+# 将文件中的 "\\" 替换为 "\\\\"
+sed 's/\\\\/\\\\\\\\/g' filename
    """
     print(sed_cmd)  
 
