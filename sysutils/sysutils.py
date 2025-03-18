@@ -1208,6 +1208,7 @@ wget -e use_proxy=yes -e http_proxy=192.168.1.1:8080 https://example.com/file.zi
 wget --user=admin --password=123456 https://example.com/protected-file.zip
 
 # 绕过 HTTPS 证书验证错误
+# 绕过 SSL 证书验证会导致潜在的安全风险，因为它可能使你下载到伪造或被篡改的文件
 wget --no-check-certificate https://self-signed.example.com/file.zip
 
 # 下载脚本，并用 bash 立即执行
