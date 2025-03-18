@@ -1176,3 +1176,58 @@ resize2fs /dev/cl/root
    """
     print(lvm_cmd) 
 
+def print_wget_cmd():
+    print("wget usage command:")
+    wget_cmd = """
+##############################wget指令的使用方法##################################
+
+# 基本用法
+wget https://example.com/file.zip
+
+# 将文件保存为 myfile.zip
+wget -O myfile.zip https://example.com/file.zip
+
+# 后台下载（断开终端仍继续），日志默认写入 wget-log 文件
+wget -b https://example.com/largefile.iso
+
+# 限制下载速度为 500 KB/s
+wget --limit-rate=500k https://example.com/video.mp4
+
+# 如果上次下载中断，使用 -c 继续下载
+wget -c https://example.com/largefile.iso
+
+# 从 urls.txt 读取 URL 并依次下载。
+echo "https://example.com/file1.zip" > urls.txt
+echo "https://example.com/file2.zip" >> urls.txt
+wget -i urls.txt
+
+# 通过代理 192.168.1.1:8080 下载文件
+wget -e use_proxy=yes -e http_proxy=192.168.1.1:8080 https://example.com/file.zip
+
+# 如果需要登录才能下载
+wget --user=admin --password=123456 https://example.com/protected-file.zip
+
+# 绕过 HTTPS 证书验证错误
+wget --no-check-certificate https://self-signed.example.com/file.zip
+
+# 下载脚本，并用 bash 立即执行
+wget -qO script.sh https://example.com/script.sh && bash script.sh
+wget -qO- https://example.com/script.sh | bash		//如果 wget 失败，bash 仍会执行一个空输入，可能导致错误，不推荐管道的方法
+# 解释：
+	-q：安静模式（不输出下载信息）
+	-O-：将文件内容直接输出到标准输出（stdout），而不是保存到磁盘
+	| bash：通过管道 | 把 wget 下载的内容传给 bash 解释器执行
+
+
+##############################下载整个网站（镜像下载）##################################
+
+wget -r -np -N -k -p https://example.com/
+# 参数说明：
+	-r 递归下载
+	-np 不下载上级目录的文件
+	-N 仅下载更新的文件
+	-k 转换 HTML 中的链接，使本地可用
+	-p 下载网页所需的所有资源（图片、CSS 等）
+   """
+    print(wget_cmd) 
+
