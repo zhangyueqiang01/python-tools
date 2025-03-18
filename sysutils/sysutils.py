@@ -1211,6 +1211,12 @@ wget --user=admin --password=123456 https://example.com/protected-file.zip
 # 绕过 SSL 证书验证会导致潜在的安全风险，因为它可能使你下载到伪造或被篡改的文件
 wget --no-check-certificate https://self-signed.example.com/file.zip
 
+# 如果网站使用了有效的 SSL 证书，不需要添加 --no-check-certificate选项
+# 更新证书颁发机构列表即可
+sudo yum install ca-certificates
+sudo dnf install ca-certificates
+sudo apt-get install --reinstall ca-certificates
+
 # 下载脚本，并用 bash 立即执行
 wget -qO script.sh https://example.com/script.sh && bash script.sh
 wget -qO- https://example.com/script.sh | bash		//如果 wget 失败，bash 仍会执行一个空输入，可能导致错误，不推荐管道的方法
