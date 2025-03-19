@@ -820,6 +820,9 @@ Linux 内核日志缓冲区（Kernel Log Buffer）用于存储内核日志消息
 	内核日志缓冲区是 环形缓冲区（ring buffer），当缓冲区满时，新日志会覆盖最旧的日志。
 	用户态程序可以通过 dmesg 或 /proc/kmsg 读取日志。
 
+# 调整日志缓冲区大小
+GRUB_CMDLINE_LINUX="log_buf_len=8M"
+
 /bin/dmesg --decode --nopager --color --ctime
 alias dmesg='/bin/dmesg --decode --nopager --color --ctime'
 
