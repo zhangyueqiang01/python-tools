@@ -360,6 +360,8 @@ def main():
        print_cmacron_cmd()
     elif args.show == 'c' and args.item == 'struct':
        print_struct_cmd()
+    elif args.show == 'c' and args.item == 'var':
+       print_cvar_cmd()
     elif args.show == 'lvm':
        print_lvm_cmd()
     elif args.show == 'kerneldir':

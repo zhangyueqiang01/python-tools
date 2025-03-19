@@ -196,3 +196,47 @@ int main() {
    """
     print(struct_cmd) 
 
+def print_cvar_cmd():
+    var_cmd = """
+#####################################基本数据类型（Primitive Data Types）################################
+C 语言的基本数据类型可以分为以下几类：
+
+整型（Integer Types）：
+	int：	用于表示整数，通常为 4 字节，具体大小取决于平台。
+	short：	表示较小的整数，通常为 2 字节。
+	long：	表示较大的整数，通常为 4 字节，但在 64 位系统上可能为 8 字节。
+	long long：用于表示更大的整数，通常为 8 字节。
+	无符号整型（Unsigned Integer Types）：
+		unsigned int：		无符号整数，通常为 4 字节，取值范围从 0 到 4,294,967,295。
+		unsigned short：	无符号短整数，通常为 2 字节，取值范围从 0 到 65,535。
+		unsigned long：		无符号长整数，通常为 4 字节。
+		unsigned long long：无符号长长整数，通常为 8 字节。
+
+字符型（Character Types）：
+	char：		表示一个字符，通常为 1 字节，取值范围从 -128 到 127（如果是有符号的）。
+	unsigned char：	无符号字符，通常为 1 字节，取值范围从 0 到 255。
+	signed char：	有符号字符，通常为 1 字节，取值范围从 -128 到 127。
+
+浮点型（Floating-point Types）：
+	float：		表示单精度浮点数，通常为 4 字节。
+	double：	表示双精度浮点数，通常为 8 字节。
+	long double：表示扩展精度浮点数，通常为 12 字节或 16 字节，具体取决于平台。
+
+派生数据类型（Derived Data Types）
+	数组（Array）：	由相同类型元素组成的集合。
+	结构体（Struct）：由多个不同类型的数据组成的集合。
+	联合体（Union）	与结构体类似，但所有成员共用同一内存空间。
+	枚举（Enum）：	用于定义一组命名的整型常量。
+
+指针类型（Pointer Types）
+	指针：用于存储变量地址的类型。例如，int* 表示指向 int 类型的指针。
+
+空类型（Void Type）
+	void：表示没有类型，用于函数没有返回值的情况，或者作为指针类型（如 void*）表示指向未知类型的数据。
+
+类型限定符（Type Qualifiers）
+	const：常量类型，表示变量的值不能被修改。
+	volatile：表示变量的值可能会随时发生变化，通常用于硬件寄存器或多线程环境。
+   """
+    print(var_cmd)
+
