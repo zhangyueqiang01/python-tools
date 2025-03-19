@@ -255,6 +255,10 @@ yum install iptables-services
 service  iptables save
 systemctl enable iptables.service
 #其实是将策略写入到了/etc/sysconfig/iptables文件中
+
+
+# 在一些现代的Linux发行版中，可能使用了firewalld、ufw（Uncomplicated Firewall）等防火墙管理工具。但是在这些
+# 系统中底层使用的依旧是iptables，熟悉iptables命令就可以避免学习重复性的知识
    """
     print(iptables_cmd)
 
