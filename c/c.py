@@ -87,13 +87,6 @@ SQUARE(3 + 2)  // 这个宏会被替换成 ((3 + 2) * (3 + 2))，所以得到正
     print(macron_cmd)  
 
 
-def print_git_cmd():
-    print("git usage command:")
-    git_cmd = """
-
-   """
-    print(git_cmd)  
-
 def print_struct_cmd():
     struct_cmd= """
 
