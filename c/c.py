@@ -270,6 +270,14 @@ BSS 段（BSS Segment）：存放未初始化的全局变量和静态变量，�
 数据段（Data Segment）：包括已初始化的全局变量和静态变量。
 代码段（Text Segment）：存放可执行程序的代码，通常是只读的。  
 
+
+
+# 用户空间stack的查看方法
+cat /proc/<pid>/stack
+
+# 内核空间stack的查看方法
+bpftrace 是一个高级 eBPF 工具，可以通过此工具捕获内核栈
+
     """
     print(vas_cmd)
 
