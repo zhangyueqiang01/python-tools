@@ -169,3 +169,74 @@ time command
    """
     print(process_cmd) 
 
+def print_strace_cmd():
+    strace_cmd = """
+strace 是一个强大的调试工具，适用于 Linux 平台的程序
+故障排查和系统调用分析。通过 strace，可以：
+	监视程序执行过程中所有的系统调用
+	发现文件权限、依赖库、网络通信等问题
+	统计系统调用的时间，优化性能
+
+##############################基本用法#####################################
+
+# 跟踪程序的系统调用
+strace ./your_program
+
+# 跟踪已运行进程
+strace -p <PID>
+
+# 记录输出到文件
+strace -o output.txt ./my_program
+
+
+##############################过滤系统调用##################################
+
+# 仅跟踪 open、read、write 相关的系统调用
+strace -e open,read,write ./my_program
+
+# 仅跟踪网络相关系统调用
+strace -e trace=network ./my_program
+strace -e socket,connect,send,recv ./your_program
+
+# 仅跟踪文件相关系统调用
+strace -e trace=file ./my_program
+
+# 仅跟踪进程管理相关的系统调用：
+strace -e fork,execve,exit ./your_program
+
+
+##############################进阶使用######################################
+
+# 统计每个系统调用的执行次数、时间占比等信息
+strace -c ./my_program
+
+# 跟踪 my_program 及其所有子进程
+strace -f ./my_program
+
+# 在每个系统调用前显示时间戳
+strace -t ./my_program
+
+# 显示每个系统调用与前一个调用的时间间隔
+strace -r ./my_program
+
+
+##############################典型应用场景##################################
+
+1. 排查程序崩溃原因
+	strace ./crash_program
+	观察最后几个系统调用，可能会看到 open() 失败、write() 失败或 segfault 相关信息
+2. 分析程序卡顿
+	strace -T -p <PID>
+	观察哪些系统调用花费的时间最多，可能是 read() 或 poll()，可以进一步优化
+3. 检查程序是否正确访问了某个文件：
+	strace -e open,access ./your_program
+	看到 open() 返回 EACCES（权限不足）或 ENOENT（文件不存在）可以帮助修复问题
+4. 监测网络连接
+	strace -e trace=network ./my_program
+	如果程序涉及网络通信，可跟踪 connect、sendto、recvfrom 等调用
+5. 找出进程依赖的文件
+	strace -e open,stat ./your_program
+	这可以帮助排查程序为何找不到某些文件
+   """
+    print(strace_cmd) 
+
