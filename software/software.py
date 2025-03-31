@@ -753,6 +753,9 @@ BJ-AZ01-SRV-CascadingOpenstack-001:/home/fsp # glance image-show fc86f110-c36a-4
 BJ-AZ01-SRV-CascadingOpenstack-001:/home/fsp # glance image-show 417b24ec-6479-49dd-8839-a7620bb19713
 BJ-AZ01-SRV-CascadingOpenstack-001:~ # glance image-show 417b24ec-6479-49dd-8839-a7620bb19713
 
+# 北京2资源池切换私有镜像无法选中问题，可能是私有镜像中有EFI分区，需要给镜像添加uefi标签
+glance image-update --property hw_firmware_type=uefi <image-id>
+glance image-update --remove-property  hw_firmware_type <image-id>	//删除标签
    """
     print(glance_cmd)  
 
