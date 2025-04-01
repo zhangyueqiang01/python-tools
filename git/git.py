@@ -226,6 +226,11 @@ display current-configuration configuration trafficpolicy BJALA-B17577618&B17577
 查看流量策略的具体行为
 display current-configuration configuration behavior BJALA-B17577618&B17577619
 
+
+查看接口配置用
+display current-configuration interface Eth-Trunk 3
+查看接口状态用
+display interface Eth-Trunk 3
    """
     print(dline_cmd) 
 
