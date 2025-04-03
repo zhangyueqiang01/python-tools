@@ -304,8 +304,10 @@ def print_vim_cmd():
         dd  剪切当前光标所在行   	
         ndd 剪切从光标所在行开始的n行
         p   粘贴光标位置之后   
-        G   跳转至尾行
-        g   跳转至首行    
+        G   跳转至文件尾
+        g   跳转至文件首
+	$   跳转至行尾
+	^   跳转至行首
         dw  删至词尾
         ndw 删除后n个词
         d$  删至行尾
@@ -316,7 +318,7 @@ def print_vim_cmd():
 末行模式
         :r /etc/passwd  读文件内容进vim
         :r! ls -l / 读命令结果保存到文件中
-        :set number 行号
+        :set number 显示行号
         :set nonumber   去除行号
         :s/old/new/g    在当前行中查找到的所有字符串old替换为new
         :2,6s/old/new/g 2-6行替换
