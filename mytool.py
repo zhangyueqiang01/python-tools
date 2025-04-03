@@ -32,7 +32,6 @@ from cmd.cmd import *
 from c.c import *
 
 
-
 def ping(host):
     rc = subprocess.call(
         'ping -c2 %s &> /dev/null' % host,
@@ -159,7 +158,7 @@ def main():
 					   'diskio','netio','cputop10','memtop10','login','gpt','iostat','vmstat','iotop','sar','parted','systemd','mod','dracut','mount','pnet','iperf','ascii','hexdump','lamp','objdump','assembly','dline','ckernel','mysql','nginx','virsh','chntpw','time','yum','nic','newline','regularExp','nfs','kdump','losetup','xxd','dline2','ethtool','grep','dmesg','gcc','trace','c','lvm','kerneldir','wget','process','strace','xxxx'], help="Display usage instance")
 
 
-    parser.add_argument('--item', choices=['var', 'printf','macron','struct','vas'], help="Usage: ./mytool.py --show c --item printf")
+    parser.add_argument('--item', choices=['var', 'printf','macron','struct','vas','mem_consume'], help="Usage: ./mytool.py --show c --item printf")
 
     parser.add_argument("-i", "--install", action='store', dest="pkg",help="install packages on remote host")
     parser.add_argument("-p", "--ping", action="store", dest='ping', help="ping a net such as ping 8.8.8")
@@ -364,6 +363,8 @@ def main():
        print_cvar_cmd()
     elif args.show == 'c' and args.item == 'vas':
        print_cvas_cmd()
+    elif args.show == 'c' and args.item == 'mem_consume':
+       print_cmem_consume_cmd()
     elif args.show == 'lvm':
        print_lvm_cmd()
     elif args.show == 'kerneldir':

@@ -281,4 +281,55 @@ bpftrace 是一个高级 eBPF 工具，可以通过此工具捕获内核栈
     """
     print(vas_cmd)
 
+def print_cmem_consume_cmd():
+    mem_cmd = """
+/*
+*以下代码实现可以消耗6GB的内存占用，如果想
+*调整内存的消耗情况调整size_t size的大小即可
+*使用方法：gcc mem.c && ./a.out
+*/
+
+
+#include <stdlib.h>  // 添加必要的头文件
+#include <stdio.h>   // 为了使用printf
+#include <string.h>  // 为了使用memset
+#include <unistd.h>  // 为了使用pause
+
+int main() {
+    size_t size = 6UL * 1024 * 1024 * 1024; // 6GB
+    char *mem = malloc(size);
+    if(mem) {
+        memset(mem, 0, size); // 强制分配物理内存
+        printf("Allocated and touched 6GB memory\n");
+        pause(); // 保持内存占用
+        free(mem); // 释放内存(虽然这里不会执行到)
+    }
+    return 0;
+}
+
+
+/*
+*size_t:
+*	这是C语言中专门用于表示内存大小的无符号整数类型
+*	在64位系统上通常是unsigned long
+*	保证足够大以表示任何对象的大小
+*6UL:
+*	6 是数字6
+*	UL 后缀表示这是一个unsigned long类型的常量
+*	6默认是int类型，使用UL确保计算在足够大的类型中进行，避免溢出
+*1024 * 1024 * 1024:
+*	这是计算GB到字节的转换
+*	1024 字节 = 1 KB
+*	1024 * 1024 = 1 MB (1,048,576 字节)
+*	1024 * 1024 * 1024 = 1 GB (1,073,741,824 字节)
+ */
+
+    """
+    print(mem_cmd)
+
+def print_cxxx_cmd():
+    xxx_cmd = """
+    """
+    print(xxx_cmd)
+
 
