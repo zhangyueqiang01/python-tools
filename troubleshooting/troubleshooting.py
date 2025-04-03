@@ -194,3 +194,55 @@ sudo systemctl enable sysstat
    """
     print(sar_cmd) 
 
+def print_reboot_cmd():
+    reboot_cmd = """
+以下内容为查询Linux重启原因的一般方法
+
+############################## 重启的常见原因 ######################################
+
+1、内核崩溃 (OOM Killer)
+2、硬件问题 (过热、电源故障)
+3、计划内的系统更新
+4、手动重启 (可能是其他用户)
+
+
+############################## 确定Linux系统重启的原因 ######################################
+
+journalctl --list-boots 
+# 列出所有启动记录
+
+journalctl --since "2025-04-01 10:00:00" --until "2025-04-03 15:00:00"
+# 如果知道大概的重启时间，可以查看特定时间段的日志：
+
+journalctl -b -1 
+# 查看上一次启动的完整日志
+
+egrep -i "reboot|shutdown" /var/log/syslog 
+egrep -i "reboot|shutdown" /var/log/messages
+# 查看传统的系统日志
+
+last -x | grep reboot -9 
+last -x | grep shutdown -9
+# 查看最后登录记录
+
+ll /var/crash/
+# 检查是否有内核崩溃转储
+
+uptime
+# 查看开机时间
+
+############################## 查看是否有手动重启的记录 ######################################
+
+# 查看认证日志中的重启记录
+grep -i "shutdown\|reboot\|halt\|poweroff" /var/log/auth.log
+
+# 检查root用户的命令历史
+sudo cat /root/.bash_history | grep -i "reboot\|shutdown"
+
+# 查看是否有定时重启任务
+sudo grep -r "reboot\|shutdown" /etc/cron*
+
+# 如果是手动重启，命令记录中会有明确的reboot、shutdown、init 6等命令   
+   """
+    print(reboot_cmd) 
+
