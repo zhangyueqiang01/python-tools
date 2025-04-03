@@ -1244,3 +1244,39 @@ wget -r -np -N -k -p https://example.com/
    """
     print(wget_cmd) 
 
+def print_chage_cmd():
+    print("chage usage command:")
+    chage_cmd = """
+
+Linux系统中的root密码（以及所有用户密码）可以设置过期时间，这是Linux密码策略的一部分
+
+############################## 密码过期相关设置 ######################################
+
+/etc/login.defs - 包含默认的密码策略设置
+/etc/shadow - 存储实际的密码过期信息
+chage命令 - 用于查看和修改用户密码过期设置
+passwd命令 - 也可以用于设置密码过期
+
+
+############################# 相关指令 ######################################
+
+sudo chage -l root
+# 查看root密码过期状态
+# 或者查看/etc/shadow文件中root用户的条目（第七、八、九字段与过期相关）
+
+sudo chage -M 90 root  
+# 设置密码90天后过期
+
+sudo chage -W 7 root   
+# 密码过期前7天开始警告
+
+sudo passwd -x 90 root  
+# 设置密码90天后过期
+
+sudo chage -M -1 root
+sudo passwd -x -1 root
+# 以上两个命令都可以让root密码永不过期
+# 请注意，保持root密码永不过期可能不符合某些安全策略要求。
+   """
+    print(chage_cmd) 
+
