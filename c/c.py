@@ -336,6 +336,42 @@ stress --cpu 2 --timeout 60  # 运行 2 个 CPU 负载线程，持续 60 秒
     """
     print(cpu_cmd)
 
+def print_cfork_cmd():
+    fork_cmd = """
+/*
+*fork() 是 Linux 进程创建的核心机制，它的作用是创建一个新的子进程，该子进程是父进程的副本。
+*fork() 的执行过程
+*	fork() 由 调用进程（父进程） 执行。
+*	内核为新进程分配 唯一的进程 ID（PID）。
+*	子进程继承父进程的用户态数据（变量、堆、栈等），但两者是 独立的地址空间。
+*	父进程与子进程继续执行，相同的代码逻辑，但 fork() 返回值不同：
+*		父进程：fork() 返回子进程的 PID。
+*		子进程：fork() 返回 0。
+*/
+
+
+##################################### fork() instance ################################
+
+
+#include <stdio.h>
+#include <unistd.h>
+
+int main() {
+    pid_t pid = fork(); // 创建子进程
+
+    if (pid > 0) {
+        printf("父进程: PID = %d, 子进程 PID = %d\n", getpid(), pid);
+    } else if (pid == 0) {
+        printf("子进程: PID = %d, 父进程 PID = %d\n", getpid(), getppid());
+    } else {
+        perror("fork failed");
+    }
+
+    return 0;
+}
+    """
+    print(fork_cmd)
+
 def print_cxxx_cmd():
     xxx_cmd = """
     """
