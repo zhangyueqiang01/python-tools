@@ -360,9 +360,9 @@ int main() {
     pid_t pid = fork(); // 创建子进程
 
     if (pid > 0) {
-        printf("父进程: PID = %d, 子进程 PID = %d\n", getpid(), pid);
+        printf("父进程: PID = %d, 子进程 PID = %d\\n", getpid(), pid);
     } else if (pid == 0) {
-        printf("子进程: PID = %d, 父进程 PID = %d\n", getpid(), getppid());
+        printf("子进程: PID = %d, 父进程 PID = %d\\n", getpid(), getppid());
     } else {
         perror("fork failed");
     }
