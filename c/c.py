@@ -370,6 +370,25 @@ int main() {
     return 0;
 }
 
+##################################### 头文件和库文件 ################################
+
+unistd.h	是一个 头文件，提供了 Unix 系统 API 的 声明（如 fork()、read()、write()等），主要用于编译阶段(一般位于/usr/include/unistd.h)。
+libc.so.6	是一个 共享库文件（动态链接库），也就是 GNU C Library (glibc) 的主要部分，里面包含了这些 API 的 具体实现，主要用于程序运行时（链接和执行阶段）。
+			一般位于/lib64/libc.so.6
+
+编译阶段：
+	编译器看到 #include <unistd.h>，找到对应头文件，知道 fork() 是一个合法的函数，返回 pid_t，不报错。
+	此时只是用到了函数的“声明”。
+链接阶段：
+	编译器生成的目标文件会标记 fork() 是一个外部符号。
+	链接器（ld）会从 libc.so.6 或 libc.a 中找到 fork 的实现，链接进你的可执行文件中。
+运行阶段：
+	你的程序真正执行 fork() 函数的机器码，是从 libc.so.6 中加载进内存的。
+	
+一句话总结：	
+	unistd.h 负责 告诉编译器 fork() 的“长相”；libc.so.6 负责 提供运行时 fork() 的“真身”。
+
+
 ##################################### fork() 详细过程 ################################
 
 
@@ -387,7 +406,6 @@ glibc		glibc/sysdeps/unix/sysv/linux/fork.c	用户态 fork() 调用 syscall(SYS_
 Linux 内核	kernel/fork.c				SYSCALL_DEFINE0(fork) 进入 _do_fork() 处理进程复制
 Linux 内核	kernel/fork.c				copy_process() 复制进程结构
 Linux 内核	kernel/sched/core.c			wake_up_new_task() 让新进程加入调度
-
     """
     print(fork_cmd)
 
