@@ -42,22 +42,6 @@ def print_kernel_compose():
     print(kernel_compose)  
 
 
-def print_gcc_cmd():
-    print("gcc usage command:")
-    gcc_cmd = """
-
-##############################gcc基本操作##################################
-
-
-# Linux 系统中 gcc 源码目录
-/usr/lib/gcc/x86_64-redhat-linux/8/include/stddef.h
-
-
-# 使用 gcc -dumpmachine 查看目标架构
-gcc -dumpmachine
-   """
-    print(gcc_cmd) 
-
 def print_kerneldir_cmd():
     print("kernel directory info:")
     kerneldir_cmd = """

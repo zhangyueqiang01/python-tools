@@ -60,3 +60,71 @@ GNU项目开发了一整套自由软件工具，这些工具构成了类Unix操�
    """
     print(gnu_cmd) 
 
+def print_gcc_cmd():
+    print("gcc usage command:")
+    gcc_cmd = """
+gcc 是 GNU 编译器套件（GNU Compiler Collection）中用于编译 C 程序的命令行工具。
+官网： https://gcc.gnu.org/mirrors.html
+获取 GCC 的源代码：
+	wget https://ftp.gnu.org/gnu/gcc/gcc-13.2.0/gcc-13.2.0.tar.gz
+	tar -xvzf gcc-13.2.0.tar.gz
+	或者：
+	yum install gcc
+	yum install gcc-devel
+	yum install gcc-source  # 如果有此包
+
+源码内容简介：
+	gcc/：核心编译器代码
+	libgcc/：运行时支持库
+	include/：内部头文件
+	config/：不同平台的配置文件
+	cp/、c/：不同语言前端（比如 C++）
+
+############################## gcc基本操作 ##################################
+
+# 查看gcc编译时使用的内部文件
+gcc -print-search-dirs
+gcc -v
+
+
+# 常用选项
+	选项	含义
+	-o file	指定输出文件名
+	-c		只编译为目标文件（.o 文件），不链接
+	-Wall	打开所有常见的警告
+	-Werror	将所有警告当作错误处理
+	-g		生成调试信息
+	-O2		开启优化等级 2
+	-I<dir>	添加头文件搜索路径
+	-L<dir>	添加库文件搜索路径
+	-l<lib>	链接名为 lib<lib>.so 或 lib<lib>.a 的库
+
+############################## 示例用法 ##################################
+
+gcc source.c -o output	# 基本用法
+gcc -c hello.c   		# 生成 hello.o
+gcc main.c util.c -o app	#链接多个源文件
+gcc -g test.c -o test		#开启调试信息（用于 gdb 调试）
+gcc -O2 main.c -o main		#开启优化（适合发布版本）
+
+动态库（.so）的生成步骤：
+	1. 编写源文件，例如 add.c
+	2. gcc -fPIC -c add.c	# 使用 -fPIC 生成位置无关代码（必须）
+	3. gcc -shared -o libmymath.so add.o	# 使用 -shared 生成动态库
+	4. gcc main.c -L. -lmymath -o main		# 使用动态库编译其他程序
+	5. export LD_LIBRARY_PATH=.:$LD_LIBRARY_PATH && ./main	# 运行时指定动态库路径（否则可能找不到）
+
+
+静态库（.a）的生成步骤
+1. 编写源文件，例如 add.c
+2. gcc -c add.c  	# 生成 add.o 目标文件
+3. ar rcs libmymath.a add.o		# 使用 ar 工具生成静态库
+	r：插入文件；
+	c：创建库；
+	s：创建符号索引。
+4. gcc main.c -L. -lmymath -o main		# 使用静态库编译其他程序
+	-L.：表示当前目录；
+	-lmymath：链接名为 libmymath.a 的库（省略前缀 lib 和扩展名 .a）；
+   """
+    print(gcc_cmd) 
+
