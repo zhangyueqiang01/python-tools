@@ -369,6 +369,25 @@ int main() {
 
     return 0;
 }
+
+##################################### fork() 详细过程 ################################
+
+
+fork（）—> glibc（libc.so.6）—>syscall(SYS_fork)—>_do_fork(）—>copy_process()—>wake_up_new_task() 
+
+
+在用户态，fork() 是由 GNU C Library（glibc） 提供的封装，它最终调用 syscall(SYS_fork) 进入内核。
+1. fork() 由 sys_fork() 触发，最终调用 _do_fork()。
+2. _do_fork() 调用 copy_process() 复制父进程。
+3. copy_process() 复制 PCB、文件描述符、内存空间（COW）。
+4. wake_up_new_task() 将新进程加入调度器，等待调度执行。
+
+层级		代码文件				作用
+glibc		glibc/sysdeps/unix/sysv/linux/fork.c	用户态 fork() 调用 syscall(SYS_fork)
+Linux 内核	kernel/fork.c				SYSCALL_DEFINE0(fork) 进入 _do_fork() 处理进程复制
+Linux 内核	kernel/fork.c				copy_process() 复制进程结构
+Linux 内核	kernel/sched/core.c			wake_up_new_task() 让新进程加入调度
+
     """
     print(fork_cmd)
 
