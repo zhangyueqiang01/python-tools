@@ -344,9 +344,8 @@ def print_vim_cmd():
     print(vim_cmd)   
 
 def print_bash_cmd():
-    print("bash usage command:")
     bash_cmd = """
-控制台的快捷键
+############################## 控制台的快捷键 ######################################
 	Tab健补全
 	Ctrl + Insert 组合键或用鼠标选中 复制
 	Shift + Insert 组合键或单击鼠标滚轮  粘贴
@@ -365,9 +364,38 @@ def print_bash_cmd():
 查看系统默认的shell
 	 echo    $SHELL
 
+############################## 内部命令 VS 外部命令 ######################################
+
 查看是内部命令还是外部命令
 	type  cd
 	type  yum
+
+如果 pwd 是 Bash 内建命令：
+	直接在 Shell 进程中调用 getcwd() 系统调用获取当前目录路径，并打印结果，不创建新进程。
+
+如果 pwd 是外部命令，Shell 需要创建一个新进程来执行：	
+	调用 fork()：	
+		Bash 使用 fork() 系统调用创建一个子进程，这个子进程是 Shell 的副本。	
+	调用 execve()：	
+		在子进程中，Bash 使用 execve() 执行 /bin/pwd 可执行文件，替换子进程的内容为 pwd 的程序代码。	
+	进程调度：	
+		Linux 内核调度 pwd 进程运行，打印当前工作目录。	
+	进程结束：	
+		pwd 运行完毕后，调用 exit() 退出，Shell 通过 wait() 回收子进程。
+
+bash -c 'pwd'  		# 使用 Shell 内建命令，不会创建子进程
+bash -c '/bin/pwd'  # 创建子进程执行 /bin/pwd
+
+strace -e execve bash -c 'pwd'
+# 只会看到 execve("/usr/bin/bash", ["bash", "-c", "pwd"], ...)
+
+strace -e execve bash -c '/bin/pwd' 
+# 会看到额外的 execve("/bin/pwd", ...)
+
+
+# 总结
+Bash 内建 pwd：	直接在 Shell 进程中执行，不创建子进程。
+外部 pwd（如 /bin/pwd）：	Shell 先 fork() 生成子进程，再 execve() 执行 /bin/pwd，最终 exit() 退出。
    """
     print(bash_cmd)
 
