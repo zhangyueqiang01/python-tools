@@ -464,6 +464,24 @@ install:
 	make -C /lib/modules/$(shell uname -r)/build/ M=$(PWD) modules_install
 clean:
 	make -C /lib/modules/$(shell uname -r)/build/ M=$(PWD) clean
+
+
+/*
+ * if you want to print all process info , update this code to the current.c
+ ****************************************************************************
+ */
+ 
+#include <linux/sched/signal.h>  // 提供 for_each_process 和相关进程遍历宏
+ 
+static int __init current_usage(void)
+
+{
+	struct task_struct *task;
+	for_each_process(task) {
+		printk(KERN_INFO "Process: %s (PID: %d)\\n", task->comm, task->pid);
+	}
+	return 0;		/* success */
+}
     """
     print(current_cmd)
 
