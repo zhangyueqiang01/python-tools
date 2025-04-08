@@ -409,6 +409,64 @@ Linux 内核	kernel/sched/core.c			wake_up_new_task() 让新进程加入调度
     """
     print(fork_cmd)
 
+def print_ccurrent_cmd():
+    current_cmd = """
+/*
+ * save this code as current.c in work directory
+ ***************************************************************
+ */
+#include <linux/init.h>
+#include <linux/module.h>
+#include <linux/kernel.h>
+#include <linux/sched.h>	/* current() */
+#include <linux/cred.h>		/* current_{e}{u,g}id() */
+
+
+MODULE_AUTHOR("Michael");
+MODULE_DESCRIPTION("macron current usage");
+MODULE_LICENSE("Dual MIT/GPL");
+MODULE_VERSION("0.1");
+
+static int __init current_usage(void)
+{
+	struct task_struct *current_task = current;
+	printk(KERN_INFO "Current process: %s (pid: %d)\\n", current_task->comm, current_task->pid);
+	printk(KERN_INFO "Current process prio: %d\\n", current_task->prio);
+	printk(KERN_INFO "Current process on_cpu: %d\\n", current_task->on_cpu);
+	return 0;		/* success */
+}
+
+static void __exit current_usage_exit(void)
+{
+	printk(KERN_INFO "Goodbye, macron current \\n");
+}
+
+module_init(current_usage);
+module_exit(current_usage_exit);
+
+
+
+
+/*
+ * save this code as Makefile in work directory
+ * run make && insmod currunt.ko && dmesg
+ ***************************************************************
+ */
+
+# Simplest kernel module Makefile
+
+PWD   := $(shell pwd)
+obj-m += current.o
+
+all:
+	make -C /lib/modules/$(shell uname -r)/build/ M=$(PWD) modules
+install:
+	make -C /lib/modules/$(shell uname -r)/build/ M=$(PWD) modules_install
+clean:
+	make -C /lib/modules/$(shell uname -r)/build/ M=$(PWD) clean
+    """
+    print(current_cmd)
+
 def print_cxxx_cmd():
     xxx_cmd = """
     """
