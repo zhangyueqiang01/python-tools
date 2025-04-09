@@ -1213,6 +1213,10 @@ growpart /dev/vda 1
 # 然后再判断文件系统的类型通过xfs_growfs或resize2fs进行扩容
 lsblk
 df -Th /dev/vda1
+
+################################  注意 ########################################
+如果Linux内核版本低于3.6.0，做完 growpart /dev/vda 1 操作后需要重启操作系统再调整文件系统的大小（resize2fs、xfs_growfs操作）
+
    """
     print(lvm_cmd) 
 
