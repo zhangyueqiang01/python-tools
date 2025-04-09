@@ -1207,6 +1207,12 @@ lvextend -L +19G /dev/cl/root
 # 扩容逻辑卷的文件系统
 xfs_growfs /dev/cl/root
 resize2fs /dev/cl/root
+
+# 如果不是逻辑卷，磁盘扩容的空间和根分区的空间并且是连续可以通过以下命令扩充根分区
+growpart /dev/vda 1
+# 然后再判断文件系统的类型通过xfs_growfs或resize2fs进行扩容
+lsblk
+df -Th /dev/vda1
    """
     print(lvm_cmd) 
 
