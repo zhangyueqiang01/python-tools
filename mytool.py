@@ -30,6 +30,7 @@ from troubleshooting.troubleshooting import *
 from git.git import *
 from cmd.cmd import *
 from c.c import *
+from assembly.assembly import *
 from gnu.gnu import *
 from hardware.hardware import *
 
@@ -161,6 +162,7 @@ def main():
 
 
     parser.add_argument('--item', choices=['var', 'printf','macron','struct','vas','mem_consume','cpu_consume','fork','current'], help="Usage: ./mytool.py --show c --item printf")
+    parser.add_argument('--option', choices=['basic' ], help="Usage: ./mytool.py --show assembly --option basic")
 
     parser.add_argument("-i", "--install", action='store', dest="pkg",help="install packages on remote host")
     parser.add_argument("-p", "--ping", action="store", dest='ping', help="ping a net such as ping 8.8.8")
@@ -311,8 +313,6 @@ def main():
        print_lamp_cmd()
     elif args.show == 'objdump':
        print_objdump_cmd()
-    elif args.show == 'assembly':
-       print_assembly_cmd()
     elif args.show == 'dline':
        print_dline_cmd()
     elif args.show == 'ckernel':
@@ -373,8 +373,12 @@ def main():
        print_cfork_cmd()
     elif args.show == 'c' and args.item == 'current':
        print_ccurrent_cmd()
+    elif args.show == 'assembly' and args.option == 'basic':
+       print_abasic_cmd()
     elif args.show == 'lvm':
        print_lvm_cmd()
+    elif args.show == 'assembly':
+       print_assembly_cmd()
     elif args.show == 'kerneldir':
        print_kerneldir_cmd()
     elif args.show == 'wget':
