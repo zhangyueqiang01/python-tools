@@ -158,11 +158,11 @@ def main():
                                            'h3c','dp','huawei1','huawei2','zte','osp','ceph','docker','iptables','tcpdump','route',\
                                             'ip','nmcli','bond','kvm','kcompose','git','vim','bash','find','linuxbasic','dd','awk',\
 					   'sed','ubuntu','echo','grub','initramfs','zip','pam','nova','cinder','neutron','glance',\
-					   'diskio','netio','cputop10','memtop10','login','gpt','iostat','vmstat','iotop','sar','parted','systemd','mod','dracut','mount','pnet','iperf','ascii','hexdump','lamp','objdump','assembly','dline','ckernel','mysql','nginx','virsh','chntpw','time','yum','nic','newline','regularExp','nfs','kdump','losetup','xxd','dline2','ethtool','grep','dmesg','gcc','trace','c','lvm','kerneldir','wget','process','strace','chage','reboot','gnu','cpu_register','xxxx'], help="Display usage instance")
+					   'diskio','netio','cputop10','memtop10','login','gpt','iostat','vmstat','iotop','sar','parted','systemd','mod','dracut','mount','pnet','iperf','ascii','hexdump','lamp','objdump','dline','ckernel','mysql','nginx','virsh','chntpw','time','yum','nic','newline','regularExp','nfs','kdump','losetup','xxd','dline2','ethtool','grep','dmesg','gcc','trace','c','lvm','kerneldir','wget','process','strace','chage','reboot','gnu','cpu_register','assembly','xxxx'], help="Display usage instance")
 
 
     parser.add_argument('--item', choices=['var', 'printf','macron','struct','vas','mem_consume','cpu_consume','fork','current'], help="Usage: ./mytool.py --show c --item printf")
-    parser.add_argument('--option', choices=['basic' ], help="Usage: ./mytool.py --show assembly --option basic")
+    parser.add_argument('--option', choices=['basic','cmd' ], help="Usage: ./mytool.py --show assembly --option basic")
 
     parser.add_argument("-i", "--install", action='store', dest="pkg",help="install packages on remote host")
     parser.add_argument("-p", "--ping", action="store", dest='ping', help="ping a net such as ping 8.8.8")
@@ -375,10 +375,10 @@ def main():
        print_ccurrent_cmd()
     elif args.show == 'assembly' and args.option == 'basic':
        print_abasic_cmd()
+    elif args.show == 'assembly' and args.option == 'cmd':
+       print_assembly_cmd()
     elif args.show == 'lvm':
        print_lvm_cmd()
-    elif args.show == 'assembly':
-       print_assembly_cmd()
     elif args.show == 'kerneldir':
        print_kerneldir_cmd()
     elif args.show == 'wget':
