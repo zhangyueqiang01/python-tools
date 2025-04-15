@@ -112,7 +112,88 @@ def print_assembly_cmd():
     print(assembly_cmd) 
 
 
+def print_instance_add_cmd():
+    add_cmd = """
+下面是一个用 x86 汇编语言（64位，适用于如 nasm 汇编器 + Linux 系统环境）编写的简单程序
+它计算 1 + 2 并将结果以 字符 形式打印到屏幕上。
+########################################### instance ################################
 
+section .data
+    msg     db  "Result: ", 0          ; 输出前缀字符串
+    len     equ $ - msg
+    newline db 10                      ; 换行符 \n
+
+section .bss
+    result  resb 3                     ; 至少 2 字节用于两位数 + 1字节终止符
+
+section .text
+    global _start
+
+_start:
+    ; --------------------------------
+    ; 计算 1 + 2 -> rax = 3
+    ; --------------------------------
+    mov     rax, 1
+    add     rax, 2                     ; rax = 3
+
+    ; --------------------------------
+    ; 转换为 ASCII 字符（只支持个位数）
+    ; --------------------------------
+    add     al, '0'                    ; AL + '0' => ASCII 字符
+    mov     [result], al              ; 存入 result[0]
+    
+    ; --------------------------------
+    ; 打印前缀 "Result: "
+    ; --------------------------------
+    mov     rax, 1                     ; syscall number for write
+    mov     rdi, 1                     ; stdout (fd = 1)
+    mov     rsi, msg                   ; message address
+    mov     rdx, len                   ; length of message
+    syscall
+
+    ; --------------------------------
+    ; 打印结果字符
+    ; --------------------------------
+    mov     rax, 1
+    mov     rdi, 1
+    mov     rsi, result
+    mov     rdx, 1                     ; 只打印一个字符
+    syscall
+
+    ; --------------------------------
+    ; 打印换行符
+    ; --------------------------------
+    mov     rax, 1
+    mov     rdi, 1
+    mov     rsi, newline
+    mov     rdx, 1
+    syscall
+
+    ; --------------------------------
+    ; 正常退出
+    ; --------------------------------
+    mov     rax, 60                    ; syscall number for exit
+    xor     rdi, rdi                   ; return 0
+    syscall
+
+########################################### 编译与运行 ################################
+nasm -f elf64 add64.asm -o add64.o
+ld -o add64 add64.o
+./add64
+
+
+########################################### 代码解读 ################################
+    """
+    print(add_cmd)
+
+
+def print_instance_helloworld_cmd():
+    helloworld_cmd = """
+
+witing for submit
+########################################### 代码解读 ################################
+    """
+    print(helloworld_cmd)
 
 
 

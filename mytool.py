@@ -162,7 +162,7 @@ def main():
 
 
     parser.add_argument('--item', choices=['var', 'printf','macron','struct','vas','mem_consume','cpu_consume','fork','current'], help="Usage: ./mytool.py --show c --item printf")
-    parser.add_argument('--option', choices=['basic','cmd' ], help="Usage: ./mytool.py --show assembly --option basic")
+    parser.add_argument('--option', choices=['basic','cmd','instance_helloworld','instance_add' ], help="Usage: ./mytool.py --show assembly --option basic")
 
     parser.add_argument("-i", "--install", action='store', dest="pkg",help="install packages on remote host")
     parser.add_argument("-p", "--ping", action="store", dest='ping', help="ping a net such as ping 8.8.8")
@@ -377,6 +377,10 @@ def main():
        print_abasic_cmd()
     elif args.show == 'assembly' and args.option == 'cmd':
        print_assembly_cmd()
+    elif args.show == 'assembly' and args.option == 'instance_add':
+       print_instance_add_cmd()
+    elif args.show == 'assembly' and args.option == 'instance_helloworld':
+       print_instance_helloworld_cmd()
     elif args.show == 'lvm':
        print_lvm_cmd()
     elif args.show == 'kerneldir':
