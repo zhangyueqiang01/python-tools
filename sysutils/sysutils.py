@@ -265,7 +265,52 @@ systemctl enable iptables.service
 def print_tcpdump_cmd():
     print("tcpdump usage command:")
     tcpdump_cmd = """
+############################## 常见选项 ######################################
+
+-i 指定从哪个接口抓包
+-w 将抓包信息保存到文件中
+-r 从抓取的包中读取抓包内容
+-n 不转换主机名，看到的是 IP ，而不是主机名 
+-nn 不转换主机名和协议名
+-c 指定抓包的数量
+-e 打印二层信息，查看vlan，vxlan等常用
+-p 忽略端口的混杂模式，如果端口是混杂模式，只抓取端口ip的报文，别的报文不抓取
+-vv 展示抓包详情
+-vvv 展示更详细的抓包内容
+
+############################## instance ######################################
+
+
+# 抓取 virbr1 接口上所有 udp 80 的报文直接打印到屏幕
+tcpdump -i virbr1 udp port 80 
+
+# 抓取所有接口
 tcpdump -i any
+
+# 抓取指定接口
+tcpdump -i virbr1
+
+# tcp 和 udp 80端口
+tcpdump -i virbr1 port 80 
+
+tcpdump -i virbr1 tcp port 80 
+tcpdump -i virbr1 udp port 80 
+
+# 抓取 virbr1 接口上所有 tcp 80 的报文并另存到 /tmp/ 目录下
+tcpdump -i virbr1 tcp port 80 -w /tmp/http.cap
+
+# 抓取主机上所有与 8.8.8.8 通信的报文
+tcpdump -i any host 8.8.8.8 
+
+# 不进行ip地址到主机名的转换
+tcpdump  -i any host 8.8.8.8  -n
+
+############################## caution ######################################
+
+# 如果抓包发现没有ping的应答报文，可检查此文件，“1”代表忽略所有 ICMP 回显请求，“0代表”不忽略
+cat /proc/sys/net/ipv4/icmp_echo_ignore_all
+
+# 如果云主机网络异常的话的话，还可以查看控制台网卡的原目的功能是否开启，可以关闭进行测试
    """
     print(tcpdump_cmd)  
 
