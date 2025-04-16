@@ -225,37 +225,72 @@ cat /proc/net/bonding/bond0
 
 
 def print_iptables_cmd():
-    print("iptables usage command:")
+    print("iptables command usage:")
     iptables_cmd = """
+############################## basic command ######################################
 
-#查看所有 iptables 策略
+# 查看所有 iptables 策略
 iptables -L
 
-#拒绝所有 ICMP 协议数据包
+# 显示详细信息（如命中次数、字节数等）。
+Iptables -L -v
+
+# 拒绝所有 ICMP 协议数据包
 iptables -I INPUT -p icmp -j REJECT
 
-#只允许管理员从 202.13.0.0/16 网段使用 SSH 远程登录
+# 拒绝所有 ICMP 协议数据包等同与,但是上一条指令不是直接修改的以下这个文件
+echo 1 > /proc/sys/net/ipv4/icmp_echo_ignore_all
+
+# 只允许管理员从 202.13.0.0/16 网段使用 SSH 远程登录
 iptables -A INPUT -p tcp --dport 22 -s 202.13.0.0/16 -j ACCEPT
 iptables -A INPUT -p tcp --dport 22 -j DROP
 
-#删除 INPUT 中的第二条策略
+# 删除 INPUT 中的第二条策略
 iptables -D INPUT 2           
 
-#删除所有策略，慎用
+# 删除所有策略，慎用
 iptables -F                 
 
-#备份iptabes rules
-iptables-save > ./iptables.bak  
+# 备份iptabes rules（一次性备份所有表（filter、nat、mangle、raw、security））
+iptables-save > /root/iptables_backup_$(date +%F).rules
 
-#恢复iptables rules
+# 恢复iptables rules
 iptables-restore < ./iptables.bak 
 
-#保存iptables
+# 保存iptables
 yum install iptables-services
 service  iptables save
 systemctl enable iptables.service
-#其实是将策略写入到了/etc/sysconfig/iptables文件中
+# 其实是将策略写入到了/etc/sysconfig/iptables文件中
 
+ 
+############################## NAT表相关指令 ######################################
+
+# 配置所有发往 192.168.2.4 的icmp流量，都转发给 192.168.2.5。
+iptables -t nat -A PREROUTING -d 192.168.2.4 -p icmp -j DNAT --to-destination 192.168.2.5
+
+# 配置让192.168.2.5收到icmp发给原始的192.168.2.4，然后192.168.2.4再回给客户端
+iptables -t nat -A POSTROUTING -d 192.168.2.5 -p icmp -j SNAT --to-source 192.168.2.4
+
+# 内核必须开启 IP 转发
+echo 1 > /proc/sys/net/ipv4/ip_forward
+echo "net.ipv4.ip_forward = 1" >> /etc/sysctl.conf
+sysctl -p
+
+# 查看NAT 表中的所有规则
+iptables -t nat -L -n -v
+	-t nat：指定查看 NAT 表（默认是 filter 表）。
+	-L：列出规则。
+	-n：不解析域名和端口，加快显示速度。
+	-v：显示详细信息（如命中次数、字节数等）。
+
+# 清空 NAT 表中的所有规则
+iptables -t nat -F
+
+# nat 表的规则保存与恢复依旧通过iptables-save iptables-restore即可，无单独指令
+
+
+############################## cuation ######################################
 
 # 在一些现代的Linux发行版中，可能使用了firewalld、ufw（Uncomplicated Firewall）等防火墙管理工具。但是在这些
 # 系统中底层使用的依旧是iptables，熟悉iptables命令就可以避免学习重复性的知识
