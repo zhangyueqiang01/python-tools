@@ -216,7 +216,7 @@ ICMP（Internet Control Message Protocol，互联网控制消息协议）是TCP/
 
 ############################## Type（类型） — 8位 ######################################
 
-类型值 	| 含义
+类型值 	        | 含义
 0 		| 回显应答（Echo Reply）
 3 		| 目标不可达（Destination Unreachable）
 8 		| 回显请求（Echo Request）
