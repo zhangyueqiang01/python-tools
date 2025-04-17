@@ -166,14 +166,14 @@ def print_ipv4_header():
 长度：8 位（即 1 字节）
 作用：指明该 IP 包载荷部分使用的是哪种传输层或网络层协议
 
-协议名称	 Protocol值	 描述
-ICMP	 	1		 Internet Control Message Protocol（控制信息）
-TCP	 	6		 Transmission Control Protocol（面向连接）
-UDP	 	17		 User Datagram Protocol（无连接）
-GRE	 	47		 通用路由封装（用于VPN等）
-ESP	 	50		 Encapsulating Security Payload（IPSec）
-AH	 	51		 Authentication Header（IPSec）
-OSPF	 	89		 Open Shortest Path First（动态路由协议）
+协议名称    Protocol值	 描述
+ICMP	 	1	 Internet Control Message Protocol（控制信息）
+TCP	 	6	 Transmission Control Protocol（面向连接）
+UDP	 	17	 User Datagram Protocol（无连接）
+GRE	 	47	 通用路由封装（用于VPN等）
+ESP	 	50	 Encapsulating Security Payload（IPSec）
+AH	 	51	 Authentication Header（IPSec）
+OSPF	 	89	 Open Shortest Path First（动态路由协议）
 
 
 ############################## IPv4 报头字段详解 ######################################
