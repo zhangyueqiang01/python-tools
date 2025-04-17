@@ -140,6 +140,9 @@ def print_ipv4_header():
     print("https://datatracker.ietf.org/doc/html/rfc791")
     print("ipv4 Header Format:")
     ipv4_header_format = """
+
+############################## header ######################################
+
     0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -155,6 +158,41 @@ def print_ipv4_header():
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |                    Options                    |    Padding    |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+########################### 常见 Protocol 字段的值及含义 ##################################
+
+位置：IPv4 报头的第 9 个字节（第 9 个字段）
+长度：8 位（即 1 字节）
+作用：指明该 IP 包载荷部分使用的是哪种传输层或网络层协议
+
+协议名称	 Protocol值	 描述
+ICMP	 	1		 Internet Control Message Protocol（控制信息）
+TCP	 	6		 Transmission Control Protocol（面向连接）
+UDP	 	17		 User Datagram Protocol（无连接）
+GRE	 	47		 通用路由封装（用于VPN等）
+ESP	 	50		 Encapsulating Security Payload（IPSec）
+AH	 	51		 Authentication Header（IPSec）
+OSPF	 	89		 Open Shortest Path First（动态路由协议）
+
+
+############################## IPv4 报头字段详解 ######################################
+
+字段名					长度		含义
+1. Version（版本）			4位		指定 IP 协议的版本，IPv4 的值为 4
+2. IHL（Internet Header Length）	4位		报头长度，单位为 4 字节（最小值 5，即 20 字节）
+3. Type of Service（服务类型）		8位		指定服务质量要求，现代中一般为 DSCP + ECN
+4. Total Length（总长度）		16位		整个 IP 包的总长度（包括报头 + 数据），单位字节
+5. Identification（标识）		16位		标识数据包，用于数据包分片与重组
+6. Flags（标志）			3位		控制分片行为：如是否允许分片（DF）、是否是最后一片（MF）
+7. Fragment Offset（片偏移）		13位		指明该分片在原始数据包中的偏移位置，单位为 8 字节
+8. Time to Live（生存时间，TTL）	8位		限制数据包在网络中能经过的最大路由跳数，防止死循环
+9. Protocol（协议）			8位		指明上层协议，如 TCP（6）、UDP（17）、ICMP（1）
+10. Header Checksum（头部校验和）	16位		用于校验 IP 头部是否有错误
+11. Source IP Address（源 IP）		32位		发送端的 IPv4 地址
+12. Destination IP Address（目的 IP）	32位		接收端的 IPv4 地址
+13. Options（可选字段）			可变		可选控制信息，不常用，如时间戳、路由记录等
+14. Padding（填充）			可变		为保证报头是 4 字节对齐的，进行填充（通常为 0）   
    """
     print(ipv4_header_format)
 
