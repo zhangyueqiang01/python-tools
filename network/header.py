@@ -199,18 +199,70 @@ OSPF	 	89		 Open Shortest Path First（动态路由协议）
 def print_icmp_header():
     print("https://datatracker.ietf.org/doc/html/rfc792")
     print("ICMP Header Format:")
-    ipv4_header_format = """
-	0                   1                   2                   3
-    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |     Type      |     Code      |          Checksum             |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                             unused                            |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |      Internet Header + 64 bits of Original Data Datagram      |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    icmp_header_format = """
+
+ICMP（Internet Control Message Protocol，互联网控制消息协议）是TCP/IP协议
+族中用于传递控制消息的协议，常用于诊断网络连接、报告错误等。
+
+############################## header ######################################
+
+0                   1                   2                   3
+0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|     Type      |     Code      |          Checksum             |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|           Identifier          |        Sequence Number        | （仅部分类型有）
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+############################## Type（类型） — 8位 ######################################
+
+类型值 	| 含义
+0 		| 回显应答（Echo Reply）
+3 		| 目标不可达（Destination Unreachable）
+8 		| 回显请求（Echo Request）
+11 		| 超时（Time Exceeded）
+
+############################## Code（代码） — 8位 ######################################
+Code     | 意义
+0 	 | 网络不可达
+1 	 | 主机不可达
+3 	 | 端口不可达
+
+############################## Identifier ######################################
+
+Identifier（标识符） 是 ICMP 报头中的一个 16 位字段，主要出现在 ICMP Echo Request（回显请求）
+和 Echo Reply（回显应答）类型的消息中，也就是我们用 ping 命令时常见的那类。
+
+它的作用是：
+	用来唯一标识一组 ICMP 请求-应答配对，帮助发送端将收到的应答与对应的请求一一对应起来。
+
+Identifier 的应用场景（以 ping 为例）
+比如你用 ping www.example.com，其实系统会这样处理：
+	生成一个 Identifier（例如 PID：进程号）
+	发送多个 ICMP Echo Request 报文，每个报文用相同的 Identifier，不同的 Sequence Number（序列号）
+	当目标主机响应 ICMP Echo Reply 报文时，也会带着相同的 Identifier
+	接收端用 Identifier 和 Sequence Number 匹配出哪个请求被应答了
+	
+在很多系统里，ping 命令会将当前进程的 PID（Process ID）作为 Identifier
+这样即使多个用户在同时 ping，不同进程的 Identifier 也不一样，不会混淆
+
+配合 Sequence Number 使用
+	字段		作用
+	Identifier	区分不同的 ping 实例
+	Sequence Num	区分同一 ping 实例中第几次请求
+
+############################## other ######################################
+
+Checksum（校验和） — 16位
+对整个ICMP报文（包括数据部分）做校验，用于保证数据完整性。如果计算结果不一致，说明数据在传输中被破坏。
+
+Sequence Number（序列号） — 16位（可选，Echo类型使用）
+同样用于匹配请求和应答，也能用于统计丢包率和延迟。
+
+Data（数据部分） — 可变长度
+可以携带任意数据，ping命令中通常包含一些填充数据，发送端发送什么内容，接收端原样返回。
    """
-    print(ipv4_header_format)
+    print(icmp_header_format)
 
 def print_http_header():
     print("rfc url")
