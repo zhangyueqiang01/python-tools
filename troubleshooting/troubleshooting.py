@@ -246,3 +246,46 @@ sudo grep -r "reboot\|shutdown" /etc/cron*
    """
     print(reboot_cmd) 
 
+def print_boot_fail_cmd():
+    boot_fail_cmd = """
+############################## emergency mode ######################################
+
+在 Linux 系统中，开机进入 emergency mode（紧急模式） 表示系统启动过程中发生了严重错误，导致无法正
+常进入多用户或图形界面模式，只能进入一个非常基本的修复环境。这种模式下，系统只挂载了最基本的文件系统，
+并启动了最少的服务，提供一个 root shell 用于排查和修复问题。
+
+通常可以看到如下提示：
+Welcome to emergency mode! After logging in, type "journalctl -xb" to view system logs, 
+"systemctl reboot" to reboot, "systemctl default" to try again to boot into default mode.
+
+常见导致进入 emergency mode 的原因：
+	/etc/fstab 配置错误
+		比如挂载了不存在的分区或格式不正确。
+	磁盘或分区损坏
+		系统启动时无法挂载某些必要的文件系统。
+	内核参数错误
+		比如 grub 配置了错误的 root 分区。
+	权限或 SELinux 问题
+		某些关键目录权限不对，或者 SELinux 策略阻止正常启动。
+	系统文件缺失或损坏
+		比如 /bin/bash 或 /lib 目录损坏。
+
+典型的排查步骤：
+	查看错误日志：
+		journalctl -xb
+	检查 /etc/fstab 是否有错误挂载项：
+		cat /etc/fstab
+	尝试挂载文件系统看是否报错：
+		mount -a
+	使用 fsck 修复分区错误：
+		fsck /dev/sdX
+	修复后重启系统：
+		reboot
+
+		
+############################## grub error ######################################
+
+./mytool --show  grub
+   """
+    print(boot_fail_cmd) 
+
