@@ -346,6 +346,15 @@ tcpdump  -i any host 8.8.8.8  -n
 cat /proc/sys/net/ipv4/icmp_echo_ignore_all
 
 # 如果云主机网络异常的话的话，还可以查看控制台网卡的原目的功能是否开启，可以关闭进行测试
+
+# VXLAN 流量是封装过的，tcpdump 只会看到 外层的 UDP 包，如果你想分析 内部的以太网
+帧、IP、ARP 等，建议用 Wireshark 打开 .pcap 文件，它能解析 VXLAN 封装。
+
+tcpdump -i <interface> udp port 4789 -vv -n -s 0 -w vxlan.pcap
+	-s 0：抓取完整报文（否则默认只抓一部分）
+	udp port 4789：VXLAN 使用的 UDP 端口，抓的就是它
+	
+部分 Linux 系统上的 tcpdump（可能支持 VXLAN 协议解码
    """
     print(tcpdump_cmd)  
 

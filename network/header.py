@@ -128,9 +128,18 @@ def print_vxlan_header():
 
 ############################## caution ######################################
 
-vxlan报文使用的udp端口号：
+# vxlan报文使用的udp端口号：
         源端口（Source Port）：一般由操作系统动态分配（可以用作负载均衡的哈希输入）。
         目的端口（Destination Port）：4789，这是 IANA 正式分配给 VXLAN 的端口号。
+
+# VXLAN 流量是封装过的，tcpdump 只会看到 外层的 UDP 包，如果你想分析 内部的以太网
+帧、IP、ARP 等，建议用 Wireshark 打开 .pcap 文件，它能解析 VXLAN 封装。
+
+tcpdump -i <interface> udp port 4789 -vv -n -s 0 -w vxlan.pcap
+	-s 0：抓取完整报文（否则默认只抓一部分）
+	udp port 4789：VXLAN 使用的 UDP 端口，抓的就是它
+	
+部分 Linux 系统上的 tcpdump（可能支持 VXLAN 协议解码
 """
     print(vxlan_header_format)
     
