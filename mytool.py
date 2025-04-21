@@ -158,7 +158,7 @@ def main():
                                            'h3c','dp','huawei1','huawei2','zte','osp','ceph','docker','iptables','tcpdump','route',\
                                             'ip','nmcli','bond','kvm','kcompose','git','vim','bash','find','linuxbasic','dd','awk',\
 					   'sed','ubuntu','echo','grub','initramfs','zip','pam','nova','cinder','neutron','glance',\
-					   'diskio','netio','cputop10','memtop10','login','gpt','iostat','vmstat','iotop','sar','parted','systemd','mod','dracut','mount','pnet','iperf','ascii','hexdump','lamp','objdump','dline','ckernel','mysql','nginx','virsh','chntpw','time','yum','nic','newline','regularExp','nfs','kdump','losetup','xxd','dline2','ethtool','grep','dmesg','gcc','trace','c','lvm','kerneldir','wget','process','strace','chage','reboot','gnu','cpu_register','assembly','boot_fail','xxxx'], help="Display usage instance")
+					   'diskio','netio','cputop10','memtop10','login','gpt','iostat','vmstat','iotop','sar','parted','systemd','mod','dracut','mount','pnet','iperf','ascii','hexdump','lamp','objdump','dline','ckernel','mysql','nginx','virsh','chntpw','time','yum','nic','newline','regularExp','nfs','kdump','losetup','xxd','dline2','ethtool','grep','dmesg','gcc','trace','c','lvm','kerneldir','wget','process','strace','chage','reboot','gnu','cpu_register','assembly','boot_fail','cpu_cache','xxxx'], help="Display usage instance")
 
 
     parser.add_argument('--item', choices=['var', 'printf','macron','struct','vas','mem_consume','cpu_consume','fork','current'], help="Usage: ./mytool.py --show c --item printf")
@@ -401,6 +401,8 @@ def main():
        print_cpu_register_cmd()
     elif args.show == 'boot_fail':
        print_boot_fail_cmd()
+    elif args.show == 'cpu_cache':
+       print_cpu_cache_cmd()
     elif args.show == 'xxxx':
        print_xxxx_cmd()
 
