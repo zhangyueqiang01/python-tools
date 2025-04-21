@@ -235,11 +235,11 @@ section .data
 hello_msg db "Hello, world!", 0xA
 	db 表示定义一个字节序列。
 	"Hello, world!" 是我们要打印的字符串。
-	0xA 是 ASCII 的换行符（即 \n），打印完后换行更美观。
+	0xA 是 ASCII 的换行符（即 \\n），打印完后换行更美观。
 hello_len equ $ - hello_msg
 	equ 是“等于”的意思，用来定义一个常量。
 	$ 表示当前位置的地址，减去 hello_msg 就得到了字符串的字节长度。
-	相当于 strlen("Hello, world!\n")
+	相当于 strlen("Hello, world!\\n")
 
 section .text
 	这是 代码段，也就是程序的主逻辑。
@@ -274,7 +274,7 @@ nasm -f elf64 hello64.asm
 hexdump -C hello64.o          # 看原始字节
 objdump -d hello64.o          # 反汇编，看程序长啥样
 readelf -S hello64.o          # 查看 ELF 文件的段信息
-readelf -h hello64.o		  # 查看 ELF 文件的header	
+readelf -h hello64.o	      # 查看 ELF 文件的header	
     """
     print(helloworld_cmd)
 
