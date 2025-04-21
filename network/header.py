@@ -92,13 +92,13 @@ def print_vxlan_header():
  |                |             |  Header  |-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+|          |   
  |                |     Header  |-+-+-|-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-|    S     |   
  |      Header    |-+-+-+-+-+-+-+-+-+-|-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-|          |   
- +-+-+|+-+-+-+-+-+-+-+-+-+-+-+|+-+-+-+|+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ +-+-+-+-+|+-+-+-+-+-+-+-+-+-+|+-+-+-+|+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
           |                           |   
-    48|Dst MAC Addr                 16|UDP Src Port
-    48|Src MAC Addr                 16|UDP Dst port(VXLAN Port)
-    16|VLAN Type                    16|UDP Length
-    16|VLAN ID Tag                  16|Checksum
-    16|Ethernet Type                  |   
+        48|Dst MAC Addr             16|UDP Src Port
+        48|Src MAC Addr             16|UDP Dst port(VXLAN Port)
+        16|VLAN Type                16|UDP Length
+        16|VLAN ID Tag              16|Checksum
+        16|Ethernet Type              |   
           |                           v    
           v                        8 Bytes
       14 Bytes
