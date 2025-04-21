@@ -189,14 +189,100 @@ ld -o add64 add64.o
 
 def print_instance_helloworld_cmd():
     helloworld_cmd = """
+以下是适用于 Linux x86-64 架构 的 64 位汇编语言版本的 Hello, world! 程
+序，使用 NASM 语法，并使用 syscall 指令调用内核服务
 
-witing for submit
-########################################### 代码解读 ################################
+################################### 源码 ################################
+
+# 将以下内容保存为hello64.asm
+
+section .data
+    hello_msg db "Hello, world!", 0xA    ; 字符串 + 换行符
+    hello_len equ $ - hello_msg          ; 字符串长度
+
+section .text
+    global _start
+
+_start:
+    ; write(int fd, const void *buf, size_t count)
+    ; 调用 write 系统调用：向标准输出（屏幕）输出字符串
+    ; 告诉cpu请把我内存里这个字符串（通过1号系统调用，地址在 rsi，长度在 rdx）打印到标准输出（fd = 1）上去。
+    mov rax, 1              ; syscall number for write (1)
+    mov rdi, 1              ; file descriptor: stdout
+    mov rsi, hello_msg      ; 将字符串的地址写入rsi寄存器
+    mov rdx, hello_len      ; 将字符串的长度写入rdx寄存器
+    syscall                 ; 调用内核服务
+
+    ; exit(int status)
+    ; 调用 exit 系统调用：程序退出
+    ; 告诉cpu通过60系统调用，退出码在rdi结束程序的运行
+    mov rax, 60             ; syscall number for exit (60)
+    xor rdi, rdi            ; status = 0，把 rdi 设为 0，表示退出码为 0（正常退出）
+    syscall                 ; 调用内核服务
+
+
+############################## 编译与运行命令 ################################
+
+nasm -f elf64 hello64.asm         # 编译成 ELF64 对象文件（汇编器：.asm -> .o）
+ld -o hello64 hello64.o           # 链接成可执行文件（链接器：.o -> 可执行程序）
+./hello64                         # 运行程序
+
+
+############################## 代码解读 ################################
+
+section .data
+	这是数据段
+hello_msg db "Hello, world!", 0xA
+	db 表示定义一个字节序列。
+	"Hello, world!" 是我们要打印的字符串。
+	0xA 是 ASCII 的换行符（即 \n），打印完后换行更美观。
+hello_len equ $ - hello_msg
+	equ 是“等于”的意思，用来定义一个常量。
+	$ 表示当前位置的地址，减去 hello_msg 就得到了字符串的字节长度。
+	相当于 strlen("Hello, world!\n")
+
+section .text
+	这是 代码段，也就是程序的主逻辑。
+global _start
+	声明 _start 是全局符号，链接器会从这里开始执行程序。
+	注意：这是 Linux 系统程序的默认入口（不像 C 程序从 main 开始）。
+
+syscall：
+	告诉CPU我要从用户态切入到内核态，请帮我执行编号为 rax 的系统调用！
+
+############################## 命令解读 ################################
+
+nasm： 
+	表示调用 NASM（Netwide Assembler），这是一个流行的汇编语言编译器
+-f elf64：
+	-f 是 format（格式） 的缩写，告诉 NASM 你要生成哪种格式的目标文件（object file）。
+	elf64 表示生成 ELF 64-bit 格式的目标文件。
+hello64.o：
+	生成的目标文件名称
+.o 是目标文件（Object File）
+	它是编译后的中间产物，里面包含了机器码，但还不是完整程序。
+	它还没把“程序入口地址”确定好，也可能引用了外部符号（比如库函数），需要链接器解决。
+	格式仍然是 ELF（Executable and Linkable Format），但状态是“未链接”。
+链接器 ld 把 .o 文件转成最终可以执行的程序
+	链接器的主要工作：
+		把所有代码段、数据段、符号地址“拼”成一个整体。
+		设置程序入口点（比如 _start）。
+		添加 ELF 头、程序头（program headers）等，告诉操作系统怎么加载它。
+
+		
+nasm -f elf64 hello64.asm
+hexdump -C hello64.o          # 看原始字节
+objdump -d hello64.o          # 反汇编，看程序长啥样
+readelf -S hello64.o          # 查看 ELF 文件的段信息
+readelf -h hello64.o		  # 查看 ELF 文件的header	
     """
     print(helloworld_cmd)
 
 
-
+def print_axxx_cmd():
+    xxx_cmd = """
+    """
+    print(xxx_cmd)
 
 def print_axxx_cmd():
     xxx_cmd = """
