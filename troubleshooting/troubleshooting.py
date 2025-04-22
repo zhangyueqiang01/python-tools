@@ -326,3 +326,110 @@ core 文件的默认生成路径：通常在当前目录，也可能由 /proc/sy
    """
     print(core_dump_cmd) 
 
+def print_gdb_cmd():
+    gdb_cmd = """
+
+############################## 概念（conception） #########################################
+
+gdb（GNU Debugger）是一个强大的调试工具，主要用于调试 C/C++ 等语言编写的程序。
+
+
+############################## 准备工作 ###################################################
+
+1. 编译程序时添加调试信息
+	在使用 gdb 调试前，需要在编译程序时加入 -g 选项：
+		gcc -g test.c -o test
+
+2. 启动 gdb
+	gdb ./test
+
+############################## gdb 常用命令分类整理 #########################################
+
+（1）运行控制命令
+	命令 		| 作用
+	run 或 r 	| 运行程序
+	start 		| 从 main() 函数开始运行
+	continue 或 c 	| 继续执行（如遇断点会停下）
+	next 或 n 	| 单步执行（不进入函数）
+	step 或 s 	| 单步执行（进入函数）
+	finish 		| 执行完当前函数并返回调用处
+	until 		| 运行直到当前循环结束或下一行
+	kill 		| 停止正在运行的程序
+	quit 或 q 	| 退出 gdb
+
+（2）断点操作命令
+	命令 			   | 作用
+	break 行号 或 b 行号 	   | 在某行设置断点（如：b 25）
+	break 函数名 		   | 在函数入口设置断点
+	info breakpoints 或 i b    | 查看当前所有断点
+	delete 			   | 删除所有断点
+	delete 编号 		   | 删除指定编号断点
+	disable 编号 / enable 编号 | 禁用/启用某个断点
+	clear 行号 		   | 清除指定行的断点
+
+（3）查看变量与表达式
+	命令 			 | 作用
+	print 变量名 或 p 变量名 | 查看变量的值（如：p x）
+	display 表达式 		 | 每次中断自动显示表达式的值
+	undisplay 		 | 取消自动显示
+	set var 变量=值 	 | 修改变量的值（如：set var x=10）
+	info locals 		 | 查看当前函数中的局部变量
+	info args 		 | 查看当前函数的参数
+
+（4）栈和函数调用
+	命令 		| 作用
+	backtrace 或 bt | 查看函数调用栈
+	frame 编号 	| 切换到指定帧（函数调用层）
+	info frame 	| 查看当前帧信息
+	up / down 	| 在调用栈中向上/向下移动
+
+（5）查看源代码
+	命令 		| 作用
+	list 或 l 	| 查看当前代码（默认显示10行）
+	list 行号 	| 查看指定行附近的代码
+	list 函数名 	| 查看某函数的源代码
+
+（6）调试核心转储文件
+	gdb ./test core
+		可用于分析程序崩溃原因。
+		core 文件可通过 ulimit -c unlimited 启用生成。
+		
+		
+############################## 调试小技巧 #############################################
+
+1、使用 tab 自动补全命令。
+2、可使用 set pagination off 禁止翻页，避免查看信息被暂停。
+3、用 info registers 查看寄存器值（用于底层调试）。
+
+############################## instance #############################################
+
+// test.c
+#include <stdio.h>
+
+int add(int a, int b) {
+    return a + b;
+}
+
+int main() {
+    int x = 3, y = 4;
+    int result = add(x, y);
+    printf("Result = %d\\n", result);
+    return 0;
+}
+
+
+# 调试流程如下：
+gcc -g test.c -o test
+gdb ./test
+(gdb) break main
+(gdb) run
+(gdb) next
+(gdb) print x
+(gdb) break add
+(gdb) continue
+(gdb) step
+(gdb) print a
+(gdb) quit
+   """
+    print(gdb_cmd) 
+
