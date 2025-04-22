@@ -62,6 +62,80 @@ virsh undefine ct7_node09
    """
     print(kvm_cmd)  
 
+def print_src2bin_cmd():
+    src2bin_cmd = """
+############################## Assembly Language ######################################
+
+源码：
+	./mytool.py --show assembly --option instance_helloworld
+
+流程：
+	编写汇编代码 → 汇编 → 生成目标文件 → 链接 → 生成可执行文件
+	example.asm --(汇编器:nasm/gas)--> example.o --(链接器:ld/gcc)--> example(可执行文件)
+
+汇编（Assembling）：
+	汇编器将每条汇编指令翻译成对应的机器指令（二进制格式）
+	但还没有把整个程序和所需库链接到一起，因此它不能单独运行
+	nasm -f elf64 example.asm -o example.o
+	
+链接（Linking）：
+	使用 链接器（linker） 把目标文件与所需的运行时库、系统调用接口等“拼接”成一个完整的可执行文件。
+	ld example.o -o example
+		链接器处理符号（如函数、变量名）的地址重定位
+		把多个目标文件（如果有）合并
+		加入标准库或系统调用接口
+		最终生成可执行文件（ELF 格式）
+
+		
+############################## C Language ######################################
+
+源码：
+	./mytool.py --show c --item printf
+
+流程：
+	hello.c
+	  │
+	  ▼（预处理 gcc -E）
+	hello.i
+	  │
+	  ▼（编译 gcc -S）
+	hello.s
+	  │
+	  ▼（汇编 gcc -c）
+	hello.o
+	  │
+	  ▼（链接 gcc）
+	hello（可执行文件）
+
+预处理（Preprocessing）：
+	源文件 .c 会被先交给 预处理器（cpp），处理以 # 开头的指令，比如 #include、#define 等。
+	gcc -E hello.c -o hello.i
+
+编译（Compiling）：
+	把预处理后的 C 代码翻译成 汇编语言代码。
+	gcc -S hello.i -o hello.s
+	得到的 hello.s 是对应的汇编语言源码文件。你可以用文本编辑器查看它。
+	
+汇编（Assembling）：
+	把汇编代码翻译成 机器码（目标文件），还不能运行。
+	gcc -c hello.s -o hello.o
+	生成 .o 文件（目标文件），它是二进制格式，包含了函数、变量等符号信息，但还没和库链接。
+	
+链接（Linking）：
+	使用链接器将目标文件与 C 标准库（如 printf 属于 libc）链接，生成可执行文件。
+	gcc hello.o -o hello
+	或者一步完成前面所有步骤（GCC 会自动处理）：
+	gcc hello.c -o hello
+
+supplement:
+         阶段 	| 文件后缀 	| 工具 		| 说明
+         预处理	| .i 		| cpp / gcc -E 	| 展开宏和头文件
+         编译 	| .s 		| gcc -S 	| 转换为汇编代码
+         汇编 	| .o 		| as / gcc -c 	| 转换为目标文件（机器码）
+         链接 	| 无扩展名 	| ld / gcc 	| 与库链接生成可执行文件
+   """
+    print(src2bin_cmd) 
+
 
 def print_python27_cmd():
     print("python27 usage command:")
