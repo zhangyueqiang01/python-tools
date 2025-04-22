@@ -133,6 +133,11 @@ supplement:
          编译 	| .s 		| gcc -S 	| 转换为汇编代码
          汇编 	| .o 		| as / gcc -c 	| 转换为目标文件（机器码）
          链接 	| 无扩展名 	| ld / gcc 	| 与库链接生成可执行文件
+
+	通常不能直接用 nasm 把 hello.s 转换成 .o 文件
+		GCC 默认生成的是 GNU 汇编器 (GAS) 所用的 AT&T 语法，比如操作数顺序是 movl $1, %eax
+		而 nasm 使用的是 Intel 汇编语法，比如 mov eax, 1
+		所以，GCC 生成的 .s 文件不能直接被 NASM 识别
    """
     print(src2bin_cmd) 
 
