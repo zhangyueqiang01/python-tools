@@ -289,3 +289,40 @@ Welcome to emergency mode! After logging in, type "journalctl -xb" to view syste
    """
     print(boot_fail_cmd) 
 
+def print_core_dump_cmd():
+    core_dump_cmd = """
+
+############################## 概念（conception） ##########################################
+
+“Core dump”（核心转储，也叫core文件）是操作系统在程序崩溃（通常是段错误 segmentation fault）时，保存程序在崩溃瞬间内存内
+容的一种方式。它会把程序当时的内存、寄存器、调用栈等信息写入一个文件，通常叫 core 或 core.<pid>。
+
+这个文件的主要用途是 调试，开发者可以通过调试器（比如 gdb）查看程序在崩溃时的状态，找到 bug 的根源。
+
+############################## instance ###################################################
+
+#include <stdio.h>
+
+int main() {
+	int *p = NULL;
+	*p = 10;  // 访问了空指针
+
+        return 0;
+}
+
+# 这时候程序就会崩溃，并生成 core 文件。你可以用 gdb 来分析它：
+
+############################## caution #####################################################
+
+core 文件的默认生成路径：通常在当前目录，也可能由 /proc/sys/kernel/core_pattern 控制。
+是否允许生成 core dump：
+	有时候系统或用户限制了 core 文件的生成，比如：
+		ulimit -c 0  # 表示不生成 core 文件
+	改成：
+		ulimit -c unlimited
+	永久生效：
+		修改 /etc/security/limits.conf
+程序崩溃常见信号：如 SIGSEGV, SIGABRT，收到这些信号时可能会生成 core 文件。
+   """
+    print(core_dump_cmd) 
+
