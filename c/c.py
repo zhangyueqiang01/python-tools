@@ -330,9 +330,84 @@ int main() {
 def print_ccpu_consume_cmd():
     cpu_cmd = """
 
+############################## 指令实现方法 #################################
+
 # 如果你只是想测试 CPU 负载，可以直接用 stress 命令：
 sudo yum install -y epel-release && sudo yum install -y stress  # 安装 stress
 stress --cpu 2 --timeout 60  # 运行 2 个 CPU 负载线程，持续 60 秒
+
+# 这条指令创建的是两个进程，如果想实现一个进程下多个线程分别打满各个cpu核心，可编译以下代码
+
+############################## source code #################################
+
+下面是一个用 C 编写的示例程序，创建两个线程，并将它们分别绑定到两个不同的 CPU 核心上（假设
+系统至少有两个核心）。这两个线程会执行一个“打满 CPU”的计算密集型任务（如死循环计算），将使用
+	pthread 创建线程
+	sched_setaffinity 绑定 CPU
+	一个死循环任务打满 CPU
+	
+#define _GNU_SOURCE
+#include <stdio.h>
+#include <stdlib.h>
+#include <pthread.h>
+#include <sched.h>
+#include <unistd.h>
+
+// 线程运行函数：死循环计算以打满CPU
+void *burn_cpu(void *arg) {
+    int cpu_id = *(int *)arg;
+    cpu_set_t cpuset;
+
+    CPU_ZERO(&cpuset);
+    CPU_SET(cpu_id, &cpuset);
+
+    pthread_t thread = pthread_self();
+
+    // 设置线程CPU亲和性
+    if (pthread_setaffinity_np(thread, sizeof(cpu_set_t), &cpuset) != 0) {
+        perror("pthread_setaffinity_np");
+        pthread_exit(NULL);
+    }
+
+    printf("Thread running on CPU %d\\n", cpu_id);
+
+    volatile unsigned long long i = 0;
+    while (1) {
+        i++;  // 死循环计算
+    }
+
+    return NULL;
+}
+
+int main() {
+    pthread_t threads[2];
+    int cpu_ids[2] = {0, 1};  // 分别指定第0核和第1核
+
+    for (int i = 0; i < 2; ++i) {
+        if (pthread_create(&threads[i], NULL, burn_cpu, &cpu_ids[i]) != 0) {
+            perror("pthread_create");
+            exit(1);
+        }
+        sleep(1); // 确保线程创建时传参不会冲突
+    }
+
+    // 主线程等待子线程（实际上不会返回）
+    for (int i = 0; i < 2; ++i) {
+        pthread_join(threads[i], NULL);
+    }
+
+    return 0;
+}
+
+
+
+############################## caution #################################
+
+编译方式
+	gcc -pthread -o burn burn.c
+	如果是较旧版本的 GCC
+		gcc -std=gnu99 -pthread -o burn burn.c
+
     """
     print(cpu_cmd)
 
