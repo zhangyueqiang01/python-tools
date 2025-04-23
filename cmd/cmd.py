@@ -257,10 +257,14 @@ KiB Swap: 10481660 total, 10481660 free,        0 used. 31328904 avail Mem
 load average：1分钟、5分钟、15分钟的平均负载
 Tasks：任务总数（正在运行、睡眠、僵尸等）
 %Cpu(s)：CPU 各种使用情况
-	us：用户空间占用
-	sy：内核空间占用
-	id：空闲
-	wa：等待I/O
+   us：用户态占用 CPU 的百分比（不含 nice 优先级进程）
+   sy：内核态（系统）占用 CPU 的百分比
+   ni：用户进程中调整过 nice 值的进程占用的 CPU 百分比
+   id：空闲 CPU 百分比
+   wa：等待 I/O（磁盘、网络）占用的 CPU 百分比
+   hi：硬中断占用 CPU 百分比
+   si：软中断占用 CPU 百分比
+   st：虚拟机偷取的 CPU 百分比（如你是虚拟机中运行）
 Mem：物理内存使用情况
 Swap：交换分区使用情况
 
