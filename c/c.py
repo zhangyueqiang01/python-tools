@@ -333,6 +333,7 @@ def print_ccpu_consume_cmd():
 ############################## 指令实现方法 #################################
 
 # 如果你只是想测试 CPU 负载，可以直接用 stress 命令：
+
 sudo yum install -y epel-release && sudo yum install -y stress  # 安装 stress
 stress --cpu 2 --timeout 60  # 运行 2 个 CPU 负载线程，持续 60 秒
 
