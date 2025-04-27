@@ -188,6 +188,21 @@ syscall 是在x86_64（64位）架构引入的新的、更高效的系统调用�
 	include/linux/syscalls.h 			| 声明系统调用函数（原型）
 	kernel/sys.c（或其他子模块） 			| 系统调用函数的具体实现
 
+常见系统调用函数的具体实现位置:
+	系统调用 		| 主要源码文件 			 | 简单说明
+	read, write, open, close| fs/read_write.c, fs/open.c 	 | 文件操作相关
+	stat, fstat, lstat 	| fs/stat.c 			 | 获取文件状态
+	mmap, munmap, mprotect  | mm/mmap.c, mm/mprotect.c 	 | 内存管理
+	fork, vfork, clone 	| kernel/fork.c 		 | 进程创建
+	execve 			| fs/exec.c 			 | 执行程序
+	exit, _exit 		| kernel/exit.c 		 | 退出进程
+	wait4, waitid 		| kernel/exit.c 		 | 等待子进程
+	kill, tkill 		| kernel/signal.c 		 | 发送信号
+	getpid, getppid, getuid | kernel/sys.c 			 | 获取基本进程信息
+	brk 			| mm/mmap.c（早期在 mm/memory.c）| 调整堆空间
+	uname 			| kernel/sys.c 			 | 获取系统信息
+	ioctl 			| fs/ioctl.c 			 | 设备控制接口
+	select, poll, epoll 	| fs/select.c, fs/eventpoll.c    | I/O多路复用
 
 ###################### 添加一个新的系统调用到Linux内核 #############################
 
