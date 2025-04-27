@@ -141,3 +141,163 @@ arch/ 目录是 Linux 内核源码中最重要的部分之一，负责适配不�
    """
     print(kerneldir_cmd) 
 
+def print_syscall_cmd():
+    syscall_cmd = """
+
+############################## syscall #########################################
+
+在 Linux 中，系统调用（System Call） 是用户空间程序和内核空间之间交互的主要方式。
+简单来说：
+	用户写的程序通常运行在用户态（User Mode），权限受限，不能直接操作硬件或者访问敏感资源。
+	**内核态（Kernel Mode）**则拥有最高权限，能够直接操作硬件、内存、文件系统、网络等。
+	系统调用就是用户程序请求内核帮它做事的一种机制，比如读文件、写网络、分配内存等。
+
+
+例子：
+	printf()-----> C 库中的printf() ------> C库中的wirite()------> wirte()系统调用
+	应用程序 ————————————————————————> C库 —————————————————————————————> 内核
+
+这个 printf 其实最终会通过一次系统调用，让内核来完成将字符打印到屏幕上的工作。
+整个过程大致是：
+	用户程序准备好参数。
+	触发一个特殊的指令（比如 int 0x80、syscall 等）切换到内核态。
+	内核根据系统调用号找到对应的内核函数。
+	执行完后，把结果返回给用户程序。
+
+
+########################## int 0x80、syscall ####################################
+
+int 是 interrupt（中断） 的缩写。
+int 0x80 是在早期32位x86架构Linux系统中，用来触发系统调用的一个指令。
+int 0x80 会产生一次软中断，让CPU跳到内核的中断向量表中的第 0x80（也就是128号）条目，去执行与之对应的系统调用处理逻辑。
+
+
+syscall 是在x86_64（64位）架构引入的新的、更高效的系统调用指令。
+相比 int 0x80，syscall 切换内核态的过程更快、开销更小，因为它是专门为系统调用优化设计的，减少了不必要的中断处理步骤。
+
+
+###################### 常见的系统调用和与之对应的系统调用号 ##########################
+
+在操作系统中查看：
+	cat /usr/include/asm/unistd_64.h
+	
+内核中相关的文件：
+	文件路径 					| 作用
+	arch/x86/entry/syscalls/syscall_64.tbl 		| 定义系统调用号及对应实现（64位）
+	arch/x86/include/generated/uapi/asm/unistd_64.h | 编译后生成的系统调用号头文件
+	include/linux/syscalls.h 			| 声明系统调用函数（原型）
+	kernel/sys.c（或其他子模块） 			| 系统调用函数的具体实现
+
+
+###################### 添加一个新的系统调用到Linux内核 #############################
+
+流程：
+	第一步：写系统调用实现函数
+	第二步：注册系统调用号
+	第三步：声明系统调用原型（可选）
+	第四步：重新编译内核
+	第五步：用户态调用测试
+
+步骤 | 内容
+ 1   | 写内核函数（用 SYSCALL_DEFINE 宏）
+ 2   | 修改 syscall_64.tbl，分配系统调用号
+ 3   | （可选）修改 syscalls.h，声明原型
+ 4   | 重新编译内核并安装
+ 5   | 写用户态程序用 syscall() 测试
+
+详细方法：
+	./mytool.py --show syscall_instance
+
+
+############################## caution #########################################
+
+添加新系统调用，必须重新编译内核，不能单靠插入模块实现。
+	系统调用（System Call）是用户态到内核态的标准接口，它的入口在内核的"系统调用表"里（比如 sys_call_table）
+   """
+    print(syscall_cmd) 
+
+def print_syscall_instance_cmd():
+    syscall_instance_cmd = """
+
+我们的新系统调用叫 sys_hello，它的功能就是简单打印一句 "Hello from kernel!"。
+
+########################## 写系统调用实现函数 #####################################
+
+在 kernel/sys.c 文件最后，加上：
+#include <linux/kernel.h>  // printk()
+#include <linux/syscalls.h> // SYSCALL_DEFINE
+
+SYSCALL_DEFINE0(hello)
+{
+    printk(KERN_INFO "Hello from kernel!\\n");
+    return 0;
+}
+
+/* 说明：
+SYSCALL_DEFINE0 这个宏是定义无参数系统调用。
+如果要带参数，比如1个参数，可以用 SYSCALL_DEFINE1(name, type, arg1)，依次类推。
+ */
+
+############################ 注册系统调用号 ######################################
+
+在文件arch/x86/entry/syscalls/syscall_64.tbl最后加一行：
+	<空格> 系统调用号  common  hello   __x64_sys_hello
+	
+	解释:
+		系统调用号（选择一个空的系统调用号）
+		common 是ABI
+		hello 是系统调用名（用户态调用名字）
+		__x64_sys_hello 是内核里的实际函数名字（SYSCALL_DEFINE0定义的那个）
+
+
+########################## 声明系统调用原型（可选） ################################
+
+打开头文件include/linux/syscalls.h加一行声明
+	asmlinkage long sys_hello(void);
+
+注意： 如果用 SYSCALL_DEFINE 系列宏，并且不想显式声明，也可以跳过。
+
+
+############################# 重新编译内核 #######################################
+
+make menuconfig
+make -j$(nproc)
+make modules_install
+make install
+update-grub  # 如果需要更新引导
+reboot       # 重启进入新内核
+
+详情:
+	./mytool.py --show ckernel
+
+
+############################ 用户态调用测试 ######################################
+
+自己写一个小程序来测试刚添加的系统调用！
+因为我们新增了新的系统调用号，但标准C库（glibc）里还没提供接口，所以需要用系统调用指令（比如 syscall）自己触发。
+比如写个C程序 test_hello.c：
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/syscall.h>
+
+#define __NR_hello 440  // 你定义的系统调用号
+
+int main() {
+    long ret = syscall(__NR_hello);
+    printf("syscall returned %ld\\n", ret);
+    return 0;
+}
+
+编译运行：
+gcc test_hello.c -o test_hello
+./test_hello
+
+然后用 dmesg 查看内核日志：
+dmesg | tail
+
+应该能看到内核打印的：
+Hello from kernel!
+
+   """
+    print(syscall_instance_cmd) 
+
