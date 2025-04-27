@@ -433,3 +433,49 @@ gdb ./test
    """
     print(gdb_cmd) 
 
+def print_launch_ipv6_cmd():
+    launch_ipv6_cmd = """
+
+Linux上开启ipv6功能
+
+############################# 修改内核参数 #######################################
+
+编辑 /etc/sysctl.conf，加上这两行：
+net.ipv6.conf.all.disable_ipv6 = 0
+net.ipv6.conf.default.disable_ipv6 = 0
+
+第一条是开启整体的IPv6支持。
+第二条是让新创建的网络接口也支持IPv6。
+
+sudo sysctl -p
+
+
+############################ 修改网卡配置文件 #####################################
+
+sudo vi /etc/sysconfig/network-scripts/ifcfg-ens33
+IPV6INIT=yes
+DHCPV6C=yes
+IPV6_AUTOCONF=yes
+
+
+sudo nmcli connection reload
+sudo nmcli connection up ens33
+
+
+############################## caution #########################################
+
+
+1、（如果是CentOS/RHEL的话）有时候还需要确认grub的启动参数里，没有禁用IPv6，比如：
+查看 /etc/default/grub 文件，有没有 ipv6.disable=1 这样的参数，如果有的话，要删掉或者改成 ipv6.disable=0。
+
+修改完后，更新grub并重启：
+sudo grub2-mkconfig -o /boot/grub2/grub.cfg
+sudo reboot
+
+2、 如果是虚拟机，注意宿主机网络也要支持IPv6。
+
+3、 有些情况下（比如防火墙规则、网络管理器设置）还需要进一步确保IPv6是允许的，不然虽然内核支持IPv6，但网络上收发不了。
+
+   """
+    print(launch_ipv6_cmd) 
+
