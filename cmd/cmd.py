@@ -436,6 +436,13 @@ mov rdi, pathname       ; 第一个参数，程序路径
 mov rsi, argv           ; 第二个参数，argv数组
 mov rdx, envp           ; 第三个参数，环境变量
 syscall                 ; 触发软中断，进入内核模式
+
+
+Summarize:
+    bash 调用 glibc的execve函数；
+    glibc 发出真正的 syscall指令；
+    CPU切换到内核态，执行 59号系统调用；
+    内核根据 sys_execve() 完成新程序的加载和运行！
    """
     print(shell_cmd) 
 
