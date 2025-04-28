@@ -161,7 +161,7 @@ def main():
 					   'diskio','netio','cputop10','memtop10','login','gpt','iostat','vmstat','iotop','sar','parted','systemd','mod','dracut','mount','pnet','iperf','ascii','hexdump','lamp','objdump','dline','ckernel','mysql','nginx','virsh','chntpw','time','yum','nic','newline','regularExp','nfs','kdump','losetup','xxd','dline2','ethtool','grep','dmesg','gcc','trace','c','lvm','kerneldir','wget','process','strace','chage','reboot','gnu','cpu_register','assembly','boot_fail','cpu_cache','src2bin','core_dump','gdb','top','htop','syscall','syscall_instance','launch_ipv6','shell','xxxx'], help="Display usage instance")
 
 
-    parser.add_argument('--item', choices=['var', 'printf','macron','struct','vas','mem_consume','cpu_consume','fork','current'], help="Usage: ./mytool.py --show c --item printf")
+    parser.add_argument('--item', choices=['main','var', 'printf','macron','struct','vas','mem_consume','cpu_consume','fork','current'], help="Usage: ./mytool.py --show c --item printf")
     parser.add_argument('--option', choices=['basic','cmd','instance_helloworld','instance_add' ], help="Usage: ./mytool.py --show assembly --option basic")
 
     parser.add_argument("-i", "--install", action='store', dest="pkg",help="install packages on remote host")
@@ -355,6 +355,8 @@ def main():
        print_gcc_cmd()
     elif args.show == 'trace':
        print_trace_cmd()
+    elif args.show == 'c' and args.item == 'main':
+       print_cmain_cmd()
     elif args.show == 'c' and args.item == 'printf':
        print_cprintf_cmd()
     elif args.show == 'c' and args.item == 'macron':
