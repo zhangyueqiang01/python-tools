@@ -402,6 +402,40 @@ def print_shell_cmd():
 小补充：
 	如果是内建命令（比如 cd），就不会 fork，Shell自己执行。
 	如果命令不存在或没有执行权限，execve 会失败，shell会显示 command not found 或 permission denied。
+
+########################## advanced #####################################
+
+基于 GNU Bash：
+	bash 调用的是 glibc 提供的 execve 函数，
+	然后 glibc 里面的 execve 才真正去触发 CPU 的 syscall 指令
+
+
+glibc（比如 /lib64/libc.so.6）里真正的 execve 函数（伪代码）大概是这样：
+long sys_execve(const char *pathname, char *const argv[], char *const envp[])
+{
+    // 使用 syscall 指令，系统调用号 __NR_execve
+    return syscall(__NR_execve, pathname, argv, envp);
+}
+
+
+完整流程：
+bash源码：调用 execve(path, argv, envp)
+   ↓
+glibc库：实现了 execve()，内部通过 syscall(__NR_execve, ...)
+   ↓
+CPU执行 syscall 指令
+   ↓
+内核态 syscall 表：根据 rax=59，找到 sys_execve() 函数
+   ↓
+内核内部实现 execve（加载新程序、替换地址空间）
+
+
+对应的汇编程序：
+mov rax, __NR_execve    ; 把系统调用号（execve）放入 rax
+mov rdi, pathname       ; 第一个参数，程序路径
+mov rsi, argv           ; 第二个参数，argv数组
+mov rdx, envp           ; 第三个参数，环境变量
+syscall                 ; 触发软中断，进入内核模式
    """
     print(shell_cmd) 
 
