@@ -359,3 +359,28 @@ M     	| 按内存使用率排序（Shift + M）
    """
     print(htop_cmd) 
 
+def print_shell_cmd():
+    shell_cmd = """
+
+##################### cmd exec process ##################################
+
+	用户输入命令
+	     ↓
+	Shell解析命令
+	     ↓
+	查找可执行文件路径
+	     ↓
+	fork() 创建子进程
+	     ↓
+	子进程调用 execve()
+	     ↓
+	内核加载新程序，执行
+	     ↓
+	父Shell等待子进程结束
+
+小补充：
+	如果是内建命令（比如 cd），就不会 fork，Shell自己执行。
+	如果命令不存在或没有执行权限，execve 会失败，shell会显示 command not found 或 permission denied。
+   """
+    print(shell_cmd) 
+
