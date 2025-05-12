@@ -316,3 +316,132 @@ Hello from kernel!
    """
     print(syscall_instance_cmd) 
 
+def print_interrupt_cmd():
+    interrupt_cmd = """
+
+中断（Interrupt） 是一种机制，允许硬件或软件打断CPU正在执行的程序流程，转而处理更紧急的任务。
+
+########################## basic ########################################
+硬件中断：通常由外部设备（如键盘、网卡、硬盘）发出，告诉CPU“我有新情况了，需要你马上处理”。
+软件中断：由程序主动触发，比如通过 int 指令或者系统调用。
+
+################### Linux中的中断处理流程（概览） #############################
+
+1、中断发生：
+	设备向CPU发送中断信号。
+2、CPU响应：
+	CPU暂停当前正在执行的程序（保存上下文，即当前执行状态）。
+3、确定中断源：
+	通过中断控制器（如x86的APIC）识别是哪个设备发的中断。
+4、执行中断处理程序（Interrupt Handler）：
+	Linux调用对应设备注册好的中断处理函数。
+5、处理中断：
+	设备驱动快速处理紧急工作（称为上半部top half），剩下的可以放到稍后处理（下半部bottom half，如软中断、tasklet、工作队列等）。
+6、恢复执行：
+	恢复到中断前被打断的程序，继续运行。
+
+
+########################## 常见的术语 #####################################
+
+术语	含义
+IRQ (Interrupt Request)	中断请求信号
+ISR (Interrupt Service Routine)	中断服务例程
+Top Half	中断上半部，紧急处理中断
+Bottom Half	中断下半部，稍后处理，减少中断延迟
+Softirq / Tasklet / Workqueue	不同层次的下半部处理机制
+
+########################## src code ######################################
+
+在Linux中，设备驱动注册中断通常用：
+	int request_irq(unsigned int irq, irq_handler_t handler, unsigned long flags, const char *name, void *dev);
+		irq：中断号
+		handler：你的中断处理函数
+		flags：是否共享、是否边缘触发等选项
+		name：名字（用于 /proc/interrupts）
+		dev：设备ID（用于共享中断时区分）
+注销中断：
+	void free_irq(unsigned int irq, void *dev);
+
+########################## instance ######################################
+
+./mytool.py --show interrupt_instance
+
+   """
+    print(interrupt_cmd) 
+
+def print_interrupt_instance_cmd():
+    interrupt_instance_cmd = """
+将以下代码保存为 simple_irq_demo.c
+########################## src code ######################################
+
+#include <linux/module.h>
+#include <linux/interrupt.h>
+#include <linux/kernel.h>
+
+#define DEMO_IRQ    1    // 使用键盘的IRQ 1号（仅演示用，小心别影响系统）
+
+static irqreturn_t demo_irq_handler(int irq, void *dev_id)
+{
+    printk(KERN_INFO "simple_irq_demo: Interrupt received! irq=%d\\n", irq);
+    return IRQ_HANDLED;
+}
+
+static int __init demo_irq_init(void)
+{
+    int ret;
+
+    printk(KERN_INFO "simple_irq_demo: Initializing module...\\n");
+
+    // 注册中断
+    ret = request_irq(DEMO_IRQ, demo_irq_handler, IRQF_SHARED, "simple_irq_demo", (void *)(demo_irq_handler));
+    if (ret) {
+        printk(KERN_ERR "simple_irq_demo: Cannot request IRQ %d\\n", DEMO_IRQ);
+        return ret;
+    }
+
+    printk(KERN_INFO "simple_irq_demo: Successfully requested IRQ %d\\n", DEMO_IRQ);
+    return 0;
+}
+
+static void __exit demo_irq_exit(void)
+{
+    printk(KERN_INFO "simple_irq_demo: Exiting module...\\n");
+    free_irq(DEMO_IRQ, (void *)(demo_irq_handler));
+    printk(KERN_INFO "simple_irq_demo: Freed IRQ %d\\n", DEMO_IRQ);
+}
+
+module_init(demo_irq_init);
+module_exit(demo_irq_exit);
+
+MODULE_LICENSE("GPL");
+MODULE_AUTHOR("YourName");
+MODULE_DESCRIPTION("A simple Linux IRQ demo module");
+
+
+########################## Makefile ######################################
+obj-m += simple_irq_demo.o
+
+all:
+	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
+
+clean:
+	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) clean
+
+
+########################## launch ######################################
+
+make
+sudo insmod simple_irq_demo.ko
+dmesg | tail
+sudo rmmod simple_irq_demo
+
+
+########################## caution ######################################
+
+在这个示例中request_irq函数调用 demo_irq_handler 没有成功，free_irq的时候调用 
+demo_irq_handler 却成功了，是因为：
+IRQ 1 已被系统键盘驱动占用，然用 IRQF_SHARED 注册了中断，但共享中断的机制决定了系统
+的主设备先处理，咱们这个“二级监听器”可能永远收不到中断。
+   """
+    print(interrupt_instance_cmd) 
+
