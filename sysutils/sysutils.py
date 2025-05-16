@@ -667,6 +667,7 @@ dm-0： 表示 Device Mapper 设备 0，它并不是一个真实的硬件设备�
 
 磁盘io相关troubleshooting:
      ./mytool.py --show diskio
+     ./mytool.py --show iotop
    """
     print(iostat_cmd) 
 
@@ -796,6 +797,7 @@ sudo iotop -b -n 1 | grep -v 'Total' | grep -v 'Actual' | awk '{print $12 " "$6}
 
 磁盘io相关troubleshooting:
     ./mytool.py --show diskio
+    ./mytool.py --show iostat
    """
     print(iotop_cmd) 
 
