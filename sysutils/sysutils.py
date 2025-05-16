@@ -664,6 +664,9 @@ dm-0： 表示 Device Mapper 设备 0，它并不是一个真实的硬件设备�
 
 在 iostat 中，默认不会显示每个磁盘分区（如 /dev/sda1, /dev/sda2）的 I/O 情况,若查看具体的分区io情况，可用如下方法：
 	iostat -x -p sda
+
+磁盘io相关troubleshooting:
+     ./mytool.py --show diskio
    """
     print(iostat_cmd) 
 
@@ -790,6 +793,9 @@ sudo iotop -b -n 1 | grep -v 'Total' | grep -v 'Actual' | awk '{print $12 " "$6}
 	awk '{print $12 " "$3}'：使用 awk 打印出进程名称（COMMAND）和磁盘读速度（DISK READ）。
 	sort -nr：对读速度进行数值排序，-n 表示按数值排序，-r 表示逆序排序。
 	head -1：只输出排序后的第一行，即读速度最高的进程。
+
+磁盘io相关troubleshooting:
+    ./mytool.py --show diskio
    """
     print(iotop_cmd) 
 
