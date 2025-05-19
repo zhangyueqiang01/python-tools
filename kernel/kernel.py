@@ -321,9 +321,41 @@ def print_interrupt_cmd():
 
 中断（Interrupt） 是一种机制，允许硬件或软件打断CPU正在执行的程序流程，转而处理更紧急的任务。
 
-########################## basic ########################################
-硬件中断：通常由外部设备（如键盘、网卡、硬盘）发出，告诉CPU“我有新情况了，需要你马上处理”。
-软件中断：由程序主动触发，比如通过 int 指令或者系统调用。
+################################ Introduction #############################################
+
+硬中断：通常由外部设备（如键盘、网卡、硬盘）发出，告诉CPU“我有新情况了，需要你马上处理”。
+软中断：Linux 内核中一种延迟处理机制，用于在中断上下文之外高效处理高频率、非紧急的任务
+	   （如网络收包、定时任务）。
+异常：CPU 执行指令时同步触发的事件，通常由程序错误（如除零）或主动请求（如系统调用）引发。
+
+		CPU0				CPU1
+	--------------			    --------------
+	|	     |	                    |		 |	
+	|   ------   |			    |	------	 |			
+	|   |本 地|--------   本地IRQs	    |   |本地|--------   本地IRQs			
+	|   |APIC |--------（LINT0，LINT1） |	|APIC|--------（LINT0，LINT1）		
+	|   ------   |                      |	------	 |
+	|	     |                      |		 |
+	--------------                      --------------
+	      ^				  	  ^
+	      |                                   |
+	      v                                   v
+	中   断   控   制   器   通   信  （ICC）   总   线
+  			    ^
+                            |
+                            v
+		 	  ------	
+		  	  |I/O |
+		  	  |APIC|
+		  	  ------	
+		   	    ^
+		    	    |
+		         外部IROs
+
+IRQ (Interrupt Request)	中断请求线
+	每个能够发出中断请求的硬件设备控制器都有一条名为IRQ的输出线
+I/O APIC: I/O Advanced Programmable Interrupt Controller
+	所有现有的IRQ线（IRQ line）都与一个名为可编程中断控制器（PIC）的硬件电路的输入引脚相连
 
 ################### Linux中的中断处理流程（概览） #############################
 
@@ -340,14 +372,13 @@ def print_interrupt_cmd():
 6、恢复执行：
 	恢复到中断前被打断的程序，继续运行。
 
-
 ########################## 常见的术语 #####################################
 
-术语	含义
-IRQ (Interrupt Request)	中断请求信号
+术语				含义
+IRQ (Interrupt Request)		中断请求信号
 ISR (Interrupt Service Routine)	中断服务例程
-Top Half	中断上半部，紧急处理中断
-Bottom Half	中断下半部，稍后处理，减少中断延迟
+Top Half			中断上半部，紧急处理中断
+Bottom Half			中断下半部，稍后处理，减少中断延迟
 Softirq / Tasklet / Workqueue	不同层次的下半部处理机制
 
 ########################## src code ######################################
@@ -362,10 +393,35 @@ Softirq / Tasklet / Workqueue	不同层次的下半部处理机制
 注销中断：
 	void free_irq(unsigned int irq, void *dev);
 
+######################## releated file ###################################
+
+文件/目录		用途
+/proc/interrupts	硬件中断统计
+/proc/softirqs		软中断统计
+/proc/irq/<IRQ>/	单个IRQ的配置（如亲和性）
+/proc/stat		系统中断总数
+/sys/kernel/irq/	结构化中断属性（较新内核）
+内核启动参数(grub)	控制中断的全局行为
+
+源码路径			作用
+kernel/irq/			中断子系统核心代码：
+  irqdesc.c			IRQ 描述符管理（struct irq_desc）。
+  handle.c			中断处理逻辑（如 handle_irq_event_percpu）。
+arch/x86/kernel/apic/		x86 平台的中断控制器（APIC、IOAPIC）实现。
+drivers/irqchip/		各类中断控制器驱动（如 GIC、MSI）。
+include/linux/interrupt.h	中断相关头文件（定义 request_irq()、softirq 等）。
+
+###################### Interrupt Request #################################
+
+类型	   范围		    典型示例
+CPU 异常   0-31（x86）	    除零错误（0）、页错误（14）、NMI（2）。
+硬件 IRQ   32-255（x86）    键盘（1）、RTC（8）、网卡（动态分配）。
+软中断	   Linux 内部编号   网络收包（NET_RX）、定时器（TIMER）。
+ARM 中断   GIC 动态分配	    定时器（16）、USB（45）。
+
 ########################## instance ######################################
 
 ./mytool.py --show interrupt_instance
-
    """
     print(interrupt_cmd) 
 
