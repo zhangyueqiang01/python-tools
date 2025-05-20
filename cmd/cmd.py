@@ -615,3 +615,50 @@ sudo dmidecode -s system-serial-number
    """
     print(dmidecode_cmd) 
 
+def print_lspci_cmd():
+    lspci_cmd = """
+############################## DESCRIPTION ##################################
+
+lspci 是 Linux 系统中用于显示所有 PCI（Peripheral Component Interconnect）总线及其连
+接设备信息的命令，常用于硬件排查、识别系统中的硬件设备等操作。
+Peripheral Component Interconnect（外围设备组件互连）
+
+############################### option ####################################
+| 选项                   | 作用                        
+| ---------------------- | ------------------------- 
+| `-v`                   | 显示更详细的信息（verbose）
+| `-vv`                  | 显示非常详细的信息（very verbose）
+| `-k`                   | 显示每个设备所使用的驱动
+| `-nn`                  | 显示设备的数字ID（vendor\:device）
+| `-t`                   | 以树状结构显示 PCI 设备拓扑结构
+| `-s <bus>`             | 指定总线编号，只显示该总线的设备
+| `-d <vendor>:<device>` | 只显示指定厂商和设备ID的设备
+| `-x`                   | 显示每个设备的配置空间（十六进制）
+| `-b`                   | 以总线编号原始形式输出，不解析名称
+| `-i <file>`            | 使用指定的 PCI ID 数据库文件
+
+############################### instance ####################################
+
+列出所有 PCI 设备（简略模式）
+lspci
+
+列出详细信息
+lspci -v
+
+查看每个设备对应的驱动信息
+lspci -k
+
+查看设备的厂商ID和设备ID
+lspci -nn
+
+查找某个特定设备（例如显示设备）
+lspci | grep VGA
+
+以树状结构展示 PCI 拓扑
+lspci -t
+
+查看某个具体设备（如总线地址 00:1f.2）
+lspci -s 00:1f.2 -vv
+   """
+    print(lspci_cmd) 
+
