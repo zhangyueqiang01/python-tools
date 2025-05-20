@@ -534,3 +534,84 @@ ps -eo args | grep kvm
    """
     print(ps_cmd) 
 
+def print_dmidecode_cmd():
+    dmidecode_cmd = """
+###################################### DESCRIPTION #################################################
+
+dmidecode 是 Linux 系统中用于查看 DMI（Desktop Management Interface）/SMBIOS（System Management BIOS） 
+信息的命令行工具，它可以显示很多底层硬件的信息，比如 BIOS、主板、CPU、内存、系统序列号等。
+
+############################## option #########################################
+| 选项  | 全写形式   | 说明
+| ---- | ----------- | ------------------------------ 
+| `-h` | `--help`    | 显示帮助信息
+| `-q` | `--quiet`   | 安静模式，隐藏描述文字（只输出字段值）
+| `-s` | `--string`  | 仅输出指定字符串（需要配合字段名）
+| `-t` | `--type`    | 指定要查询的类型编号或名称
+| `-H` | `--handle`  | 仅显示指定的 Handle（如 `0x0100`）
+| `-u` | `--dump`    | 以十六进制和ASCII形式显示原始数据
+| `-d` | `--dev-mem` | 指定 `dev/mem` 路径（默认 `/dev/mem`）
+| `-V` | `--version` | 显示版本信息
+
+############################ instance #########################################
+
+查看系统摘要信息
+sudo dmidecode -t system
+
+查看 BIOS 信息
+sudo dmidecode -t bios
+
+查看主板信息
+sudo dmidecode -t baseboard
+
+查看 CPU 信息
+sudo dmidecode -t processor
+
+查看内存插槽信息（包括空插槽）
+sudo dmidecode -t memory
+
+查看所有支持的类型（Type）
+sudo dmidecode -t
+    例如：
+	0：BIOS
+	1：System
+	2：Baseboard
+	4：Processor
+	17：Memory Device
+
+############################## tips #########################################
+| 任务             | 命令
+| -----------------| ---------------------------------------- 
+| 获取服务器型号   | `sudo dmidecode -t system`
+| 查看序列号       | `sudo dmidecode -s system-serial-number`
+| 查看 BIOS 版本   | `sudo dmidecode -t bios`
+| 查看内存插槽数量 | `sudo dmidecode -t memory`
+| 检查内存是否满插 | 查看 memory 中有多少条非 “No Module Installed”
+
+
+只输出某一项
+sudo dmidecode -s system-serial-number
+
+| 字段名                    | 含义                     
+| ------------------------- | ---------------------- 
+| `bios-vendor`             | BIOS 厂商
+| `bios-version`            | BIOS 版本
+| `bios-release-date`       | BIOS 发布日期
+| `system-manufacturer`     | 系统制造商
+| `system-product-name`     | 系统产品名
+| `system-version`          | 系统版本
+| `system-serial-number`    | 系统序列号
+| `system-uuid`             | 系统 UUID
+| `baseboard-manufacturer`  | 主板厂商
+| `baseboard-product-name`  | 主板产品名
+| `baseboard-version`       | 主板版本
+| `baseboard-serial-number` | 主板序列号
+| `baseboard-asset-tag`     | 主板资产标签
+| `chassis-manufacturer`    | 机箱制造商
+| `chassis-type`            | 机箱类型（如 Laptop、Desktop）
+| `chassis-serial-number`   | 机箱序列号
+| `processor-family`        | 处理器家族
+| `processor-version`       | 处理器型号
+   """
+    print(dmidecode_cmd) 
+
