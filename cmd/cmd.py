@@ -486,3 +486,51 @@ scp 无法断点续传（如需支持断点续传推荐使用 rsync）。
    """
     print(scp_cmd) 
 
+def print_ps_cmd():
+    ps_cmd = """
+############################## tips #########################################
+
+按内存/CPU 占用排序
+ps aux --sort=-%mem | head
+ps aux --sort=-%cpu | head
+
+按用户名筛选进程
+ps -U root -u root u 或者 ps aux | grep root
+
+输出字段定制
+ps -eo pid,user,%cpu,%mem,vsz,rss,tty,stat,start,time,command
+| 字段    | 含义
+| ------- | ------------- 
+| pid     | 进程 ID
+| user    | 所属用户
+| %cpu    | CPU 占比
+| %mem    | 内存占比
+| vsz     | 虚拟内存使用量（KB）   
+| rss     | 实际物理内存使用量（KB）
+| tty     | 终端
+| stat    | 进程状态
+| start   | 启动时间
+| time    | 占用 CPU 时间
+| command | 启动命令
+
+
+查看某个父进程的所有子进程
+ps --ppid 1234
+
+查看整个进程树
+ps axjf
+
+查看所有用户的进程总数
+ps -eo user= | sort | uniq -c | sort -nr
+
+查看某个用户的进程总内存占用
+ps -u username -o rss= | awk '{sum+=$1} END {print sum/1024 " MB"}'
+
+显示线程（其中 L 表示线程，f 表示全格式。每个线程都会显示一行。）
+ps -eLf
+
+显示完整命令行参数（避免被截断）
+ps -eo args | grep kvm
+   """
+    print(ps_cmd) 
+
