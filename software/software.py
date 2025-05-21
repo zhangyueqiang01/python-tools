@@ -655,7 +655,51 @@ nova dec-host-list | grep 3fb888b6-7907-483e-bff9-79e94e7773e7（专属云主机
 def print_cinder_cmd():
     print("cinder usage command:")
     cinder_cmd = """
-ovs -s
+# 查看卷详情
+openstack volume show <volume-id>
+cinder show <volume-id>
+
+# 查询该卷的操作历史
+grep <volume-id> /var/log/cinder/cinder-volume.log
+zgrep <volume-id> /var/log/cinder/*.gz
+
+-- 查看卷挂载过的服务器
+SELECT * FROM volume_attachment WHERE volume_id = '<volume-id>';
+
+-- 在 nova 数据库中查卷关联
+SELECT * FROM block_device_mapping WHERE volume_id = '<volume-id>';
+
+# 创建一个卷 
+cinder create --display-name myvolume --size 10
+
+# 删除一个卷
+cinder delete <volume-id>
+
+# 创建卷快照
+cinder snapshot-create --display-name mysnap <volume-id>
+
+# 查看快照列表
+cinder snapshot-list
+
+# 从快照创建卷
+cinder create --snapshot-id <snapshot-id> --size 10
+
+# 附加卷到实例
+cinder attach <volume-id> <instance-id> <mountpoint>
+
+# 卸载卷
+cinder detach <volume-id>
+
+# 修改卷名称或描述
+cinder update --display-name newname --display-description "new description" <volume-id>
+
+################################### tips #############################################
+
+建议：使用 openstack 替代 cinder,现代 OpenStack 更推荐使用统一接口：
+openstack volume list
+openstack volume create
+openstack volume delete
+openstack snapshot create
    """
     print(cinder_cmd)  
 
