@@ -30,3 +30,4 @@ process: 进程相关的知识
 Hexdump: 调试和分析二进制文件
 kthread: 常见内核线程功能概述
 lspci/dmidecode: 硬件信息查看
+sysctl: 系统级行为调优

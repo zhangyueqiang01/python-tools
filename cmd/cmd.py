@@ -662,3 +662,74 @@ lspci -s 00:1f.2 -vv
    """
     print(lspci_cmd) 
 
+def print_sysctl_cmd():
+    sysctl_cmd = """
+############################## DESCRIPTION ##################################
+
+sysctl 是 Linux 和其他类 Unix 系统中用于 查看和修改内核参数 的命令。这些内核参数多位
+于 /proc/sys/ 目录中，主要用于内存管理、网络设置、安全控制等系统级行为的调优。
+
+基本语法
+sysctl [options] [variable[=value]]
+
+
+############################### option ######################################
+
+| 选项               | 含义                               
+| ------------------ | -------------------------------- 
+| `-a` 或 `--all`    | 显示所有可用的内核参数及其当前值                 
+| `-w` 或 `--write`  | 写入（设置）一个内核参数的值                   
+| `-p` 或 `--load`   | 从配置文件（默认 `/etc/sysctl.conf`）加载参数 
+| `-e` 或 `--ignore` | 加载配置时忽略无效参数（通常与 `-p` 一起使用）       
+| `-n` 或 `--values` | 仅显示参数值，不显示参数名                    
+| `-q` 或 `--quiet`  | 静默模式，抑制非错误输出，常用于脚本中              
+| `-N`               | 显示所有参数的名称（不显示值）                  
+| `-r`               | 显示所有支持正则匹配的参数（参数名匹配）             
+
+
+############################### instance ####################################
+
+1. 查看某个内核参数的当前值
+sysctl net.ipv4.ip_forward
+等价于：
+cat /proc/sys/net/ipv4/ip_forward
+
+
+2. 设置某个参数的值（临时）
+sudo sysctl -w net.ipv4.ip_forward=1
+等价于：
+echo 1 > /proc/sys/net/ipv4/ip_forward
+⚠️ 这种方式 重启后会失效。
+
+
+3. 查看所有内核参数
+sysctl -a
+会列出当前系统中所有支持的参数及其值。
+
+
+4. 从配置文件加载参数
+sudo sysctl -p
+默认从 /etc/sysctl.conf 加载。你也可以指定其他文件：
+sudo sysctl -p /path/to/file.conf
+
+
+5. 永久生效的方法
+编辑 /etc/sysctl.conf 或 /etc/sysctl.d/xxx.conf 文件，添加例如：
+net.ipv4.ip_forward = 1
+vm.swappiness = 10
+然后执行：
+sudo sysctl -p
+
+
+######################### Common parameter analysis #########################
+
+| 参数                  | 含义
+| --------------------- | ------------------------------
+| `net.ipv4.ip_forward` | 是否开启 IP 转发（1 为启用，0 为禁用）
+| `vm.swappiness`       | 控制内核将内存页换出到 swap 的倾向（范围 0–100）
+| `fs.file-max`         | 系统允许打开的最大文件数
+| `kernel.shmmax`       | 单个共享内存段的最大大小
+| `net.core.somaxconn`  | socket 的 listen 队列最大长度
+   """
+    print(sysctl_cmd) 
+
