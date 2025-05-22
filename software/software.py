@@ -462,10 +462,10 @@ sudo grub2-set-default 'Linux Kernel 4.19.0'
 /boot/efi/EFI/redhat/grub.cfg
 
 # grub.cfg文件丢失后进行修复，相关文件可以自动补全
-ls
-set root='hd0,msdos1'
-linux16 /vmlinuz-3.10.0-514.el7.x86_64 root=/dev/mapper/cl-root
-initrd16 /initramfs-3.10.0-514.el7.x86_64.img
+grub > ls
+grub > set root='hd0,msdos1'
+grub > linux16 /vmlinuz-3.10.0-514.el7.x86_64 root=/dev/mapper/cl-root
+grub > initrd16 /initramfs-3.10.0-514.el7.x86_64.img
 
 # grub设置密码
 [root@node09 ~]# grub2-setpassword 
