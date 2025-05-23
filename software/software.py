@@ -415,10 +415,10 @@ password   required      pam_cracklib.so try_first_pass retry=6 minlen=8 dcredit
     print(pam_cmd)  
 
 def print_grub_cmd():
-    print("grub usage command:")
     grub_cmd = """
 
-# gurb映像的构成
+######################################## gurb映像的构成 ###############################################
+
 grub1
 +-----------------------------------------------------------------------+
 | boot.img   |   core.img   |  |   |  modules   |   |  modules  |       |
@@ -426,7 +426,6 @@ grub1
 +-----------------------------------------------------------------------+
 | 1 sector   | 2043 sectors    |           Partion 1            | 
 |            |                 |                                |
-
 
 core.img
 +---------------------------------------------------------------------------------------------------------------------------+
@@ -438,15 +437,41 @@ core.img
 |            |                 |                         |                                         |                        |
 
 
-# 查看mbr
-dd if=/dev/sda of=/tmp/sda_mbr.img count=1 bs=512
-hexdump -C /tmp/sda_mbr.img
+######################################## troubleshooting ###############################################
 
 # 在MBR与MBR后面的空闲空间中安装grub，安装grub1与grub1.5 stage
-grub2-install --boot-directory=/disk/boot /dev/vdb
+grub2-install --boot-directory=/disk/boot /dev/vdb 
+--boot-directory 一般不用手动指定，使用默认即可
 
 # 创建grub.cfg文件
 grub2-mkconfig -o /boot/grub2/grub.cfg
+
+# grub.cfg文件丢失后进行修复，相关文件可以自动补全
+grub > ls
+grub > set root='hd0,msdos1'
+grub > linux16 /vmlinuz-3.10.0-514.el7.x86_64 root=/dev/mapper/cl-root
+grub > initrd16 /initramfs-3.10.0-514.el7.x86_64.img
+
+# 手动进入救援模（将故障系统盘作为数据盘挂载到正常的Linux上，然后再将根切换到故障盘，前提是故障盘中的分区和根文件系统必须是正常的）
+    mount /dev/vdb /mnt
+    mount --bind /proc /mnt/proc
+    mount --bind /dev /mnt/dev
+    mount --bind /sys /mnt/sys
+    chroot /mnt
+
+# 大面积systemd服务启动报错
+    1）在grub界面按e选择进入指定内核的编辑模式
+    2）在linux16行末尾添加systemd.debug-shell=1，CRTL+x系统启动,通过tty
+    启用该参数后，在系统启动时，systemd 会在 tty9（即第 9 个终端）上启动一个 root 权限的 shell，不需要密码即可访问(Ctrl+Alt+F9)。
+    通过 systemctl list-jobs 去分析什么服务导致getty@tty1.service没有启动
+	getty@tty1.service 启动 tty1 进一步启动 login 程序
+
+		
+######################################## others ###############################################
+
+# 查看mbr
+dd if=/dev/sda of=/tmp/sda_mbr.img count=1 bs=512
+hexdump -C /tmp/sda_mbr.img
 
 # 设置50秒的倒计时
 set timeout=50
@@ -460,12 +485,6 @@ sudo grub2-set-default 'Linux Kernel 4.19.0'
 
 # efi模式下(GPT分区)grub.cfg文件存放路径
 /boot/efi/EFI/redhat/grub.cfg
-
-# grub.cfg文件丢失后进行修复，相关文件可以自动补全
-grub > ls
-grub > set root='hd0,msdos1'
-grub > linux16 /vmlinuz-3.10.0-514.el7.x86_64 root=/dev/mapper/cl-root
-grub > initrd16 /initramfs-3.10.0-514.el7.x86_64.img
 
 # grub设置密码
 [root@node09 ~]# grub2-setpassword 
