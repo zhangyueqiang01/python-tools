@@ -895,6 +895,7 @@ systemctl start getty@tty1.service
 systemctl list-units 'xxx@*.service'
 例如：
 systemctl list-units getty@*.service
+systemctl list-units *@*.service
    """
     print(systemd_cmd) 
 
