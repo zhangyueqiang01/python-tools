@@ -461,7 +461,7 @@ grub > initrd16 /initramfs-3.10.0-514.el7.x86_64.img
 
 # 大面积systemd服务启动报错
     1）在grub界面按e选择进入指定内核的编辑模式
-    2）在linux16行末尾添加systemd.debug-shell=1，CRTL+x系统启动,通过tty
+    2）在linux16行末尾添加systemd.debug-shell=1，CRTL+x系统启动
     启用该参数后，在系统启动时，systemd 会在 tty9（即第 9 个终端）上启动一个 root 权限的 shell，不需要密码即可访问(Ctrl+Alt+F9)。
     通过 systemctl list-jobs 去分析什么服务导致getty@tty1.service没有启动
 	getty@tty1.service 启动 tty1 进一步启动 login 程序
