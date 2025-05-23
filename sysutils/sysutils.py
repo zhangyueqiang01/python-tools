@@ -802,19 +802,20 @@ sudo iotop -b -n 1 | grep -v 'Total' | grep -v 'Actual' | awk '{print $12 " "$6}
     print(iotop_cmd) 
 
 def print_systemd_cmd():
-    print("systemd usage command:")
     systemd_cmd = """
+################################################ DESCRIPTION ########################################################
+
+每个服务对应一个 unit 文件，存放在 /etc/systemd/system/ 或 /lib/systemd/system/ 等目录中。unit 文件通常以 .service 结尾，内容类似 ini 格式。
+
 基本语法
 Unit 文件由多个部分组成，每部分以一个方括号包围的段名开始。
 每个部分包含一系列 Key=Value 形式的配置选项。
 注释以 # 或 ; 开头。
 
-
 常见的部分
 [Unit]：描述 unit 本身的元数据和依赖关系。
 [Service]：定义服务的行为（仅用于 service 类型的 unit）。
 [Install]：定义如何安装该 unit，例如是否在系统启动时启用。
-
 
 [Unit] 部分
 Description=：对 unit 的简短描述。
@@ -849,6 +850,51 @@ unit文件路径
 /etc/systemd/user/：管理员自定义的用户服务目录。
 /run/systemd/user/：运行时用户服务目录。
 ~/.config/systemd/user/：每个用户的自定义 unit 文件目录。
+   
+######################################### systemd 支持的主要 Unit 类型及其扩展名 ######################################
+
+| 类型          | 扩展名       | 用途说明
+| ------------- | ------------ | ----------------------------
+| **Service**   | `.service`   | 定义系统服务（守护进程），最常用
+| **Socket**    | `.socket`    | 定义套接字激活机制，用于按需启动服务
+| **Timer**     | `.timer`     | 定义定时任务，类似 cron
+| **Target**    | `.target`    | 类似 SysV 的运行级别，聚合多个 Unit
+| **Device**    | `.device`    | 绑定设备节点，例如 `/dev/sda`
+| **Mount**     | `.mount`     | 定义挂载点，自动挂载文件系统
+| **Automount** | `.automount` | 自动挂载机制，与 `.mount` 搭配使用
+| **Path**      | `.path`      | 监控某路径的变化，触发服务
+| **Scope**     | `.scope`     | systemd 管理的临时进程组，通常由外部工具创建
+| **Slice**     | `.slice`     | 控制组（cgroups）资源划分，用于资源隔离
+| **Swap**      | `.swap`      | 管理交换分区或交换文件
+| **BusName**   | `.busname`   | D-Bus 名称激活服务
+| **Import**    | `.import`    | （较少见）用于 systemd-importd 管理镜像
+| **Image**     | `.image`     | 与容器映像相关的管理（systemd v249+）
+
+################################################# advance ##########################################################
+
+在 systemd 中，带有 @ 符号的 unit 文件表示 "模板 Unit"（template unit）。这是 systemd 的一种高级机制，用于创建多个基于相同模板、但
+具有不同实例名的服务或资源。模板 Unit 是一种 可复用的 unit 文件，其文件名中使用了 @ 占位符，比如：
+getty@.service
+它并不是一个直接被启动的服务，而是一个模板——你需要通过实例名来启动它，比如：
+systemctl start getty@tty1.service
+这将基于 getty@.service 模板，启动名为 tty1 的服务实例。
+
+在模板 Unit 文件中，可以使用特殊变量 %i 来表示实例名，常见变量占位符如下：
+
+|占位符| 含义                            
+| ---- | ----------------------------- 
+| `%i` | 实例名（不包含 `@`）
+| `%I` | 实例名（保持原始大小写）
+| `%n` | 完整单元名称（如 `myapp@foo.service`）
+| `%N` | 不带类型的单元名称（如 `myapp@foo`）
+| `%p` | 单元名称的前缀部分（如 `myapp`）
+| `%u` | 当前用户（用于 user 单元）
+
+
+# 列出所有正在运行的 xxx@实例名.service
+systemctl list-units 'xxx@*.service'
+例如：
+systemctl list-units getty@*.service
    """
     print(systemd_cmd) 
 
