@@ -34,6 +34,7 @@ from assembly.assembly import *
 from gnu.gnu import *
 from hardware.hardware import *
 from memory.memory import *
+from other.other import *
 
 
 def ping(host):
@@ -159,7 +160,7 @@ def main():
                                            'h3c','dp','huawei1','huawei2','zte','osp','ceph','docker','iptables','tcpdump','route',\
                                             'ip','nmcli','bond','kvm','kcompose','git','vim','bash','find','linuxbasic','dd','awk',\
 					   'sed','ubuntu','echo','grub','initramfs','zip','pam','nova','cinder','neutron','glance',\
-					   'diskio','netio','cputop10','memtop10','login','gpt','iostat','vmstat','iotop','sar','parted','systemd','mod','dracut','mount','pnet','iperf','ascii','hexdump','lamp','objdump','dline','ckernel','mysql','nginx','virsh','chntpw','time','yum','nic','newline','regularExp','nfs','kdump','losetup','xxd','dline2','ethtool','grep','dmesg','gcc','trace','c','lvm','kerneldir','wget','process','strace','chage','reboot','gnu','cpu_register','assembly','boot_fail','cpu_cache','src2bin','core_dump','gdb','top','htop','syscall','syscall_instance','launch_ipv6','shell','scp','interrupt','interrupt_instance','kthread','ps','dmidecode','lspci','sysctl','mm','xxxx'], help="Display usage instance")
+					   'diskio','netio','cputop10','memtop10','login','gpt','iostat','vmstat','iotop','sar','parted','systemd','mod','dracut','mount','pnet','iperf','ascii','hexdump','lamp','objdump','dline','ckernel','mysql','nginx','virsh','chntpw','time','yum','nic','newline','regularExp','nfs','kdump','losetup','xxd','dline2','ethtool','grep','dmesg','gcc','trace','c','lvm','kerneldir','wget','process','strace','chage','reboot','gnu','cpu_register','assembly','boot_fail','cpu_cache','src2bin','core_dump','gdb','top','htop','syscall','syscall_instance','launch_ipv6','shell','scp','interrupt','interrupt_instance','kthread','ps','dmidecode','lspci','sysctl','mm','poetry','xxxx'], help="Display usage instance")
 
 
     parser.add_argument('--item', choices=['main','var', 'printf','macron','struct','vas','mem_consume','cpu_consume','fork','current'], help="Usage: ./mytool.py --show c --item printf")
@@ -443,6 +444,8 @@ def main():
        print_lspci_cmd()
     elif args.show == 'sysctl':
        print_sysctl_cmd()
+    elif args.show == 'poetry':
+       print_poetry_cmd()
     elif args.show == 'xxxx':
        print_xxxx_cmd()
 
