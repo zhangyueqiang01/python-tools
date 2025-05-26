@@ -33,6 +33,7 @@ from c.c import *
 from assembly.assembly import *
 from gnu.gnu import *
 from hardware.hardware import *
+from memory.memory import *
 
 
 def ping(host):
@@ -158,11 +159,12 @@ def main():
                                            'h3c','dp','huawei1','huawei2','zte','osp','ceph','docker','iptables','tcpdump','route',\
                                             'ip','nmcli','bond','kvm','kcompose','git','vim','bash','find','linuxbasic','dd','awk',\
 					   'sed','ubuntu','echo','grub','initramfs','zip','pam','nova','cinder','neutron','glance',\
-					   'diskio','netio','cputop10','memtop10','login','gpt','iostat','vmstat','iotop','sar','parted','systemd','mod','dracut','mount','pnet','iperf','ascii','hexdump','lamp','objdump','dline','ckernel','mysql','nginx','virsh','chntpw','time','yum','nic','newline','regularExp','nfs','kdump','losetup','xxd','dline2','ethtool','grep','dmesg','gcc','trace','c','lvm','kerneldir','wget','process','strace','chage','reboot','gnu','cpu_register','assembly','boot_fail','cpu_cache','src2bin','core_dump','gdb','top','htop','syscall','syscall_instance','launch_ipv6','shell','scp','interrupt','interrupt_instance','kthread','ps','dmidecode','lspci','sysctl','xxxx'], help="Display usage instance")
+					   'diskio','netio','cputop10','memtop10','login','gpt','iostat','vmstat','iotop','sar','parted','systemd','mod','dracut','mount','pnet','iperf','ascii','hexdump','lamp','objdump','dline','ckernel','mysql','nginx','virsh','chntpw','time','yum','nic','newline','regularExp','nfs','kdump','losetup','xxd','dline2','ethtool','grep','dmesg','gcc','trace','c','lvm','kerneldir','wget','process','strace','chage','reboot','gnu','cpu_register','assembly','boot_fail','cpu_cache','src2bin','core_dump','gdb','top','htop','syscall','syscall_instance','launch_ipv6','shell','scp','interrupt','interrupt_instance','kthread','ps','dmidecode','lspci','sysctl','mm','xxxx'], help="Display usage instance")
 
 
     parser.add_argument('--item', choices=['main','var', 'printf','macron','struct','vas','mem_consume','cpu_consume','fork','current'], help="Usage: ./mytool.py --show c --item printf")
     parser.add_argument('--option', choices=['basic','cmd','instance_helloworld','instance_add' ], help="Usage: ./mytool.py --show assembly --option basic")
+    parser.add_argument('--choice', choices=['concept'], help="Usage: ./mytool.py --show mm --choice concept")
 
     parser.add_argument("-i", "--install", action='store', dest="pkg",help="install packages on remote host")
     parser.add_argument("-p", "--ping", action="store", dest='ping', help="ping a net such as ping 8.8.8")
@@ -383,6 +385,8 @@ def main():
        print_instance_add_cmd()
     elif args.show == 'assembly' and args.option == 'instance_helloworld':
        print_instance_helloworld_cmd()
+    elif args.show == 'mm' and args.choice == 'concept':
+       print_concept_cmd()
     elif args.show == 'lvm':
        print_lvm_cmd()
     elif args.show == 'kerneldir':
