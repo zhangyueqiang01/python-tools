@@ -822,6 +822,73 @@ glance image-update --remove-property  hw_firmware_type <image-id>	//删除标�
    """
     print(glance_cmd)  
 
+
+def print_keepalived_cmd():
+    keepalived_cmd = """
+############################## DESCRIPTION ##################################
+
+Keepalived 最初是为 LVS（Linux Virtual Server）设计的，用于实现主备热备（例如主服务器宕机后自动切换到备用服务器）。
+它现在也常用于与 Nginx、HAProxy、Redis、MySQL 等服务结合，实现 VIP 的自动漂移和服务不中断。
+
+############################### instance ####################################
+
+vip 192.168.2.200
+node01 eth1 ip 192.168.0.1
+node02 eth1 ip 192.168.0.2
+
+[root@ct7_node01 ~]# yum install  keepalived -y
+[root@ct7_node02 ~]# yum install  keepalived -y
+[root@ct7_node01 keepalived]# cp /etc/keepalived/keepalived.conf /etc/keepalived/keepalived.conf.bak
+[root@ct7_node01 keepalived]# echo > /etc/keepalived/keepalived.conf
+[root@ct7_node01 keepalived]# vi /etc/keepalived/keepalived.conf
+
+****** node01 config *******
+vrrp_instance VI_1 {
+    state MASTER  # 备机上写为 BACKUP
+    interface eth1
+    virtual_router_id 51
+    priority 100  # 备机写 90
+    advert_int 1
+    authentication {
+        auth_type PASS
+        auth_pass 1234
+    }
+    virtual_ipaddress {
+        192.168.2.200
+    }
+}
+
+***** node02 config******
+
+vrrp_instance VI_1 {
+    state BACKUP  # 备机上写为 BACKUP
+    interface eth1
+    virtual_router_id 51
+    priority 90  # 备机写 90
+    advert_int 1
+    authentication {
+        auth_type PASS
+        auth_pass 1234
+    }
+    virtual_ipaddress {
+        192.168.2.200
+    }
+}
+
+[root@ct7_node01 keepalived]# systemctl start keepalived
+
+############################# verification ##################################
+
+ip a 进行查看，vip 地址在两台主机上都会显示，关闭其中任何一台主机上的 eth1 网口，vip 都可以 ping 通
+
+
+############################### caution ####################################
+
+master 挂掉后 vip 会漂移到 backup 上 ，master 恢复后 vip 会漂回到 master 上
+   """
+    print(keepalived_cmd) 
+
+
 def print_neutron_cmd():
     print("neutron usage command:")
     neutron_cmd = """

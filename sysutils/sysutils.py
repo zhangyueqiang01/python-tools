@@ -315,6 +315,8 @@ def print_tcpdump_cmd():
 
 ############################## instance ######################################
 
+# 只抓取 eth1 接口上的 icmp 报文
+tcpdump -i eth1 icmp 
 
 # 抓取 virbr1 接口上所有 udp 80 的报文直接打印到屏幕
 tcpdump -i virbr1 udp port 80 
