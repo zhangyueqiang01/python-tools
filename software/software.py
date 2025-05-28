@@ -830,6 +830,13 @@ def print_keepalived_cmd():
 Keepalived 最初是为 LVS（Linux Virtual Server）设计的，用于实现主备热备（例如主服务器宕机后自动切换到备用服务器）。
 它现在也常用于与 Nginx、HAProxy、Redis、MySQL 等服务结合，实现 VIP 的自动漂移和服务不中断。
 
+核心功能组成：
+| 模块                                           | 作用说明
+| ---------------------------------------------- | -------------------------------------------------
+| **VRRP（Virtual Router Redundancy Protocol）** | 实现 IP 浮动（Virtual IP，VIP）和主备切换，是 Keepalived 的核心模块。
+| **Health Check（健康检查）**                   | 检测本地服务是否存活，如 Nginx、HAProxy、MySQL 等。可自定义脚本进行检测。
+| **LVS管理**（可选）                            | 管理 Linux 内核中的 LVS 虚拟服务器功能（较老的架构中常用）。
+
 ############################### instance ####################################
 
 vip 192.168.2.200
@@ -885,6 +892,22 @@ ip a 进行查看，vip 地址在两台主机上都会显示，关闭其中任�
 ############################### caution ####################################
 
 master 挂掉后 vip 会漂移到 backup 上 ，master 恢复后 vip 会漂回到 master 上
+VIP 也可以独立配置在单独的网卡上（在配置中用的是 interface eth0，那 VIP 就会被绑定在 eth0 上）
+
+配置文件参数逐项解读：
+| 参数                   | 含义
+| ---------------------- | -------------------------------------------------------------------
+| `vrrp_instance VI_1`   | 定义一个 VRRP 实例，`VI_1` 是实例名称（可自定义）。一个实例表示一组主备切换逻辑。
+| `state MASTER`         | 当前节点初始状态。可为 `MASTER`（主）或 `BACKUP`（备）。Keepalived 会根据优先级等实际情况动态决定谁是主。
+| `interface eth0`       | 指定用于绑定 VIP 的网卡接口。这里为 `eth0`，也可写为 `ens33`、`enp3s0` 等真实网卡名。
+| `virtual_router_id 51` | VRRP 组标识符，同一组中的主备必须保持一致。值范围是 `0–255`，多个 VRRP 实例不能冲突。
+| `priority 100`         | 优先级（数值越大越优先）。通常主节点设高值如 `100`，备节点设低值如 `90`。
+| `advert_int 1`         | VRRP 通告间隔时间，单位为秒。主节点每隔这个时间广播一次“我还活着”。
+| `authentication`       | 验证配置，防止不受信节点加入 VRRP 组。可选 `PASS`（密码）或 `AH`（IPSec AH认证）。
+| └── `auth_type PASS`   | 使用明文密码认证方式。
+| └── `auth_pass 1234`   | 明文密码（主备节点需一致）。
+| `virtual_ipaddress`    | 指定要绑定的虚拟 IP 地址。支持多个 VIP（换行写多个 IP）。VIP 会自动添加到指定接口。
+
    """
     print(keepalived_cmd) 
 
