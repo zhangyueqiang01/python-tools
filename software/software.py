@@ -904,12 +904,128 @@ VIP 也可以独立配置在单独的网卡上（在配置中用的是 interface
 | `priority 100`         | 优先级（数值越大越优先）。通常主节点设高值如 `100`，备节点设低值如 `90`。
 | `advert_int 1`         | VRRP 通告间隔时间，单位为秒。主节点每隔这个时间广播一次“我还活着”。
 | `authentication`       | 验证配置，防止不受信节点加入 VRRP 组。可选 `PASS`（密码）或 `AH`（IPSec AH认证）。
-| └── `auth_type PASS`   | 使用明文密码认证方式。
-| └── `auth_pass 1234`   | 明文密码（主备节点需一致）。
+|   └── `auth_type PASS` | 使用明文密码认证方式。
+|   └── `auth_pass 1234` | 明文密码（主备节点需一致）。
 | `virtual_ipaddress`    | 指定要绑定的虚拟 IP 地址。支持多个 VIP（换行写多个 IP）。VIP 会自动添加到指定接口。
 
+高级参数（可选）：
+| 参数                | 含义                                             
+| ------------------- | ----------------------------------------------
+| `track_script`      | 指定自定义脚本用于健康检查，脚本返回非0表示故障，会自动降权。
+| `nopreempt`         | 对于 BACKUP 节点，即使检测到 MASTER 掉线也不自动提升为主，适合双主避免抖动。
+| `garp_master_delay` | MASTER 在切换为主之后延迟发送 GARP 报文的时间（防止网络不一致）。
+
+
+############################### advance ####################################
+
+下面是一个完整的示例，展示如何使用 Keepalived + Nginx 实现高可用的 Web 服务（主备模式 + VIP 浮动）。
+./mytool.py --show keepalived_nginx
    """
     print(keepalived_cmd) 
+
+
+def print_keepalived_nginx_cmd():
+    keepalived_nginx_cmd = """
+############################## DESCRIPTION ##################################
+主机 A：192.168.1.101，作为 MASTER
+备机 B：192.168.1.102，作为 BACKUP
+虚拟IP（VIP）：192.168.1.100
+使用 eth0 网卡
+检查 Nginx 是否正常运行，异常时自动切换
+
+########################### 主节点（MASTER）配置 ###########################
+
+文件路径：/etc/keepalived/keepalived.conf
+
+vrrp_script chk_nginx {
+    script "/etc/keepalived/check_nginx.sh"
+    interval 2
+    weight -10
+}
+
+vrrp_instance VI_1 {
+    state MASTER
+    interface eth0
+    virtual_router_id 51
+    priority 100
+    advert_int 1
+    authentication {
+        auth_type PASS
+        auth_pass 1234
+    }
+    virtual_ipaddress {
+        192.168.1.100
+    }
+    track_script {
+        chk_nginx
+    }
+}
+
+########################### 备节点（MASTER）配置 ############################
+
+唯一不同是 state 和 priority：
+
+vrrp_script chk_nginx {
+    script "/etc/keepalived/check_nginx.sh"
+    interval 2
+    weight -10
+}
+
+vrrp_instance VI_1 {
+    state BACKUP
+    interface eth0
+    virtual_router_id 51
+    priority 90
+    advert_int 1
+    authentication {
+        auth_type PASS
+        auth_pass 1234
+    }
+    virtual_ipaddress {
+        192.168.1.100
+    }
+    track_script {
+        chk_nginx
+    }
+}
+
+########################### nginx 检查脚本 ################################
+
+检查脚本 /etc/keepalived/check_nginx.sh
+
+#!/bin/bash
+if ! pidof nginx > /dev/null; then
+    exit 1
+else
+    exit 0
+fi
+该脚本用于检测 Nginx 是否运行。失败会触发优先级下降。
+
+chmod +x /etc/keepalived/check_nginx.sh
+
+########################### 启动流程 ######################################
+
+确保两台机器都已安装并启动 nginx
+两台机器都安装 keepalived
+将配置文件放入 /etc/keepalived/keepalived.conf
+启动服务：
+systemctl enable keepalived
+systemctl start keepalived
+
+############################ verification ################################
+
+访问 http://192.168.1.100，确认正常响应；
+停止主机 A 上的 nginx：
+systemctl stop nginx
+继续访问 http://192.168.1.100，确认正常响应；
+
+############################# advance ####################################
+
+如需要 LVS 模式、双主模式或使用双网卡的配置示例。
+./mytool.py --show LVS
+
+   """
+    print(keepalived_nginx_cmd) 
 
 
 def print_neutron_cmd():
