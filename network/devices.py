@@ -430,3 +430,80 @@ MLAG（Multi-Chassis Link Aggregation Group，多机箱链路聚合组）是网�
    """
     print(mlag_cmd) 
 
+def print_ruijie_cmd():
+    ruijie_cmd = """
+terminal length 0
+show memory
+show cpu
+show upgrade auto
+show cpu-protect m
+show ip route count
+show route-res usage all 
+show ip route
+show ip route count
+show ip route summary all 
+show ipv6 route
+show ipv6 route summary 
+show ipv6 route summary all 
+show ip route vrf NET-manage count
+show ip route vrf NET-manage
+show ipv6 route vrf NET-manage
+show arp detail vrf NET-manage
+show arp count
+show version detail
+show version slot
+show tcam-mode status
+show switch-mode
+show aggregatePort capacity 
+show switch-mode status
+show interface counters summary up
+show interface counters rate up 
+show interface counters errors up
+show interface usage up 
+show interface link-state-change statistics 
+show interface counters drops up 
+show memory
+show cpu
+show upgrade auto
+show power
+show fan
+show tem
+show alarm
+show vap data-sync
+show vap keepalive
+show vap peer-link
+show run | in vap
+show interface description
+show lldp neighbor
+show lacp summary
+show interface switchport
+show interface trunk
+show vlan
+show span summary
+show vrf
+show vrrp brief
+show ipv6 vrrp brief
+show ip ospf neighbor
+show ip bgp neighbor
+show bgp al lsummary
+show bgp all
+show isis neighbor
+show mac count
+show mac
+show vxlan mac
+show ipv6 neighbors ve
+show ipv6 neighbors statistics 
+show acl res 
+show acl res detail
+show vxlan
+show vxlan vtep-nbr
+show aggregatePort summary
+show lacp summary
+show aggregatePort summary 
+show run
+show clock
+show logging reverse
+terminal no length
+   """
+    print(ruijie_cmd) 
+
