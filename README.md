@@ -35,3 +35,4 @@ keepalived: 实现 VIP 在两台主机上漂移
 keepalived_nginx：实现 nginx 的高可用
 stp: 生成树基本概念介绍
 mlag: 多机箱链路聚合基本概念介绍
+ftp: ftp交互模式下常用的指令
