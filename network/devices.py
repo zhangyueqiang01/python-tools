@@ -504,6 +504,15 @@ show run
 show clock
 show logging reverse
 terminal no length
+
+# 通过SSH协议连接到锐捷（Ruijie）网络设备		   
+ssh -l COC_operator 30.16.80.33 /vrf CTVPN1107
+	ssh：Secure Shell协议，用于加密的远程登录
+	-l COC_operator：指定登录用户名为"COC_operator"
+	30.16.80.33：目标设备的IP地址
+	/vrf CTVPN1107：指定使用名为"CTVPN1107"的VRF(Virtual Routing and Forwarding)实例进行连接
+		/vrf 参数 告诉 SSH 客户端，不要使用默认路由表，而是查询 CTVPN1107 的路由表来确定如何连接到 30.16.80.33，确保 SSH 流量走正确的接口或隧道（如 MPLS VPN、专线等）。
+		如果 CTVPN1107 不可达，可通过 show ip vrf brief 查看别的vrf
    """
     print(ruijie_cmd) 
 
