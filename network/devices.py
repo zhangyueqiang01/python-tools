@@ -505,7 +505,7 @@ show clock
 show logging reverse
 terminal no length
 
-# 通过SSH协议连接到锐捷（Ruijie）网络设备		   
+# 通过SSH协议连接到锐捷（Ruijie）网络设备（跳板机 10.249.30.254）
 ssh -l COC_operator 30.16.80.33 /vrf CTVPN1107
 	ssh：Secure Shell协议，用于加密的远程登录
 	-l COC_operator：指定登录用户名为"COC_operator"
