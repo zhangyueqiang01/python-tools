@@ -24,6 +24,11 @@ def print_git_cmd():
 	# 恢复暂存的更改（如果需要）
 	git stash pop
 
+	# 删除 git 仓库中的文件
+	git rm file
+	git commit -m 'info'
+	git push
+
    """
     print(git_cmd)  
 
