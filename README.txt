@@ -22,7 +22,7 @@ troubleshooting： 存放故障处理案例的目录
 [入口程序和辅助程序介绍]
 addnew.sh: 为show选项添加新功能，使用方法./addnew.sh new,然后修改tmp.txt，将需要添加的内容写入指定位置,并将tmp.txt中的内容写入对应的文件即可。
 
-通过运行./mytool.py 添加以下选项可以实现不同的功能
+通过运行./mytool.py 添加以下选项可以实现不同的功能，建议克隆到本地后创建软连接 ln -s /workdir/python-tools/mytool.py /usr/bin/mytool
 
 optional arguments:
   -h, --help            show this help message and exit
