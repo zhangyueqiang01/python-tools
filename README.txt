@@ -1,3 +1,27 @@
+[各目录简介]
+ssembly：存放汇编代码的目录
+bash：存放bash脚本的目录
+bin：存放二进制程序的目录
+c：存放c语言教程的目录
+cmd: 存放指令帮助文档的目录
+databases：存放数据相关内容的目录
+git：存放git指令的目录
+gnu：存放gnu资料的目录
+hardware:存放硬件知识的目录（例如cpu、寄存器等）
+kernel：存放内核相关知识的目录
+memory：存放内存相关知识的目录
+network：存放网络相关内容的目录
+other：存放古诗的目录
+program:
+python2.7:存放python2.7版本代码的目录
+software：存放第三方应用程序指令使用帮助的目录
+sysutils：存放系统指令帮助的目录
+troubleshooting： 存放故障处理案例的目录
+
+
+[入口程序和辅助程序介绍]
+addnew.sh: 为show选项添加新功能，使用方法./addnew.sh new,然后修改tmp.txt，将需要添加的内容写入指定位置,并将tmp.txt中的内容写入对应的文件即可。
+
 通过运行./mytool.py 添加以下选项可以实现不同的功能
 
 optional arguments:
@@ -44,7 +68,7 @@ optional arguments:
   --cntoeng CNTOENG     Modify all Chinese punctuation marks into English
                         punctuation marks, like sed -i s/：/:/g test.py
 
-
+[各类查询参数介绍]
 通过运行./mytool.py —show [arg] 可以进行信息展示，以下是对各种不常用的参数的备注
 
 reboot: 系统重启原因定位
