@@ -69,3 +69,13 @@ def print_poetry_cmd():
    """
     print(poetry_cmd) 
 
+def print_english_cmd():
+    print("english usage command:")
+    english_cmd = """
+Can you can a can as a canner can can a can?
+你能像罐头工人一样把罐头装起来吗
+
+How much wood would a woodchuck chuck if a woodchuck could chuck wood? He would chuck, he would, as much as he could and chuck as much wood as a woodchuck would if a woodchuck could chuck wood
+   """
+    print(english_cmd) 
+
