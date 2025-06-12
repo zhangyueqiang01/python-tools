@@ -1,5 +1,51 @@
-通过运行./mytool.py —show [arg] 可以进行信息展示，以下是对各种不常用的参数的备注
+通过运行./mytool.py 添加以下选项可以实现不同的功能
 
+optional arguments:
+  -h, --help            show this help message and exit
+                        Display usage instance
+  --item {main,var,printf,macron,struct,vas,mem_consume,cpu_consume,fork,current}
+                        Usage: ./mytool.py --show c --item printf
+  --option {basic,cmd,instance_helloworld,instance_add}
+                        Usage: ./mytool.py --show assembly --option basic
+  --choice {concept}    Usage: ./mytool.py --show mm --choice concept
+  -i PKG, --install PKG
+                        install packages on remote host
+  -p PING, --ping PING  ping a net such as ping 8.8.8
+  -d HOST, --ihost HOST
+                        combine with -i
+  -z ZOMBIE, --zombie ZOMBIE
+                        create a zombie process on loalhost machine
+  -P PASSWD, --passwd PASSWD
+                        input a number and create a random passwd
+  -w HPORT, --web HPORT
+                        such as python -m SimpleHTTPServer 8080 or python3 -m
+                        http.server 80
+  -t TPORT, --mytcpdump TPORT
+                        such as tcpdump -i any tcp port 80 and host 8.8.8.8
+  -u UPORT, --udpdump UPORT
+                        such as tcpdump -i any udp port 80 and host 8.8.8.8
+                        -vv
+  -H, --healthchk       Run Linux health check
+  -e, --SecureEn        protect your Linux
+  --arpdump             such as tcpdump -i any arp -ennl -vv
+  --top10               { ps aux | head -1 ; ps aux | sort -k3rn | head ; }
+  --host HOST           send UDP packages to Host name or IP address, default
+                        is NUll
+  --port PORT           send UDP packages to Port number, default is 12345
+  --size SIZE           send UDP packages Message size in bytes, default is
+                        1024 Kb
+  --packets-per-thread PACKETS_PER_THREAD
+                        Number of UDP packets per thread, default is 3
+  --total-threads TOTAL_THREADS
+                        Total number of threads, default is 10
+  --shost SHOST         Scan a special host tcp port, default host is NUll
+  --sport SPORT         Scan a host speial tcp port like "nc -zv 8.8.8.8 80"
+                        or "nmap -sV -p 22 8.8.8.8", default port is NUll
+  --cntoeng CNTOENG     Modify all Chinese punctuation marks into English
+                        punctuation marks, like sed -i s/：/:/g test.py
+
+
+通过运行./mytool.py —show [arg] 可以进行信息展示，以下是对各种不常用的参数的备注
 
 reboot: 系统重启原因定位
 shell: shell 概念讲解
