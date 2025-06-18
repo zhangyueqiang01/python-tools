@@ -107,5 +107,6 @@ stp: 生成树基本概念介绍
 mlag: 多机箱链路聚合基本概念介绍
 ftp: ftp交互模式下常用的指令
 mysql: mysql 基础指令
+elf: 可执行与可链接格式讲解
 
 --show c --item current : 通过 current 宏查看进程属性的示例代码
