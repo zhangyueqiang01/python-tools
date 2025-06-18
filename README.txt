@@ -110,5 +110,6 @@ mysql: mysql 基础指令
 elf: 可执行与可链接格式讲解
 readelf: 查看 ELF 文件内部结构的命令行工具使用方法
 objdump: objdump 指令的使用方法
+task_struct：进程结构体简介
 
 --show c --item current : 通过 current 宏查看进程属性的示例代码

@@ -530,3 +530,78 @@ def print_kthread_cmd():
    """
     print(kthread_cmd) 
 
+def print_task_struct_cmd():
+    task_struct_cmd = """
+############################## DESCRIPTION ##################################
+
+task_struct 是 Linux 内核中最核心的数据结构之一，它用来表示一个进程（或线程）的完整信息。
+每个进程在内核中都有一个对应的 task_struct 结构体实例，内核通过这个结构体来管理和调度进程。
+在 Linux 源码中（通常在 include/linux/sched.h 或 include/linux/sched/task.h 中）。
+这个结构体非常庞大，包含了进程执行所需的各种信息。
+
+############################# 主要字段分类与说明 ###############################
+
+1. 进程状态与标识
+   pid：进程 ID。
+   tgid：线程组 ID（对于主线程等于 pid）。
+   state：进程状态（如运行、就绪、睡眠、停止、僵尸等）。
+   exit_state：退出时的状态。
+   flags：进程的各种标志位。
+   comm[16]：进程名。
+   
+2. 进程调度相关
+   prio / static_prio / normal_prio：优先级。
+   policy：调度策略（如 SCHED_NORMAL、SCHED_FIFO）。
+   se：调度实体（调度器用来管理调度队列的部分）。
+   rt：实时调度信息。
+   sched_class：调度类（如 CFS、RT 等）。
+   
+3. 内存管理
+   mm：指向进程的内存描述符（内核线程为 NULL）。
+   active_mm：当前活跃使用的 mm 结构。
+   vma：虚拟内存区域链表。
+   
+4. 文件系统相关
+   fs：文件系统信息（如根目录、当前工作目录）。
+   files：打开的文件列表（struct files_struct）。
+   
+5. 信号处理
+   signal：共享的信号处理结构（线程组共享）。
+   sighand：具体的信号处理函数。
+   blocked：当前阻塞的信号。
+   
+6. 父子关系与线程关系
+   real_parent：真正的父进程。
+   parent：用于信号发送和审计的父进程。
+   children：子进程链表。
+   sibling：兄弟进程链表。
+   group_leader：线程组的领头线程。
+   thread_group：线程组中的其他线程。
+   
+7. 时间统计
+   utime / stime：用户态 / 内核态运行时间。
+   start_time：进程启动时间。
+   real_start_time：实际启动时间（包含 sleep 的时间）。
+   
+8. CPU相关
+   cpu：当前运行在哪个 CPU 上。
+   cpus_allowed：允许在哪些 CPU 上运行。
+   thread：体系结构相关的寄存器上下文（切换上下文时用到）。
+   
+9. 安全与审计
+   cred：进程的凭据（UID、GID、权限等）。
+   audit_context：审计日志信息。
+
+############################## 与线程的关系 ###################################
+
+在 Linux 中，线程本质上也是一个 task_struct，只是与其它线程共享某些资源（如 mm、files、
+signal 等）。通过 CLONE_xxx 标志决定哪些资源共享。
+
+
+################################# tips ######################################
+
+在调试内核或分析 crash dump 时，可以通过 ps, /proc/[pid], top 等工具间接查看 task_struct 
+的内容，也可以在内核模块或使用 gdb 直接分析。
+   """
+    print(task_struct_cmd) 
+
