@@ -69,6 +69,7 @@ def print_poetry_cmd():
 报君黄金台上意，提携玉龙为君死
 怒从心头起、恶向胆边生
 天子一怒，伏尸百万；匹夫一怒，血溅三尺,老子一怒,就怒了一下
+月黑风高夜，杀人放火天
 """
     print(poetry_cmd) 
 
@@ -79,6 +80,8 @@ Can you can a can as a canner can can a can?
 你能像罐头工人一样把罐头装起来吗
 
 How much wood would a woodchuck chuck if a woodchuck could chuck wood? He would chuck, he would, as much as he could and chuck as much wood as a woodchuck would if a woodchuck could chuck wood
+
+freedom is not free
    """
     print(english_cmd) 
 
