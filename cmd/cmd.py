@@ -773,3 +773,75 @@ ftp <ftp服务器地址>
    """
     print(ftp_cmd) 
 
+def print_readelf_cmd():
+    readelf_cmd = """
+############################## DESCRIPTION ##################################
+
+readelf 是 Linux 系统中用于查看 ELF（Executable and Linkable Format，可执行与可链
+接格式） 文件内部结构的重要命令行工具。它由 GNU binutils 提供，主要用于分析二进制文件、可
+执行文件、目标文件（.o）、共享库（.so）等。
+
+############################### option ######################################
+
+基本语法：
+readelf [选项] <ELF文件>
+
+| 选项       | 说明                          
+| ---------- | ------------------------------------------ 
+| `-h`       | 显示 ELF 文件头信息（ELF Header）
+| `-l`       | 显示程序头表（Program Header Table）
+| `-S`       | 显示节区头表（Section Header Table）
+| `-s`       | 显示符号表（Symbol Table）
+| `-r`       | 显示重定位信息（Relocation Entries）
+| `-d`       | 显示动态段信息（Dynamic Section）
+| `-V`       | 显示版本信息（版本需求和定义）
+| `-a`       | 显示所有可用的信息（相当于组合了多个选项）
+
+
+############################### instance ####################################
+
+1. 查看 ELF 文件头
+readelf -h a.out
+# 输出 ELF 文件的基本信息，比如架构、入口地址、字节序等。
+
+2. 查看节区头表（Section Header Table）
+readelf -S a.out
+# 可以看到所有节区（如 .text, .data, .bss, .symtab, .strtab）的名称、类型、偏移、大小等。
+
+3. 查看程序头表（Program Header Table）
+readelf -l a.out
+# 用于分析 ELF 是如何被加载进内存的（如 LOAD, INTERP, DYNAMIC 等段）。
+
+4. 查看符号表（Symbol Table）
+readelf -s a.out
+# 显示函数、变量等符号及其地址、类型、作用域。
+
+5. 查看重定位信息
+readelf -r a.out
+# 显示编译时生成的重定位条目，常用于分析未完全链接的目标文件。
+
+6. 查看动态段信息（用于共享库）
+readelf -d libfoo.so
+# 包括动态链接器、依赖库名、符号查找信息等。
+
+7. 查看节区内容
+readelf -x .text a.out 或：readelf -x 10 a.out
+# 用于查看 .text 节（即机器码段）或指定编号的节的十六进制内容。
+
+8. 查看所有信息
+readelf -a a.out
+# 相当于把多个选项合在一起全面分析 ELF 文件。
+
+如需更详细帮助：
+man readelf
+
+
+############################# 与 objdump 的区别 ##############################
+
+| 工具      | 功能描述
+| --------- | ----------------------------------------------------------------
+| `readelf` | 只分析 ELF 格式，输出更为详细，速度更快，适用于 ELF 文件结构研究
+| `objdump` | 支持更多文件格式（如 COFF），可反汇编，更适合逆向工程和调试分析
+   """
+    print(readelf_cmd) 
+
