@@ -405,6 +405,7 @@ def print_vim_cmd():
         nd$ 删除后n行（从光标当前处开始算起）        
         u   撤销上一次修改
         U   撤销一行内的所有修改
+	多行同时添加空格的方法    Ctrl + v ---> 上下箭头选中 ---> Shift + i ---> 空格 ---> Esc
 
 末行模式
         :r /etc/passwd  读文件内容进vim
