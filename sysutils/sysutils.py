@@ -1522,14 +1522,17 @@ ELF 文件由多个部分组成，主要包括以下三种表结构：
 1. ELF Header（ELF头部）
   描述整个文件的基本信息，比如类型、架构、入口地址等。
   文件的开头 16 字节是 "magic number"，用于标识 ELF 文件。
+  更多详细信息请执行：./mytool --show elf_header
 
 2. Program Header Table（程序头部表）
   告诉系统如何创建进程的内存映像。
   主要用于运行阶段，比如加载动态库、映射段到内存。
+  更多详细信息请执行：./mytool --show elf_program_header
 
 3. Section Header Table（节区头部表）
   描述文件中各个节（section）的信息，比如 .text, .data, .bss, .symtab 等。
   主要用于链接阶段，不参与程序运行。
+  更多详细信息请执行：./mytool --show elf_section_header
 
 
 ########################## 常见节区（Section） ################################
@@ -1577,5 +1580,78 @@ $ objdump -d /bin/ls
    """
     print(elf_cmd) 
 
+def print_elf_header_cmd():
+    elf_header_cmd = """
+############################## DESCRIPTION ##################################
+
+在 ELF（Executable and Linkable Format） 文件中，**ELF Header（ELF 头部）**是文件
+的起始部分，占据固定的 64 字节（在 64 位系统中）或 52 字节（在 32 位系统中）。它是整个 ELF
+文件的“身份证”，提供了关于该文件类型、架构、入口地址等关键信息。
+
+######################### ELF Header 的位置与结构定义 ##########################
+
+在 Linux 内核源码中，ELF 头部结构体定义在：
+
+// 32位系统
+/usr/include/elf.h: typedef struct {
+    ...
+} Elf32_Ehdr;
+
+// 64位系统
+/usr/include/elf.h: typedef struct {
+    ...
+} Elf64_Ehdr;
+
+
+#################### ELF Header 字段详细解释（以 64 位为例） ####################
+
+typedef struct {
+    unsigned char e_ident[16];   // 魔数和其他标识
+    uint16_t      e_type;        // 文件类型
+    uint16_t      e_machine;     // 目标机器架构
+    uint32_t      e_version;     // ELF 版本
+    uint64_t      e_entry;       // 程序入口地址
+    uint64_t      e_phoff;       // 程序头表 (Program Header Table) 的偏移
+    uint64_t      e_shoff;       // 节区头表 (Section Header Table) 的偏移
+    uint32_t      e_flags;       // 与处理器相关的标志
+    uint16_t      e_ehsize;      // ELF Header 的大小（单位：字节）
+    uint16_t      e_phentsize;   // 程序头表每项大小
+    uint16_t      e_phnum;       // 程序头表项数量
+    uint16_t      e_shentsize;   // 节区头表每项大小
+    uint16_t      e_shnum;       // 节区头表项数量
+    uint16_t      e_shstrndx;    // 字符串表在节区表中的索引
+} Elf64_Ehdr;
+
+############################### 各字段说明 ###################################
+
+| 字段          | 含义说明
+| ------------- | -------------------------------------------------------------
+| `e_ident[16]` | 魔数（0x7F 'E' 'L' 'F'）、位数（32/64）、字节序（小端/大端）等识别信息
+| `e_type`      | 文件类型（如可执行文件 `ET_EXEC`，共享库 `ET_DYN`）
+| `e_machine`   | 目标架构（如 x86 是 `EM_386`，x86\_64 是 `EM_X86_64`）
+| `e_version`   | ELF 版本，通常为 `1`（当前版本）
+| `e_entry`     | 程序入口点地址（即运行时从哪开始执行）
+| `e_phoff`     | Program Header Table 的偏移位置（从文件头起）
+| `e_shoff`     | Section Header Table 的偏移位置
+| `e_flags`     | 处理器相关标志，特定架构用
+| `e_ehsize`    | ELF Header 的总大小
+| `e_phentsize` | 每个程序头表项的大小
+| `e_phnum`     | 程序头表中的条目数量
+| `e_shentsize` | 每个节区头表项的大小
+| `e_shnum`     | 节区头表中的条目数量
+| `e_shstrndx`  | 字符串节 `.shstrtab` 在节表中的索引位置
+
+查看 ELF Header 示例:
+readelf -h /bin/ls
+
+############################### 作用总结 #####################################
+
+| 功能     | 描述
+| -------- | ---------------------------------------------------------------------
+| 文件识别 | 通过 `e_ident` 来识别是否是 ELF 格式、是 32 位或 64 位、是否为小端字节序等。
+| 程序加载 | 操作系统根据 `e_entry` 找到程序入口地址开始执行；根据 `e_phoff` 找到加载的段。
+| 链接处理 | 链接器（如 `ld`）使用节区表（`e_shoff`）进行符号解析、重定位处理等。
+   """
+    print(elf_header_cmd) 
 
 
