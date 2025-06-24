@@ -1679,7 +1679,7 @@ typedef struct {
 
 ############################### 字段解释 #####################################
 
-| 字段         | 含义
+| 字段       | 含义
 | ---------- | --------------------------------------
 | `p_type`   | 段类型（如 `PT_LOAD` 表示需要加载）
 | `p_flags`  | 权限标志，如可读 `R`，可写 `W`，可执行 `X`
@@ -1726,4 +1726,104 @@ Program Headers:
 | 不依赖节表   | 程序运行时不需要 Section Header Table，只用 Program Header Table 即可运行
    """
     print(elf_program_header_cmd) 
+
+def print_elf_section_header_cmd():
+    elf_section_header_cmd = """
+############################## DESCRIPTION ##################################
+
+ELF 文件中的 Section Header Table（节区头表），这是 ELF 文件结构中非常重要的一部分，主
+要用于链接、重定位、调试等阶段，不直接参与程序运行。
+
+Section VS Segment
+Segment（段）：运行时概念，由 Program Header Table 控制，操作系统用它来加载程序。
+Section（节）：链接时概念，由 Section Header Table 控制，链接器用它来组织和管理代码、数据、符号等信息。
+➤ ELF 文件中常见的 .text, .data, .bss, .symtab, .strtab 都是 section。
+
+########################## 结构定义（以 64 位为例） ############################
+
+在 Linux 内核源码中的头文件 /usr/include/elf.h ，64 位 ELF 定义如下：
+typedef struct {
+    uint32_t sh_name;       // 节区名称（在字符串表中的偏移）
+    uint32_t sh_type;       // 节区类型
+    uint64_t sh_flags;      // 节区标志（可执行/可写等）
+    uint64_t sh_addr;       // 节区在内存中的地址（可执行文件中有效）
+    uint64_t sh_offset;     // 节区在文件中的偏移
+    uint64_t sh_size;       // 节区大小（单位：字节）
+    uint32_t sh_link;       // 节区间的链接信息（具体含义依类型而异）
+    uint32_t sh_info;       // 附加信息（通常是一个索引或数量）
+    uint64_t sh_addralign;  // 对齐要求
+    uint64_t sh_entsize;    // 若节中包含表格结构，此为每项大小
+} Elf64_Shdr;
+
+############################## 主要字段解释 ####################################
+| 字段           | 含义
+| -------------- | -----------------------------------------------------
+| `sh_name`      | 名称在字符串表 `.shstrtab` 中的偏移
+| `sh_type`      | 节区类型（如 `SHT_PROGBITS`, `SHT_SYMTAB` 等）
+| `sh_flags`     | 权限标志（如 `SHF_WRITE`, `SHF_ALLOC`, `SHF_EXECINSTR`）
+| `sh_addr`      | 节区在内存中的地址（仅用于可执行文件）
+| `sh_offset`    | 节区在 ELF 文件中的偏移
+| `sh_size`      | 节区大小
+| `sh_link`      | 链接信息，依类型不同而异
+| `sh_info`      | 附加信息，依类型不同而异
+| `sh_addralign` | 对齐边界
+| `sh_entsize`   | 如果是表格（如符号表），则是每个条目的大小
+
+########################### 常见节区类型（sh_type） ############################
+| 类型常量       | 含义                       
+| -------------- | ------------------------ 
+| `SHT_NULL`     | 保留，不使用
+| `SHT_PROGBITS` | 程序数据（如 `.text`, `.data`）
+| `SHT_SYMTAB`   | 符号表（静态）
+| `SHT_DYNSYM`   | 动态符号表
+| `SHT_STRTAB`   | 字符串表
+| `SHT_RELA`     | 重定位表（带附加项）
+| `SHT_REL`      | 重定位表（不带附加项）
+| `SHT_NOBITS`   | 占用内存但不占文件空间（如 `.bss`）
+
+############################ 常见节区（section） ##############################
+| 节区名      | 说明                         
+| ----------- | ------------------------------- 
+| `.text`     | 程序代码段，`SHT_PROGBITS`，`R-X`
+| `.data`     | 初始化数据，`SHT_PROGBITS`，`RW-`
+| `.bss`      | 未初始化数据，`SHT_NOBITS`，`RW-`
+| `.rodata`   | 只读数据，如字符串常量
+| `.symtab`   | 静态符号表
+| `.strtab`   | 符号名字符串表
+| `.shstrtab` | 节区名称字符串表
+| `.rel.text` | 针对 `.text` 的重定位表
+| `.debug*`   | 调试信息节（GDB 使用）
+
+############################### instance ####################################
+readelf -S /bin/ls
+There are 29 section headers, starting at offset 0x25b40:
+  [Nr] Name      Type            Address          Offset
+  [ 0]           NULL            0000000000000000 00000000
+  [ 1] .interp   PROGBITS        0000000000000238 00000238
+  [ 2] .note.ABI-tag NOTE        0000000000000254 00000254
+  [ 3] .text     PROGBITS        0000000000001000 00001000
+  ...
+  
+########################### Section Header 的用途 ############################
+| 用途         | 描述
+| ------------ | ------------------------------------------------------------- 
+| 链接器使用   | 识别符号表、重定位信息、节名等
+| 调试器使用   | `.debug_info`, `.symtab`, `.strtab` 提供调试信息
+| 静态分析     | 分析代码段、数据段、符号关系
+| 并不用于运行 | 加载运行时主要使用 **Program Header Table**，而非 Section Header Table
+
+################# 关联字段回顾：e_shoff, e_shnum, e_shstrndx ##################
+| 字段         | 说明
+| ------------ | -------------------------------
+| `e_shoff`    | Section Header Table 的文件偏移
+| `e_shnum`    | 节区表的条目数量
+| `e_shstrndx` | `.shstrtab` 字符串表的节索引（即节名表）
+
+############################### 作用总结 #####################################
+Section Header Table 是链接器、调试器等工具的主要依据；
+每个 Section 描述 ELF 文件中的一个内容单元，如代码、数据、符号等；
+程序运行时几乎不使用 Section Header Table，而是依赖 Program Header Table；
+利用 readelf -S 可以快速查看 ELF 文件的结构。
+   """
+    print(elf_section_header_cmd) 
 
