@@ -1522,17 +1522,17 @@ ELF 文件由多个部分组成，主要包括以下三种表结构：
 1. ELF Header（ELF头部）
   描述整个文件的基本信息，比如类型、架构、入口地址等。
   文件的开头 16 字节是 "magic number"，用于标识 ELF 文件。
-  更多详细信息请执行：./mytool --show elf_header
+  更多详细信息请执行：./mytool.py --show elf_header
 
 2. Program Header Table（程序头部表）
   告诉系统如何创建进程的内存映像。
   主要用于运行阶段，比如加载动态库、映射段到内存。
-  更多详细信息请执行：./mytool --show elf_program_header
+  更多详细信息请执行：./mytool.py --show elf_program_header
 
 3. Section Header Table（节区头部表）
   描述文件中各个节（section）的信息，比如 .text, .data, .bss, .symtab 等。
   主要用于链接阶段，不参与程序运行。
-  更多详细信息请执行：./mytool --show elf_section_header
+  更多详细信息请执行：./mytool.py --show elf_section_header
 
 
 ########################## 常见节区（Section） ################################
@@ -1654,4 +1654,76 @@ readelf -h /bin/ls
    """
     print(elf_header_cmd) 
 
+
+def print_elf_program_header_cmd():
+    elf_program_header_cmd = """
+############################## DESCRIPTION ##################################
+
+Program Header Table（PHT） 告诉操作系统或动态链接器如何将 ELF 文件的内容加载到内存中运行。
+每一项（叫一个 Program Header）描述了一个段（Segment），而这些段通常是加载到内存中的代码段、数据段、动态链接信息等。
+✅ 注意：段（Segment）是运行时概念，而节（Section）是编译和链接时概念。
+
+########################## 结构定义（以 64 位为例） ############################
+
+定义在内核源码 /usr/include/elf.h 中：
+typedef struct {
+    uint32_t p_type;    // 段类型（决定用途）
+    uint32_t p_flags;   // 段权限（rwx）
+    uint64_t p_offset;  // 在文件中的偏移
+    uint64_t p_vaddr;   // 虚拟地址（内存中）
+    uint64_t p_paddr;   // 物理地址（一般忽略）
+    uint64_t p_filesz;  // 文件中段的大小
+    uint64_t p_memsz;   // 段在内存中的大小
+    uint64_t p_align;   // 对齐方式
+} Elf64_Phdr;
+
+############################### 字段解释 #####################################
+
+| 字段         | 含义
+| ---------- | --------------------------------------
+| `p_type`   | 段类型（如 `PT_LOAD` 表示需要加载）
+| `p_flags`  | 权限标志，如可读 `R`，可写 `W`，可执行 `X`
+| `p_offset` | 文件中偏移位置（从文件头开始）
+| `p_vaddr`  | 加载到内存后的虚拟地址
+| `p_paddr`  | 物理地址（仅用于嵌入式）
+| `p_filesz` | 文件中这段的大小
+| `p_memsz`  | 加载后在内存中占用的大小（可包含未初始化部分）
+| `p_align`  | 对齐方式（一般为页面大小，0x1000）
+
+
+常见的 p_type 类型：
+| 值           | 含义                               
+| ------------ | --------------------------------------- 
+| `PT_NULL`    | 忽略条目
+| `PT_LOAD`    | 可加载到内存的段（代码/数据段）
+| `PT_DYNAMIC` | 动态链接信息
+| `PT_INTERP`  | 指向解释器路径（比如 `/lib/ld-linux.so.2`）
+| `PT_NOTE`    | 附注信息（core dump）
+| `PT_PHDR`    | 包含程序头表的自身信息
+| `PT_TLS`     | 线程局部存储段
+
+查看 Program Header 表：
+readelf -l /bin/ls
+############################### instance ####################################
+
+Program Headers:
+  Type           Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   Flags  Align
+  LOAD           0x000000 0x0000000000400000 0x0000000000400000 0x001000 0x001000 R      0x200000
+  LOAD           0x001000 0x0000000000401000 0x0000000000401000 0x002000 0x002000 R E    0x200000
+  LOAD           0x003000 0x0000000000403000 0x0000000000403000 0x001000 0x002000 RW     0x200000
+解释：
+  第一段是只读（R），可能是 ELF 头 + 程序头
+  第二段是代码段（R + E）
+  第三段是数据段（RW），可能还包括 .bss（未初始化变量）
+  
+############################### 作用总结 #####################################
+
+| 功能         | 描述
+| ------------ | ---------------------------------------------------------------- 
+| 加载指导     | 操作系统根据 `PT_LOAD` 项将文件的各段加载进内存
+| 动态链接     | 动态链接器根据 `PT_DYNAMIC`, `PT_INTERP` 等执行链接逻辑
+| 栈保护等功能 | 有时包含 `GNU_STACK`, `GNU_RELRO` 段做安全加固
+| 不依赖节表   | 程序运行时不需要 Section Header Table，只用 Program Header Table 即可运行
+   """
+    print(elf_program_header_cmd) 
 
