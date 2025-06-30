@@ -116,5 +116,7 @@ objdump: objdump 指令的使用方法
 task_struct：进程结构体简介
 lsof: lsof 指令使用帮助
 ltrace: ltrace 指令使用帮助
+smartctl: smartctl 指令使用帮助
+lsscsi: lsscsi 指令使用帮助
 
 --show c --item current : 通过 current 宏查看进程属性的示例代码

@@ -973,3 +973,119 @@ ltrace一般适用于：
    """
     print(ltrace_cmd) 
 
+def print_smartctl_cmd():
+    smartctl_cmd = """
+############################## DESCRIPTION ##################################
+
+smartctl 是 smartmontools 工具包中的一个命令行工具，用于监控和控制硬盘的 S.M.A.R.T.
+（Self-Monitoring, Analysis and Reporting Technology）功能。它可以帮助你检测磁盘是
+否即将出现故障，对 HDD 和 SSD 都适用。
+
+############################### option ######################################
+
+smartctl [选项] 设备
+| 选项          | 说明
+| ------------- | ---------------------------------------- 
+| `-i`          | 显示设备信息
+| `-a` 或 `-x`  | 显示所有可用信息（包括设备信息、SMART 状态、日志等）
+| `-H`          | 显示健康状况（SMART overall-health）
+| `-c`          | 显示SMART功能支持情况
+| `-A`          | 显示SMART属性（例如通电时间、坏道计数等）
+| `-t short`    | 执行短时自检
+| `-t long`     | 执行长时自检
+| `-l error`    | 显示错误日志
+| `-l selftest` | 显示自检日志
+| `-s on/off`   | 开启或关闭 SMART 功能
+| `-d`          | 指定设备类型（如 RAID 控制器后的磁盘）
+| `--scan`      | 扫描所有支持的设备
+
+
+############################### instance ####################################
+
+1. 查看磁盘是否支持 SMART，并查看设备信息
+smartctl -i /dev/sda
+
+2. 检查磁盘健康状况
+smartctl -H /dev/sda
+
+3. 显示所有SMART信息
+smartctl -a /dev/sda
+
+4. 启动短自检
+smartctl -t short /dev/sda
+执行后可以通过以下命令查看自检结果：
+smartctl -l selftest /dev/sda
+
+5. 启用 SMART 功能（如果未启用）
+smartctl -s on /dev/sda
+
+6.查看 NVMe 盘的SMART
+smartctl -a -d nvme /dev/nvme0n1
+
+
+################################## tips #####################################
+
+1.有些RAID控制器后的硬盘不支持直接通过/dev/sdX访问，需要加 -d 参数指定类型（如 -d megaraid,N）。
+2.smartctl 需要 root 权限运行。
+3.如果是 NVMe 设备，要加 -d nvme 参数，否则可能无法读取信息。
+	常见磁盘设备路径
+		/dev/sda、/dev/sdb：SATA/SAS 硬盘
+		/dev/nvme0n1：NVMe 固态硬盘（需使用 -d nvme）
+   """
+    print(smartctl_cmd) 
+
+def print_lsscsi_cmd():
+    lsscsi_cmd = """
+############################## DESCRIPTION ##################################
+
+lsscsi 是 Linux 系统中用于列出当前系统中所有 SCSI 设备（包括 SATA、SAS、光驱等）的命令。
+它基于 /sys 文件系统，能够清晰地展示每个设备的 SCSI 地址、类型、厂商、型号等信息，是系统管
+理和排障中常用的工具之一。
+
+############################### option ######################################
+lsscsi [选项]
+| 选项 | 作用说明
+| ---- | ------------------------------
+| `-s` | 显示设备的 SCSI 地址（默认行为）
+| `-v` | 显示更详细信息，包括设备路径
+| `-t` | 显示设备类型
+| `-d` | 显示设备的 major/minor 号
+| `-c` | 显示设备的通道（Channel）信息
+| `-l` | 显示设备与块设备的链接路径
+| `-g` | 显示对应的 sg 设备（如 `/dev/sg0`）
+
+
+############################### instance ####################################
+1. 查看所有 SCSI 设备（默认）：
+lsscsi
+
+2. 查看详细信息：
+lsscsi -v
+
+3. 显示设备的类型：
+lsscsi -t
+
+4. 显示对应的 SG 设备（如用于smartctl等工具）：
+lsscsi -g
+
+5. 显示块设备链接路径：
+lsscsi -l
+
+############################# 常见输出格式说明： ###############################
+
+$ lsscsi
+[0:0:0:0]    disk    ATA      ST1000DM010-2EP1 CC43  /dev/sda
+[1:0:0:0]    cd/dvd  TSSTcorp CDDVDW SH-224DB   SB00  /dev/sr0
+
+各字段含义如下：
+| 字段       | 说明
+| ---------- | ------------------------------------- 
+| \[0:0:0:0] | SCSI 地址（Host\:Channel\:Target\:LUN）
+| disk       | 设备类型（磁盘 disk、光驱 cd/dvd 等）
+| ATA        | 厂商标识
+| ST1000...  | 型号
+| CC43       | 固件版本
+| /dev/sda   | 对应的设备文件
+   """
+    print(lsscsi_cmd) 
+
