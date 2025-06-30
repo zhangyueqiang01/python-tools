@@ -114,5 +114,7 @@ elf_section_header: elf 文件 Section Header Table 讲解
 readelf: 查看 ELF 文件内部结构的命令行工具使用方法
 objdump: objdump 指令的使用方法
 task_struct：进程结构体简介
+lsof: lsof 指令使用帮助
+ltrace: ltrace 指令使用帮助
 
 --show c --item current : 通过 current 宏查看进程属性的示例代码
