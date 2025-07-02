@@ -4,30 +4,37 @@
 def print_git_cmd():
     print("git usage command:")
     git_cmd = """
-	#添加一个特定的目录，比如my_folder
-	git add my_folder
+#添加一个特定的目录，比如my_folder
+git add my_folder
 
-	#添加当前目录及其所有子目录中的所有文件
-	git add .
+#添加当前目录及其所有子目录中的所有文件
+git add .
 
-	git commit -m "提交信息"
-	git push
-	git log
-	git status
+git commit -m "提交信息"
+git push
+git log
+git status
 
-	# 暂存本地更改
-	git stash
-	
-	# 拉取远程仓库的更新
-	git pull origin master
-	
-	# 恢复暂存的更改（如果需要）
-	git stash pop
+# 暂存本地更改
+git stash
 
-	# 删除 git 仓库中的文件
-	git rm file
-	git commit -m 'info'
-	git push
+# 拉取远程仓库的更新
+git pull origin master
+
+# 恢复暂存的更改（如果需要）
+git stash pop
+
+# 删除 git 仓库中的文件
+git rm file
+git commit -m 'info'
+git push
+
+# 远端仓库和本地不一致，需要先合并再推送
+git add .
+git commit -m "你的提交信息"
+git pull --rebase
+这会先将你的本地提交暂存，拉取远端变更，然后重新应用你的提交
+git push
 
    """
     print(git_cmd)  
