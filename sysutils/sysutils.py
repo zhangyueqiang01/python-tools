@@ -1395,9 +1395,9 @@ lsblk
 df -Th /dev/vda1
 
 ################################  caution ########################################
-如果Linux内核版本低于3.6.0，做完 growpart /dev/vda 1 操作后需要重启操作系统再调整文件系统的大小（resize2fs、xfs_growfs操作）
+1、如果Linux内核版本低于3.6.0，做完 growpart /dev/vda 1 操作后需要重启操作系统再调整文件系统的大小（resize2fs、xfs_growfs操作）
 
-MBR 格式单个分区最大支持2T 的存储空间，
+2、MBR 格式单个分区最大支持2T 的存储空间
    """
     print(lvm_cmd) 
 
