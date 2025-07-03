@@ -1828,3 +1828,76 @@ Section Header Table 是链接器、调试器等工具的主要依据；
    """
     print(elf_section_header_cmd) 
 
+def print_sub_net_cmd():
+    sub_net_cmd = """
+############################## DESCRIPTION ##################################
+
+在 Linux 中，网卡次要地址（secondary IP address） 和 子接口（sub-interface） 都可以
+用来给一个物理网卡分配多个 IP 地址，但它们在配置方式、使用场景和底层机制上有所不同。
+
+############################### 定义 #########################################
+
+网卡次要地址（Secondary IP Address）
+  给同一个物理网卡添加多个 IP 地址，这些 IP 地址都属于同一个接口（如 eth0）。
+  不区分 VLAN、物理层，只是逻辑上的额外 IP。
+
+子接口（Sub-interface）
+  在一个物理网卡上通过“接口别名”或“VLAN 接口”的方式创建逻辑接口，如 eth0:1 或 eth0.100。
+  常用于 VLAN 或需要逻辑隔离的网络配置场景。
+
+################################ 配置方式 ####################################
+
+添加次要 IP
+  ip addr add 192.168.1.100/24 dev eth0
+  ifconfig eth0:1 192.168.1.100 netmask 255.255.255.0 up
+  注意：这种 eth0:1 写法其实并不创建真正的“子接口”，只是为了标识方便。
+
+添加子接口（VLAN 子接口）
+  ip link add link eth0 name eth0.100 type vlan id 100
+  ip addr add 192.168.100.1/24 dev eth0.100
+  ip link set eth0.100 up
+
+################################# 路由与隔离 ##################################
+
+次要地址：所有 IP 地址共用一个路由表、MAC 地址。
+子接口（如 VLAN 子接口）：虽然共享物理设备，但可有不同 VLAN tag，有独立的逻辑接口名、MAC 地址（可配置）。
+
+######################## 配置文件差异（以 RHEL/CentOS 为例） ####################
+
+主/次地址：
+  /etc/sysconfig/network-scripts/ifcfg-eth0
+  可用 IPADDR1=... IPADDR2=... 添加多个 IP。
+
+子接口：
+  文件名如 ifcfg-eth0.100，内容中指定 VLAN 信息。
+
+################################## 总结 #####################################
+
+| 项目           | 网卡次要地址      | 子接口         
+| -------------- | ----------------- | ----------- 
+| 本质           | 同一接口多个 IP   | 基于物理接口的逻辑接口 
+| 是否 VLAN 支持 | ❌                | ✅           
+| 适用场景       | 多 IP、多网段访问 | VLAN、网络隔离   
+| 命令复杂度     | 简单              | 稍复杂         
+| 配置文件       | 与主接口共享或独立| 独立文件        
+
+
+通过 ip a 指令查看：
+网卡次要地址
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether 74:52:01:01:01:01 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.122.21/24 brd 192.168.122.255 scope global dynamic eth0
+       valid_lft 3582sec preferred_lft 3582sec
+    inet 2.2.2.2/8 brd 2.255.255.255 scope global eth0:0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::7652:1ff:fe01:101/64 scope link 
+       valid_lft forever preferred_lft forever
+
+子接口(eth0.10@eth0)
+6: eth0.10@eth0: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000
+    link/ether 74:52:01:01:01:01 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.10.1/24 scope global eth0.10
+       valid_lft forever preferred_lft forever
+   """
+    print(sub_net_cmd) 
+
