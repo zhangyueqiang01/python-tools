@@ -119,5 +119,6 @@ ltrace: ltrace 指令使用帮助
 smartctl: smartctl 指令使用帮助
 lsscsi: lsscsi 指令使用帮助
 sub_net: Linux 上网卡次要地址和子接口地址的区别和配置方法
+arp: arp 指令使用帮助
 
 --show c --item current : 通过 current 宏查看进程属性的示例代码
