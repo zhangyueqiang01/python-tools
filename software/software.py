@@ -886,20 +886,33 @@ vrrp_instance VI_1 {
 
 ############################# verification ##################################
 
-ip a 进行查看，vip 地址在两台主机上都会显示，关闭其中任何一台主机上的 eth1 网口，vip 都可以 ping 通
+ip a 进行查看，vip 地址在两台主机上都会以子接口的方式显示，关闭其中任何一台主机上的 eth1 网口，vip 都可以 ping 通
 
+3: eth1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether 74:52:01:01:01:02 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.2.1/24 brd 192.168.2.255 scope global eth1
+       valid_lft forever preferred_lft forever
+    inet 192.168.2.200/32 scope global eth1
+       valid_lft forever preferred_lft forever
+    inet6 fe80::7652:1ff:fe01:102/64 scope link 
+       valid_lft forever preferred_lft forever
+	   	   
+arp -n | grep 200
+可以看到 192.168.2.200 对应的 HWaddress 会在 node01 和 node02 两台机器上的 eth1 网卡之间来回切换
 
 ############################### caution ####################################
 
-master 挂掉后 vip 会漂移到 backup 上 ，master 恢复后 vip 会漂回到 master 上
-VIP 也可以独立配置在单独的网卡上（在配置中用的是 interface eth0，那 VIP 就会被绑定在 eth0 上）
+1、默认情况下，keepalived 要求绑定的接口（如 eth1）上至少有一个 非VIP 的已有 IP 地址，用于发送 VRRP 包，否则它会直接退出。
+
+2、master 挂掉后 vip 会漂移到 backup 上 ，master 恢复后 vip 会漂回到 master 上
+
 
 配置文件参数逐项解读：
 | 参数                   | 含义
 | ---------------------- | -------------------------------------------------------------------
 | `vrrp_instance VI_1`   | 定义一个 VRRP 实例，`VI_1` 是实例名称（可自定义）。一个实例表示一组主备切换逻辑。
 | `state MASTER`         | 当前节点初始状态。可为 `MASTER`（主）或 `BACKUP`（备）。Keepalived 会根据优先级等实际情况动态决定谁是主。
-| `interface eth0`       | 指定用于绑定 VIP 的网卡接口。这里为 `eth0`，也可写为 `ens33`、`enp3s0` 等真实网卡名。
+| `interface eth0`       | 指定用于绑定 VIP 的网卡接口。这里为 `eth0`，也可写为 `ens33`、`enp3s0` 等别的拥有IP地址的网卡名。
 | `virtual_router_id 51` | VRRP 组标识符，同一组中的主备必须保持一致。值范围是 `0–255`，多个 VRRP 实例不能冲突。
 | `priority 100`         | 优先级（数值越大越优先）。通常主节点设高值如 `100`，备节点设低值如 `90`。
 | `advert_int 1`         | VRRP 通告间隔时间，单位为秒。主节点每隔这个时间广播一次“我还活着”。
@@ -914,7 +927,6 @@ VIP 也可以独立配置在单独的网卡上（在配置中用的是 interface
 | `track_script`      | 指定自定义脚本用于健康检查，脚本返回非0表示故障，会自动降权。
 | `nopreempt`         | 对于 BACKUP 节点，即使检测到 MASTER 掉线也不自动提升为主，适合双主避免抖动。
 | `garp_master_delay` | MASTER 在切换为主之后延迟发送 GARP 报文的时间（防止网络不一致）。
-
 
 ############################### advance ####################################
 
