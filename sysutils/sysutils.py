@@ -1901,3 +1901,97 @@ def print_sub_net_cmd():
    """
     print(sub_net_cmd) 
 
+def print_selinux_cmd():
+    selinux_cmd = """
+############################## DESCRIPTION ##################################
+
+SELinux（Security-Enhanced Linux）是由 NSA（美国国家安全局） 开发的一个 Linux 安全子
+系统，它提供了强制访问控制（MAC, Mandatory Access Control）机制，用于增强 Linux 系统
+的安全性。它最早被集成到 Red Hat Enterprise Linux 和 Fedora 系统中，现在也可用于
+ Debian、Ubuntu 等发行版。
+
+########################### SELinux 的基本概念 ################################
+
+1. 访问控制类型比较：
+| 类型                                | 说明
+| ----------------------------------- | -------------------------------------------------------
+| DAC（Discretionary Access Control） | 自主访问控制，Linux 默认使用的访问控制机制，用户可以更改自己拥有文件的权限。
+| MAC（Mandatory Access Control）     | 强制访问控制，系统统一策略管理，即使是 root 用户也不能随意访问资源。SELinux 使用的就是 MAC。
+
+2. SELinux 核心思想：
+   系统中每个对象（如文件、端口）和主体（如进程）都有一个 安全上下文。
+   SELinux 通过策略规则来判断某个进程是否可以访问某个资源。
+   安全策略不依赖于传统的 chmod/chown/chgrp。
+
+########################### SELinux 的工作模式 ################################
+
+| 模式           | 描述
+| -------------- | -----------------------
+| **Enforcing**  | 强制执行 SELinux 策略（默认生产模式）
+| **Permissive** | 不拦截违规操作，只记录（用于调试策略）
+| **Disabled**   | 禁用 SELinux
+
+查看当前模式：
+getenforce
+
+临时切换模式（重启后失效）：
+setenforce 0     # 切换为 Permissive
+setenforce 1     # 切换为 Enforcing
+
+永久修改（需重启）：
+编辑 /etc/selinux/config 文件：
+SELINUX=enforcing       # 或者 permissive / disabled
+
+########################### SELinux 安全上下文结构 ############################
+
+一个文件或进程的 SELinux 上下文类似这样：
+  -rw-r--r--. root root system_u:object_r:httpd_sys_content_t:s0 index.html
+格式：用户:角色:类型:级别
+  用户（user）：如 system_u、staff_u、unconfined_u
+  角色（role）：如 object_r、system_r
+  类型（type）：最重要的一项，如 httpd_t 表示 Apache 进程类型
+  级别（level）：一般用于 MLS（多级安全），如 s0，多数情况可忽略
+
+########################### 常用 SELinux 工具命令 #############################
+
+查看文件的 SELinux 上下文
+ls -Z filename
+
+修改文件的 SELinux 类型
+chcon -t httpd_sys_content_t /var/www/html/index.html
+
+还原默认 SELinux 上下文
+restorecon -v /var/www/html/index.html
+
+查看策略允许哪些操作
+semanage fcontext -l     # 查看文件路径与类型的匹配关系
+
+查看某个端口是否被允许：
+semanage port -l | grep 80
+
+############################ SELinux 日志分析 ################################
+
+SELinux 拒绝操作会记录在 /var/log/audit/audit.log 文件中。
+可以使用 ausearch 或 audit2why、audit2allow 工具进行分析和建议：
+# 找出最近一次被拒绝的操作
+ausearch -m avc -ts recent
+
+# 分析原因
+cat /var/log/audit/audit.log | audit2why
+
+# 自动生成允许该操作的 SELinux 策略模块
+cat /var/log/audit/audit.log | audit2allow -M mypol
+semodule -i mypol.pp
+
+########################### SELinux 常见场景示例 ##############################
+
+1. Apache 无法访问网页目录
+可能原因：文件类型不对，应为 httpd_sys_content_t
+chcon -t httpd_sys_content_t /var/www/html/index.html
+
+或者设置并持久生效：
+semanage fcontext -a -t httpd_sys_content_t "/var/www/html(/.*)?"
+restorecon -Rv /var/www/html
+   """
+    print(selinux_cmd) 
+
