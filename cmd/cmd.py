@@ -1113,6 +1113,7 @@ arp 命令用于查看和操作系统的 ARP (Address Resolution Protocol) 缓�
 arp -a
 
 2. 显示 ARP 表（纯 IP，不解析主机名）
+arp -n
 arp -an
 
 3. 添加静态 ARP 条目
