@@ -576,21 +576,56 @@ ps aux | sort -k4rn | head
 def print_gpt_cmd():
     print("gpt usage command:")
     gpt_cmd = """
-# 在执行这些操作时，请确保您已经备份了重要数据
+############################## DESCRIPTION ##################################
 
-parted /dev/vdb
-(parted) mklabel gpt  
-# mkpart后跟分区名称、文件系统类型、起始位置和结束位置
-(parted) mkpart primary ext4 1MB 100%  
+parted 是 Linux 下用于磁盘分区管理的命令行工具，支持 GPT 和 MBR 分区表格式。相比传统的 
+fdisk，parted 支持更大的磁盘并具有图形界面（gparted 是其 GUI 版）。
+
+############################### option ####################################
+
+基本语法：
+parted [设备路径] [命令] [参数]
+
+| 命令          | 作用                        
+| ------------ | -------------------------
+| `print`      | 显示当前磁盘的分区表
+| `mklabel`    | 创建新的分区表（如 `gpt`, `msdos`） 
+| `mkpart`     | 创建新分区
+| `rm`         | 删除一个分区
+| `resizepart` | 调整某个分区的大小
+| `quit`       | 退出 parted 工具
+
+############################### instance ####################################
+使用 parted 创建两个分区（10G + 剩余空间）
+
+sudo parted /dev/sdX
 (parted) print
+(parted) mklabel gpt           # 如果是新磁盘或需要 GPT
+(parted) mkpart primary 1MiB 10GiB
+(parted) mkpart primary xfs 1MB 10G		# 可以指定文件系统，也可以不指定，只是起标记的作用；单位可以是GB也可以是GiB（MB同理）
+	1MiB 是起始位置（从 1MB 开始，避免对齐问题）。
+	10GiB 是结束位置（100GB）。
+(parted) mkpart primary 10GiB 100%		# 100% 代表从10GB开始使用剩下的所有空间
+(parted) print
+Number  Start   End     Size    File system  Name     Flags
+ 1      1049kB  10.0GB  9999MB               primary
+ 2      10.7GB  21.5GB  10.7GB               primary
 (parted) quit
-sudo mkfs.ext4 /dev/vdb1
 
+sudo mkfs.ext4 /dev/sdX1
+sudo mkfs.xfs /dev/sdX2
 
-# 创建多个分区的方法
-mkpart primary ext4 1MB 10GB
-mkpart primary ext4 10GB 20GB
-mkpart primary ext4 20GB 100%
+sudo mkdir /mnt/part1 /mnt/part2
+sudo mount /dev/sdX1 /mnt/part1
+sudo mount /dev/sdX2 /mnt/part2
+
+############################### caution ####################################
+1、确保选择正确的磁盘（/dev/sdX），否则可能导致数据丢失！
+2、如果磁盘已有数据，建议先备份。
+3、对齐问题：1MiB 起始位置确保 4K 对齐，适合 SSD 和现代硬盘。
+4、GPT vs MBR：
+  如果磁盘 >2TB，必须使用 GPT（parted 默认使用 GPT）。
+  如果磁盘 ≤2TB 且需要 MBR，可以在 parted 中运行 mklabel msdos（但会清除所有分区！）。
    """
     print(gpt_cmd) 
 
