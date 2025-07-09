@@ -574,7 +574,6 @@ ps aux | sort -k4rn | head
     print(linuxbasic_cmd)   
 
 def print_gpt_cmd():
-    print("gpt usage command:")
     gpt_cmd = """
 ############################## DESCRIPTION ##################################
 
@@ -1394,6 +1393,13 @@ def print_lvm_cmd():
 
 创建物理卷--->扩容卷组--->扩容逻辑卷--->扩容文件系统
 
+fdisk -l /dev/vdb
+    Disk label type: gpt	# gpt
+    Disk label type: dos	# MBR
+
+# 给新磁盘分区
+fdisk /dev/vdb	    # MBR 只能用fdisk指令
+parted /dev/vdb	    # parted 是通用指令（MBR/GPT都可以）,详情 mytool.py --show parted
 
 # 给新磁盘分区
 fdisk /dev/vdb
