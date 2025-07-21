@@ -488,6 +488,13 @@ strace -e execve bash -c '/bin/pwd'
 # 总结
 Bash 内建 pwd：	直接在 Shell 进程中执行，不创建子进程。
 外部 pwd（如 /bin/pwd）：	Shell 先 fork() 生成子进程，再 execve() 执行 /bin/pwd，最终 exit() 退出。
+
+
+############################## tips ######################################
+
+# bash 下进程是如何运行的：
+mytool.py --show shell
+
    """
     print(bash_cmd)
 
