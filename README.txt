@@ -121,5 +121,6 @@ lsscsi: lsscsi 指令使用帮助
 sub_net: Linux 上网卡次要地址和子接口地址的区别和配置方法
 arp: arp 指令使用帮助
 selinux: selinux 基础知识和相关指令介绍
+cpu_mode: cpu real mode 和 protected mode 讲解
 
 --show c --item current : 通过 current 宏查看进程属性的示例代码
