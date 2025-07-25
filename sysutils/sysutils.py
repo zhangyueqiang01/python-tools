@@ -1471,6 +1471,11 @@ wget --limit-rate=500k https://example.com/video.mp4
 
 # 如果上次下载中断，使用 -c 继续下载
 wget -c https://example.com/largefile.iso
+# 如果遇到wget 下载中断问题也可以通过以下方式进一步排查原因
+	1、ping 查看是都有丢包
+	2、通过scp 命令对比scp下载是否有问题
+	3、通过python临时启动一个web，然后通过wget下载进行对比
+	4、服务器侧的配置也可能导致wget中断
 
 # 从 urls.txt 读取 URL 并依次下载。
 echo "https://example.com/file1.zip" > urls.txt
