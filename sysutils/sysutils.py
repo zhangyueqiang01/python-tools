@@ -1466,7 +1466,7 @@ wget -O myfile.zip https://example.com/file.zip
 # 后台下载（断开终端仍继续），日志默认写入 wget-log 文件
 wget -b https://example.com/largefile.iso
 
-# 限制下载速度为 500 KB/s
+# 限制下载速度为 500 KB/s,也可以使用 M 表示 MB/s,如果不手动限制，wget 会全力下载
 wget --limit-rate=500k https://example.com/video.mp4
 
 # 如果上次下载中断，使用 -c 继续下载
