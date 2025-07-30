@@ -186,7 +186,7 @@ def main():
     parser.add_argument('--total-threads', type=int, default=10, help='Total number of threads, default is 10')
     parser.add_argument('--shost', default=' ', help='Scan a special host tcp port, default host is NUll')
     parser.add_argument('--sport', default='', help='Scan a host  speial tcp port like "nc -zv 8.8.8.8 80" or "nmap -sV -p 22 8.8.8.8", default port is NUll')
-    parser.add_argument("--cntoeng", nargs=1,help="Modify all Chinese punctuation marks into English punctuation marks, like sed -i s/：/:/g test.py")
+    parser.add_argument("--cntoeng", nargs=1,help="Modify all Chinese punctuation marks into English punctuation marks, like sed -i 's/：/:/g' test.py")
 
     args = parser.parse_args()
 
