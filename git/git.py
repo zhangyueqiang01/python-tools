@@ -2,8 +2,9 @@
 # -*- coding: utf-8 -*-
 
 def print_git_cmd():
-    print("git usage command:")
     git_cmd = """
+################################ basic ######################################
+
 #添加一个特定的目录，比如my_folder
 git add my_folder
 
@@ -12,7 +13,6 @@ git add .
 
 git commit -m "提交信息"
 git push
-git log
 git status
 
 # 暂存本地更改
@@ -36,6 +36,38 @@ git commit -m "你的提交信息"
 git pull --rebase
   #这会先将你的本地提交暂存，拉取远端变更，然后重新应用你的提交
 git push
+   
+################################# log #######################################
+
+查看文件的修改历史
+git log [文件路径]
+
+查看文件的详细修改内容
+git log -p [文件路径]
+
+查看谁在什么时候修改了文件
+git blame [文件路径]
+
+查看文件的变更历史（包括重命名）
+git log --follow [文件路径]
+
+查看某个提交中的文件变更
+git show [commit哈希] [文件路径]
+
+查看某段时间内的文件修改
+git log --since="2023-01-01" --until="2023-12-31" [文件路径]
+
+查看文件的修改统计
+git log --stat [文件路径]
+
+图形化查看历史
+gitk [文件路径]
+
+查看最近5次提交的某个文件历史
+git log -5 --oneline src/main.js
+
+查看某个文件的修改内容及作者
+git log -p --author="John" src/main.js
    """
     print(git_cmd)  
 
