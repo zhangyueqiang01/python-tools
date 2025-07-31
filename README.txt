@@ -124,5 +124,7 @@ selinux: selinux 基础知识和相关指令介绍
 cpu_mode: cpu real mode 和 protected mode 讲解
 cpu_privilege: cpu 特权级讲解
 cpu_component: cpu 各组件介绍
+htop: top 命令的增强版,交互式进程查看工具
+top: top命令输出内容详解
 
 --show c --item current : 通过 current 宏查看进程属性的示例代码
