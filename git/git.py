@@ -166,19 +166,21 @@ objdump -D -b binary -mi386 -Maddr16,data16 mbr.bin
     print(objdump_cmd) 
 
 def print_dline_cmd():
-    print("合营客户专线信息查看方法:")
     dline_cmd = """
-################################
-# 合营专线客户相关信息查看方法 #
-################################
+########################## 合营专线客户相关信息查看方法 ####################################
 
-#专线（dedicated line）
-#先在cloudscope上通过客户邮箱找到专线对应的vlan号
 
-//通过接入网关找到对应的pop
+# 专线（dedicated line）
+# 先在cloudscope上通过客户邮箱找到专线对应的vlan号，以及远端子网掩码为30的互联ip地址
+
+# 通过接入网关找到对应的pop
 网关					pop
-169.254.195.11 				10.255.223.191
+169.254.195.11 				10.255.223.191（新68）
 169.254.195.10 				老68
+
+
+# 找到互联地址的接口，过滤互联ip地址，确定本端互联ip所在接口（已查询到的10.6.16.44为例）
+dis ip int brief | i 10.6.16.4 
 
 display ip interface brief | include  10.101.212.34
 display ip routing-table
@@ -207,10 +209,9 @@ display device board
 # 查看接口收发光
 display interface 10GE 2/0/13 transceiver verbose
 
-#####################
-# pop上查看带宽方法 #
-#####################
-查看专线接口上出方向和入方向是否配置了流量策略
+
+###########################  pop上查看带宽方法 #######################################
+
 display current-configuration interface Eth-Trunk 3
 
 查看流量策略
@@ -219,11 +220,20 @@ display current-configuration configuration trafficpolicy BJALA-B17577618&B17577
 查看流量策略的具体行为
 display current-configuration configuration behavior BJALA-B17577618&B17577619
 
-
 查看接口配置用
 display current-configuration interface Eth-Trunk 3
 查看接口状态用
 display interface Eth-Trunk 3
+   
+
+########################### 自研 pop 信息 #######################################
+
+POP交换机： 10.249.30.104
+北京5交换机目前没有权限登录，登录上层汇聚管理交换机（10.249.30.254）ssh登录 
+ssh -l COC_operator 10.249.30.104  /vrf  CTVPN1107 
+密码： Ywy25c0!a360
+
+自研在控制台可以直接看到互联地址，合营不可以
    """
     print(dline_cmd) 
 
