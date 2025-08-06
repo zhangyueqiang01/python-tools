@@ -85,5 +85,6 @@ htop: top 命令的增强版,交互式进程查看工具
 top: top命令输出内容详解
 mem_wr: 磁盘上的信息读取到内存，以及从内存中读取的大致过程
 maps: /proc/[pid]/maps 文件介绍
+maps: /proc/[pid]/smaps 文件介绍
 
 --show c --item current : 通过 current 宏查看进程属性的示例代码

@@ -644,6 +644,94 @@ address           perms offset  dev   inode       pathname
 ############################### instance ####################################
 
 cat /proc/self/maps
+/proc/self/smaps 可查看 maps 区域后附加上详细的统计数据，详情：
+aa --show smaps
    """
     print(maps_cmd) 
+
+
+def print_smaps_cmd():
+    smaps_cmd = """
+
+/proc/[pid]/smaps 文件是 Linux 中每个进程的内存映射详细信息文件。它提供了比 /proc/[pid]/maps
+更丰富的信息，主要用于分析进程内存使用情况的细节，尤其适用于内存泄露排查和内存占用分析。
+
+############################### overview ####################################
+
+/proc/[pid]/maps 显示每个内存区域的起始地址、权限、偏移量、设备、inode、映射文件路径。
+/proc/[pid]/smaps 在每个 maps 区域后附加上详细的统计数据
+
+00400000-004dd000 r-xp 00000000 fd:00 6571        /usr/bin/bash
+Size:                884 kB
+Rss:                 692 kB
+Pss:                 205 kB
+Shared_Clean:        684 kB
+Shared_Dirty:          0 kB
+Private_Clean:         8 kB
+Private_Dirty:         0 kB
+Referenced:          692 kB
+Anonymous:             0 kB
+AnonHugePages:         0 kB
+Swap:                  0 kB
+KernelPageSize:        4 kB
+MMUPageSize:           4 kB
+Locked:                0 kB
+VmFlags: rd ex mr mw me dw sd 
+
+关键字段含义:
+| 字段名           | 含义说明
+| ---------------- | ------------------------------------------------
+| `Size`           | 区域的总虚拟内存大小
+| `Rss`            | 实际占用物理内存的大小（常驻集）
+| `Pss`            | 共享内存按比例分摊到各个进程的大小（更公平的内存占用指标）
+| `Shared_Clean`   | 可共享的且干净的内存页（未被修改）
+| `Shared_Dirty`   | 可共享的但被修改过的页
+| `Private_Clean`  | 进程私有但未修改的页
+| `Private_Dirty`  | 进程私有且被修改的页
+| `Referenced`     | 最近被访问过的页
+| `Anonymous`      | 匿名映射内存（不映射文件）
+| `Swap`           | 被换出到 swap 分区的内存大小
+| `KernelPageSize` | 页大小，通常为 4 KB 或大页
+| `VmFlags`        | 映射区域的标志位（如是否可读、可写、是否匿名、是否私有等）
+
+
+############################### VmFlags #####################################
+
+| 标志   | 含义说明
+| ------ | ----------------------------------------------------
+| **rd** | 区域可读（Read）
+| **wr** | 区域可写（Write）
+| **ex** | 区域可执行（eXecute）
+| **sh** | 区域是共享的（Shared）
+| **dd** | 区域是私有复制的（Copy-on-write，即 demand-loaded）
+| **mr** | 可以被 mmap 读映射
+| **mw** | 可以被 mmap 写映射
+| **me** | 可以被 mmap 执行映射
+| **ms** | 可以被 mmap 共享映射
+| **gd** | 区域触发了 grow-down（栈扩展）
+| **pf** | 区域已预取（prefaulted）页
+| **ac** | 匿名映射（Anonymous mapping）
+| **hg** | 使用 hugepage（HugeTLB）
+| **nh** | 禁用 transparent hugepages（no hugepages）
+| **ar** | Arch-specific read access（架构特定读权限）
+| **aw** | Arch-specific write access
+| **ae** | Arch-specific execute access
+| **lo** | Lockable（可以被 mlock 锁定）
+| **io** | 可能是设备 I/O 映射
+| **sr** | Soft-dirty 标志（用于用户态增量检查）
+| **rr** | 不可回收页（Unreclaimable）
+| **dc** | 不缓存的设备内存（uncached device memory）
+| **de** | 延迟释放（Delayed free）
+| **sd** | Soft-dirty 页面（已被修改）
+| **mm** | 使用 memory migration 标志
+| **hg** | 使用 HugeTLB huge pages
+| **cf** | 匿名共享映射被强制写回（Crazy Force？少见）
+
+
+############################### instance ####################################
+
+cat /proc/self/smaps
+aa --show maps
+   """
+    print(smaps_cmd) 
 
