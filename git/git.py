@@ -21,6 +21,11 @@ git stash
 # 拉取远程仓库的更新
 git pull origin master
 
+# 放弃工作区的所有修改(本地和远端仓库不一致，放弃本地的修改，同步远端最新的commit)
+git status
+git checkout .
+git pull origin master
+
 # 恢复暂存的更改（如果需要）
 git stash pop
 
