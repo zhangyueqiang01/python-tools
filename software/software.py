@@ -270,6 +270,9 @@ sed -i 's/\\r$//' windowsfile.txt
 
 # 将文件中的 "\\" 替换为 "\\\\"
 sed 's/\\\\/\\\\\\\\/g' filename
+
+# 删除文本文件中每行以多个空格加|结尾的内容
+sed -i 's/  *|$//' tmp.txt
    """
     print(sed_cmd)  
 
