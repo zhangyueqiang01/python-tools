@@ -742,19 +742,66 @@ Linux 中的 /proc 目录是一个伪文件系统（procfs），它并不对应�
 
 ######################### 与系统整体信息相关的文件 ##############################
 
-| 文件                | 说明
-| ------------------- | --------------------------------------------------------
-| `/proc/cpuinfo`     | 显示 CPU 相关信息，如型号、核心数、频率、缓存等。
-| `/proc/meminfo`     | 显示内存使用情况（总量、空闲、缓存、缓冲等）。
-| `/proc/uptime`      | 系统启动至今已运行的时间和空闲时间（单位秒）。
-| `/proc/loadavg`     | 系统负载情况（1、5、15分钟平均负载），以及进程调度信息。
-| `/proc/version`     | 当前运行的内核版本信息。
-| `/proc/swaps`       | 当前启用的 swap 区信息。
-| `/proc/filesystems` | 系统支持的文件系统类型。
-| `/proc/partitions`  | 列出系统识别到的分区设备及大小。
-| `/proc/cmdline`     | 启动内核时传递的启动参数。
-| `/proc/modules`     | 当前加载的内核模块列表。
-| `/proc/kallsyms`    | 所有内核符号（函数/变量）及地址。需 root 权限。
+| 文件名          | 功能简述
+| --------------- | -----------------------------------------------
+| `asound`        | ALSA（高级Linux声音架构）的接口信息（实际是符号链接或接口文件）。
+| `buddyinfo`     | 展示内存分配器（Buddy System）中各个内存区域的空闲页块分布。
+| `cgroups`       | 显示当前启用了哪些 cgroup 子系统。
+| `cmdline`       | 显示当前内核启动时使用的启动参数（命令行）。
+| `consoles`      | 显示当前已注册的控制台设备及其状态。
+| `cpuinfo`       | 每个 CPU 核心的详细信息，如型号、主频、缓存等。
+| `crypto`        | 显示内核当前支持的加密算法及其实现方式。
+| `devices`       | 显示已注册的字符设备和块设备的主次设备号。
+| `diskstats`     | 各磁盘设备的 I/O 操作统计信息。
+| `dma`           | 显示当前分配的 DMA 通道。
+| `execdomains`   | 显示支持的执行域（用于二进制兼容，比如 iBCS）。
+| `fb`            | 显示已注册的帧缓冲设备（framebuffer），用于图形输出。
+| `filesystems`   | 显示内核支持的文件系统类型及其挂载方式（nodev 代表伪设备）。
+| `interrupts`    | 显示系统中所有中断的使用情况（每个 CPU 的中断次数和源设备）。
+| `iomem`         | 显示系统的物理内存地址映射，包括内核和驱动的使用情况。
+| `ioports`       | 显示已分配的 I/O 端口地址区间（用于设备通信）。
+| `kallsyms`      | 显示内核导出的所有符号（函数名、变量名等，需 root）。
+| `kcore`         | 内核虚拟内存的 ELF core dump 接口，可用 GDB 调试分析（伪设备）。
+| `keys`          | 当前内核中的密钥信息（密钥管理子系统）。
+| `key-users`     | 显示每个 UID 拥有的密钥数量和使用资源限制。
+| `kmsg`          | 内核日志缓冲区内容（类似 `dmesg` 输出，可写入触发日志）。
+| `kpagecount`    | 显示每个物理页的使用引用计数（与 `pfn` 相关，需 root）。
+| `kpageflags`    | 显示每页的页标志，如是否是脏页、活动页等。
+| `loadavg`       | 系统负载（1/5/15分钟平均值）、运行队列/总进程数、最后活跃进程PID。
+| `locks`         | 显示当前系统上存在的文件锁。
+| `mdstat`        | 显示软件 RAID（md设备）的状态（如是否正在重建）。
+| `meminfo`       | 内存使用详情，包括空闲、缓存、swap等，最常用的监控信息。
+| `misc`          | 显示 misc 类型设备的主设备号和名称（比如 /dev/rtc）。
+| `modules`       | 当前已加载的内核模块列表及其使用计数。
+| `mounts`        | 显示所有挂载的文件系统（类似 `mount` 命令），格式标准。
+| `mtrr`          | MTRR（内存类型范围寄存器）设置情况，常用于优化图形性能。
+| `net`           | 伪文件，实际上是一个包含网络状态的子目录（如 `/proc/net/dev` 等）。
+| `pagetypeinfo`  | 物理页按照类型（如可回收页、活动页）分类的统计信息。
+| `partitions`    | 显示系统识别到的磁盘分区（设备号、名称、大小）。
+| `sched_debug`   | 显示内核调度器的调试信息和调度策略状态。
+| `schedstat`     | 显示调度器统计信息，如上下文切换次数、运行时间等。
+| `self`          | 指向当前访问 `/proc` 目录的进程的 PID 目录（符号链接）。
+| `slabinfo`      | 显示内核 slab 分配器的缓存状态，用于调试内存分配器。
+| `softirqs`      | 显示软中断的执行统计信息（按 CPU 核心划分）。
+| `stat`          | 各类系统运行状态信息：CPU 时间、进程数、上下文切换数等。
+| `swaps`         | 显示系统当前启用的 swap 区及其使用情况。
+| `sysrq-trigger` | 向此文件写入字符可触发 Magic SysRq 操作（如 `b` 重启，`o` 关机）。
+| `timer_list`    | 所有内核定时器的详细信息（调试用），包括到期时间、函数指针等。
+| `timer_stats`   | （部分内核版本有）统计哪些进程设置了定时器。需启用定时器统计功能。
+| `uptime`        | 系统运行时长和空闲时间（单位秒）。
+| `version`       | 内核版本、编译器、构建时间等信息。
+| `vmallocinfo`   | 显示内核通过 vmalloc 分配的内存区域（主要用于模块、驱动）。
+| `vmstat`        | 虚拟内存子系统的运行统计，如页面换入/出、缺页异常等。
+| `zoneinfo`      | 每个内存 zone 的状态信息（如 DMA、Normal、HighMem），细粒度的内存布局。
+
+系统资源类：cpuinfo meminfo stat uptime loadavg vmstat zoneinfo
+设备与中断类：interrupts ioports iomem dma fb devices
+文件系统类：filesystems mounts partitions
+调度与锁类：schedstat sched_debug locks slabinfo
+内核调试类：kmsg kallsyms kcore execdomains timer_list
+内存调试类：buddyinfo pagetypeinfo kpagecount kpageflags vmallocinfo
+模块与驱动类：modules mdstat misc asound
+特殊控制类：sysrq-trigger cmdline consoles version swaps
 
 
 ############################# /proc/[pid]/ ##################################
