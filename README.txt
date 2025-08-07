@@ -88,5 +88,6 @@ maps: /proc/[pid]/maps 文件介绍
 maps: /proc/[pid]/smaps 文件介绍
 proc: /proc 目录下各文件介绍
 ethtool: 网卡灯闪烁、网卡速度、双工半双工、驱动、缓存等信息
+iperf3: 带宽测试方法
 
 --show c --item current : 通过 current 宏查看进程属性的示例代码

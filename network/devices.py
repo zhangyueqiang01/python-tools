@@ -394,7 +394,8 @@ ethtool -E|--change-eeprom DEVNAME
   aa --show scp
   
 如果想测试带宽：
-  aa --show perf
+  aa --show iperf
+  aa --show iperf3
    """
     print(ethtool_cmd) 
 
