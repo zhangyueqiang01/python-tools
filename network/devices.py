@@ -385,6 +385,16 @@ ethtool -G <interface> rx <RX_size> tx <TX_size> [other options]
 
 # 修改网卡存储器中的信息
 ethtool -E|--change-eeprom DEVNAME	
+
+################################ caution ####################################
+
+如果怀疑接口速度有问题，可以结合 wget 、 scp 等指令进行测试，这些指令默认会尽可能使用可用带宽进行数据传输
+详情：
+  aa --show wget
+  aa --show scp
+  
+如果想测试带宽：
+  aa --show perf
    """
     print(ethtool_cmd) 
 
