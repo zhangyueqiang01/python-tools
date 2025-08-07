@@ -314,9 +314,27 @@ Connecting to host 192.168.2.254, port 5201
     print(iperf_cmd) 
 
 def print_ethtool_cmd():
-    print("ethtool usage command:")
     ethtool_cmd = """
-#############################查询类操作################################
+
+ethtool 是 Linux 中用于查看和设置网卡参数的命令行工具，特别常用于网卡故障排查、性能调优、链路状态查看等。
+
+############################### instance ####################################
+
+基本用法：
+ethtool <interface>
+
+| 命令                 | 作用
+| -------------------- | -------------------------------------------
+| `ethtool <iface>`    | 查看接口基本信息，如速率、双工、链路状态等
+| `ethtool -i <iface>` | 查看网卡驱动信息（驱动名、版本、固件等）
+| `ethtool -p <iface>` | 网卡指示灯闪烁，用于物理定位（某些网卡支持）
+| `ethtool -S <iface>` | 显示网卡统计数据（如错误帧、丢包数）
+| `ethtool -d <iface>` | 显示网卡寄存器内容（仅部分网卡支持）
+| `ethtool -e <iface>` | 读取 EEPROM 内容（需驱动支持）
+| `ethtool -k <iface>` | 查看当前内核协议 offload（如GRO, TSO等）开启状态
+| `ethtool -n <iface>` | 查看网卡的多播地址过滤表
+
+############################### 查询类操作 ####################################
 
 # 查看ethtool指令的版本
 ethtool --version
@@ -350,8 +368,7 @@ ethtool -S|--statistics DEVNAME
 # 查看网卡MAC地址
 ethtool -P|--show-permaddr DEVNAME
 
-
-##############################修改类操作##################################
+############################### 修改类操作 ####################################
 
 # 设置网卡的速率为 1000 Mbps，并启用自动协商
 ethtool -s eth0 speed 1000 duplex full autoneg on
