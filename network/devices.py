@@ -542,6 +542,18 @@ ssh -l COC_operator 30.16.80.33 /vrf CTVPN1107
 		/vrf 参数 告诉 SSH 客户端，不要使用默认路由表，而是查询 CTVPN1107 的路由表来确定如何连接到 30.16.80.33，确保 SSH 流量走正确的接口或隧道（如 MPLS VPN、专线等）。
 		如果 CTVPN1107 不可达，可通过 show ip vrf brief 查看别的vrf
 
+# 进入系统视图
+configure terminal
+
+# 查看全局配置
+show running-config
+
+# 查看接口描述信息
+show interface description
+
+# 查看有哪些聚合口
+show aggregateport summary
+
 # 查看接口状态
 show interface brief 
 show interface hundredGigabitEthernet 0/54
@@ -550,8 +562,11 @@ show interface hundredGigabitEthernet 0/54
 show ip interface brief 
 show run interface hundredGigabitEthernet 0/54
 
-# 查看聚合口
-show interface aggregatePort 254     
+# 查看聚合口11上的配置
+show running-config interface aggregatePort 11
+
+# 查看聚合口11详细信息
+show interface aggregatePort 11
    """
     print(ruijie_cmd) 
 
