@@ -91,5 +91,6 @@ ethtool: 网卡灯闪烁、网卡速度、双工半双工、驱动、缓存等�
 iperf3: 带宽测试方法
 storage_unit: KB MB GB TB PB EB 介绍
 eg: 创建新内容的模板
+fio: 磁盘性能测试工具使用方法
 
 --show c --item current : 通过 current 宏查看进程属性的示例代码

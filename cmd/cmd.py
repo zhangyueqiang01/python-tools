@@ -1196,3 +1196,105 @@ introduce
    """
     print(eg_cmd) 
 
+def print_fio_cmd():
+    fio_cmd = """
+
+fio 是一个用于测试存储性能的开源命令行工具，全称为 "Flexible I/O Tester"。它被广泛用于评
+估硬盘（HDD）、固态硬盘（SSD）、NVMe、文件系统以及整个存储子系统的性能。
+
+############################### overview ####################################
+
+工具安装:
+  sudo yum install libaio -y
+  sudo yum install libaio-devel -y
+  sudo yum install fio –y
+
+fio VS dd
+  若需进行专业的存储性能评估（如选购硬盘、优化存储子系统），优先用 fio。
+  若仅需快速检查存储的顺序读写速度（如验证新硬盘是否正常），可用 dd 临时测试。
+
+天翼云参考网址:
+https://www.ctyun.cn/document/10027696/10381488
+
+################################ option #####################################
+
+一、全局基础选项
+  --name=JOB_NAME：定义测试任务名称（必填，可用于区分多个任务）。
+  --filename=PATH：指定测试文件或设备路径（如 /tmp/test.fio 或 /dev/sdb）。
+  --size=SIZE：测试数据总量（如 1G、500M，若不指定则默认使用整个文件 / 设备）。
+  --direct=1|0：是否绕过操作系统缓存（1 为直接 I/O，测试真实存储性能；0 为使用缓存，默认 0）。
+  --runtime=SECONDS：测试持续时间（如 60 表示运行 60 秒，超时后自动停止）。
+  --time_based：即使达到 --size 设定的总量，仍按 --runtime 持续测试（确保时长准确）。
+  --numjobs=N：启动 N 个并行任务（模拟多线程 / 进程并发，如 --numjobs=8）。
+  
+二、I/O 模式与类型
+  --rw=MODE：指定读写模式（核心参数）：
+    read：顺序读
+    write：顺序写
+    randread：随机读
+    randwrite：随机写
+    rw,readwrite：混合随机读写（默认 50% 读 / 50% 写，可通过 --rwmixread 调整比例）
+    trim：测试 SSD trim 功能（仅支持特定设备）
+  --bs=SIZE：I/O 块大小（如 4k、128k、1m，可指定范围如 4k-64k 表示随机块大小）。
+  --rwmixread=PERCENT：混合模式下读操作的比例（如 70 表示 70% 读、30% 写）。
+  --iodepth=N：异步 I/O 队列深度（仅对 libaio 等异步引擎有效，如 --iodepth=32）。
+  
+三、I/O 引擎选项
+  --ioengine=ENGINE：指定 I/O 引擎（决定 fio 如何与存储交互）：
+    libaio：Linux 异步 I/O（支持异步操作，需配合 --iodepth 使用）。
+    sync：同步 I/O（默认值，每次 I/O 需等待完成）。
+    psync：POSIX 同步 I/O。
+    mmap：通过内存映射文件进行 I/O。
+    net：网络 I/O（测试网络存储如 NFS、CIFS）。
+    posixaio：POSIX 异步 I/O（兼容性好，但性能可能不如 libaio）。
+	
+四、性能与输出选项
+  --iodepth_batch_submit=N：每次提交的 I/O 数量（用于控制批量提交）。
+  --iodepth_batch_complete=N：每次完成的 I/O 数量。
+  --group_reporting：当 --numjobs>1 时，汇总所有任务的结果（而非单独显示每个任务）。
+  --output=FILE：将测试结果输出到指定文件（默认打印到终端）。
+  --bandwidth-log：记录吞吐量变化日志。
+  --latency-log：记录延迟分布日志（可用于绘制延迟直方图）。
+  
+五、文件与设备选项
+  --nrfiles=N：每个任务使用的文件数量（默认 1 个）。
+  --filesize=SIZE：单个文件的大小（当 --nrfiles>1 时使用）。
+  --delete=1：测试结束后删除测试文件（默认不删除，避免重复测试受旧数据影响）。
+  --fsync=FREQ：每 FREQ 次写操作后执行一次 fsync（模拟需要持久化的场景，如数据库）。
+  
+六、其他常用选项
+  --dry-run：仅检查配置是否有效，不实际执行测试。
+  --help：查看所有选项的简要说明。
+  --version：显示 fio 版本。
+
+############################### instance ####################################
+
+以下命令中，filename参数指定的设备名为/dev/test_device，请您根据实际情况替换为磁盘设备名称（如/dev/vdb），或文件地址（如/opt/fiotest/fiotest.txt）。      
+
+# 测试硬盘的随机写IOPS：
+fio -direct=1 -iodepth=32 -rw=randwrite -ioengine=libaio -bs=4k -size=1G -numjobs=4 -runtime=1000 -group_reporting -filename=/dev/test_device -name=RandWrite_Testing
+
+# 测试硬盘的随机读IOPS：
+fio -direct=1 -iodepth=32 -rw=randread -ioengine=libaio -bs=4k -size=1G -numjobs=4 -runtime=1000 -group_reporting -filename=/dev/test_device -name=RandRead_Testing
+
+# 测试硬盘的顺序写吞吐量：
+fio -direct=1 -iodepth=64 -rw=write -ioengine=libaio -bs=1024k -size=1G -numjobs=1 -runtime=1000 -group_reporting -filename=/dev/test_device -name=Write_Testing
+
+# 测试硬盘的顺序读吞吐量：
+fio -direct=1 -iodepth=64 -rw=read -ioengine=libaio -bs=1024k -size=1G -numjobs=1 -runtime=1000 -group_reporting -filename=/dev/test_device -name=Read_Testing
+
+# 测试硬盘的随机写时延：
+fio -direct=1 -iodepth=1 -rw=randwrite -ioengine=libaio -bs=4k -size=1G -numjobs=1 -group_reporting -filename=/dev/test_device -name=RandWrite_Latency_Testing
+
+# 测试硬盘的随机读时延：
+fio -direct=1 -iodepth=1 -rw=randread -ioengine=libaio -bs=4k -size=1G -numjobs=1 -group_reporting -filename=/dev/test_device -name=RandRead_Latency_Testing
+
+############################### caution #####################################
+
+1、 进行磁盘性能测试前，建议做好数据备份，避免造成数据丢失
+2、 测试时需指定正确的文件路径或设备（如 /dev/sda），直接测试物理设备可能会覆盖数据，需谨慎！
+3、 --direct=1 表示绕过操作系统缓存，测试真实存储性能；--direct=0 则使用缓存。
+4、 可通过 man fio 查看完整参数说明，或访问 官方文档 了解更多高级用法。
+   """
+    print(fio_cmd) 
+
