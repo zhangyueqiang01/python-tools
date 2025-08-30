@@ -1375,6 +1375,16 @@ lsb_release -a            # 需要安装 redhat-lsb-core
       el7 → Enterprise Linux 7（即 RHEL7 / CentOS7）
       x86_64 → 平台架构
     在 Debian/Ubuntu 中可能看到 -generic、-lowlatency 等后缀，分别代表通用内核、低延迟内核。
+
+
+如果要下载这个版本（3.10.0-693.el7.x86_64）的内核源码；
+3.10.0（比如 RHEL 7 自带的 3.10.0-xxx.el7），那是 Red Hat 在 3.10 基础上打了大量补丁的定制版本，在 kernel.org 是没有的。
+
+# 安装对应的源码包
+yum install kernel-devel-$(uname -r) kernel-headers-$(uname -r) kernel-source
+
+源码会放在 /usr/src/kernels/ 或者 /usr/src/debug/ 下。
+如果你只要 RPM 包，可以去 CentOS Vault 找对应的 7.x 版本下载。
    """
     print(uname_cmd) 
 
