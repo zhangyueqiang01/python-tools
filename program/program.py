@@ -142,6 +142,106 @@ supplement:
     print(src2bin_cmd) 
 
 
+def print_crun_cmd():
+    crun_cmd = """
+
+用最经典的 C语言 Hello World 程序 来说明整个 编译和链接 的详细过程
+
+################################ 程序源码 ####################################
+
+假设我们写了一个最简单的程序 hello.c：
+
+#include <stdio.h>
+
+int main(void) {
+    printf("Hello, World!\n");
+    return 0;
+}
+
+C 语言从源码到可执行文件，通常分为 预处理 → 编译 → 汇编 → 链接。
+
+######################### 预处理 (Preprocessing) #############################
+
+gcc -E hello.c -o hello.i
+
+发生的事情：
+  展开头文件 #include <stdio.h>，把标准库头文件中的内容复制进来。
+  处理宏定义 #define，替换宏。
+  处理条件编译 #ifdef/#endif。
+  删除注释。
+结果：得到一个 纯净的 C 源码文件（hello.i）。里面的 printf 已经声明好了（通过 stdio.h）。
+
+########################### 编译 (Compilation) ###############################
+
+gcc -S hello.i -o hello.s
+
+发生的事情：
+  把预处理后的 C 代码翻译成 汇编代码。
+  编译器会进行语法分析、语义分析、优化。
+  例如 printf("Hello, World!\n"); 会变成对外部函数 printf 的调用指令（比如 call printf）。
+结果：生成汇编代码文件（hello.s）。
+
+############################ 汇编 (Assembly) #################################
+
+gcc -c hello.s -o hello.o
+
+发生的事情：
+  汇编器把汇编代码转为 机器码（目标文件）。
+  目标文件 hello.o 里包含：
+  .text 段：机器指令（main函数的二进制代码）。
+  .data 段：已初始化的全局/静态变量。
+  .bss 段：未初始化的全局/静态变量。
+  符号表：记录 main、printf 等函数和变量的名字，以及是否已定义/未定义。
+  此时 hello.o 里的 main 是定义好的，但 printf 只是一个 未定义符号 (undefined symbol)。
+
+############################# 链接 (Linking) #################################
+
+gcc hello.o -o hello
+
+发生的事情：
+  链接器把 hello.o 和 C 标准库 glibc（比如 libc.so 或 libc.a）进行合并。
+  在 libc 里找到 printf 的实现地址，把 hello.o 中未定义的 printf 符号解析掉。
+  链接器同时处理：
+  重定位 (Relocation)：把代码和数据段的地址调整到最终可执行文件里的地址。
+  符号解析 (Symbol Resolution)：找到 printf 的真正实现。
+结果：生成一个可执行文件 hello。
+
+############################# 运行程序时的过程 #################################
+
+当你运行：
+./hello
+
+操作系统（Linux）会把 hello 程序加载进内存。
+程序的入口是 _start（不是 main，由 crt1.o 提供）。
+_start 会调用运行时库初始化环境（堆栈、全局变量初始化等），然后再调用 main()。
+main 里调用 printf，最终通过系统调用 write 把字符串输出到终端。
+main 返回后，运行时库调用 exit 系统调用退出进程。
+
+################################ 总结图示 ####################################
+
+源码 (hello.c)
+   │
+   ▼
+[预处理] ──> hello.i
+   │
+   ▼
+[编译] ─────> hello.s
+   │
+   ▼
+[汇编] ─────> hello.o (目标文件，未定义printf)
+   │
+   ▼
+[链接] ─────> hello (可执行文件，printf已解析)
+   │
+   ▼
+[运行] ─────> 输出 Hello, World!
+
+
+用 objdump 和 readelf 来实际分析一下 hello.o 和 hello 的符号表和段信息，能直观地看到 printf 在编译阶段和链接阶段的不同状态。
+   """
+    print(crun_cmd) 
+
+
 def print_python27_cmd():
     print("python27 usage command:")
     python27_cmd = """
