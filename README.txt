@@ -93,6 +93,6 @@ storage_unit: KB MB GB TB PB EB 介绍
 eg: 创建新内容的模板
 fio: 磁盘性能测试工具使用方法
 uname: 内核版本号解读
-crun: C 语言程序编译和连接的详细过程
+crun: 用 hello world C 语言程序说明编译和连接的详细过程
 
 --show c --item current : 通过 current 宏查看进程属性的示例代码

@@ -154,7 +154,7 @@ def print_crun_cmd():
 #include <stdio.h>
 
 int main(void) {
-    printf("Hello, World!\n");
+    printf("Hello, World!\\n");
     return 0;
 }
 
@@ -178,7 +178,7 @@ gcc -S hello.i -o hello.s
 发生的事情：
   把预处理后的 C 代码翻译成 汇编代码。
   编译器会进行语法分析、语义分析、优化。
-  例如 printf("Hello, World!\n"); 会变成对外部函数 printf 的调用指令（比如 call printf）。
+  例如 printf("Hello, World!\\n"); 会变成对外部函数 printf 的调用指令（比如 call printf）。
 结果：生成汇编代码文件（hello.s）。
 
 ############################ 汇编 (Assembly) #################################
