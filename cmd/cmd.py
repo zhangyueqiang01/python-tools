@@ -1388,3 +1388,30 @@ yum install kernel-devel-$(uname -r) kernel-headers-$(uname -r) kernel-source
    """
     print(uname_cmd) 
 
+def print_port_cmd():
+    port_cmd = """
+############################### Scan port ###################################
+
+telnet localhost 2222
+nc -zv localhost 2222
+nmap -sV -p 2222 localhost
+
+############################### instance ####################################
+
+ssh root@localhost -p 2222
+ssh localhost -p 2222
+
+############################### advance ####################################
+
+如果经常需要连接到这个特定端口的服务器，可以在 ~/.ssh/config 文件中添加配置，避免每次输入端口号：
+
+Host myserver
+    HostName 192.168.1.100
+    User root
+    Port 2222
+
+之后只需使用 ssh myserver 即可连接到该服务器。
+
+   """
+    print(port_cmd) 
+
