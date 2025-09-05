@@ -1392,9 +1392,22 @@ def print_port_cmd():
     port_cmd = """
 ############################### Scan port ###################################
 
+TCP
+
 telnet localhost 2222
 nc -zv localhost 2222
 nmap -sV -p 2222 localhost
+
+# 临时在TCP 端口监听（需保持终端运行）
+python -m SimpleHTTPServer 8080 / python3 -m http.server 80
+
+UDP
+
+nc -zv -u 8.8.8.8 53
+nmap -sU -p 161 localhost
+
+# 临时在UDP 5353端口监听（需保持终端运行）
+nc -ul 5353
 
 ############################### instance ####################################
 
@@ -1411,7 +1424,6 @@ Host myserver
     Port 2222
 
 之后只需使用 ssh myserver 即可连接到该服务器。
-
    """
     print(port_cmd) 
 
