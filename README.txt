@@ -72,7 +72,7 @@ readelf: 查看 ELF 文件内部结构的命令行工具使用方法
 objdump: objdump 指令的使用方法
 task_struct：进程结构体简介
 lsof: lsof 指令使用帮助
-ltrace: ltrace 指令使用帮助
+ltrace: 库函数调用跟踪工具使用帮助
 smartctl: smartctl 指令使用帮助
 lsscsi: lsscsi 指令使用帮助
 sub_net: Linux 上网卡次要地址和子接口地址的区别和配置方法
