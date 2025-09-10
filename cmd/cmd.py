@@ -1427,3 +1427,14 @@ Host myserver
    """
     print(port_cmd) 
 
+def print_ipv6_cmd():
+    ipv6_cmd = """
+ping6 www.baidu.com
+ping6 self_ipv6
+telnet ipv6 22
+telnet ipv6 80
+curl http://[ipv6]:8080
+curl -6 http://www.baidu.com:80
+   """
+    print(ipv6_cmd) 
+
