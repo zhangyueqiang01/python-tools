@@ -92,7 +92,7 @@ iperf3: 带宽测试方法
 storage_unit: KB MB GB TB PB EB 介绍
 eg: 创建新内容的模板
 fio: 磁盘性能测试工具使用方法
-uname: 内核版本号解读
+uname: 内核版本号(kernel version)解读
 crun: 用 hello world C 语言程序说明编译和连接的详细过程
 shadow: /etc/shadow 文件详解
 port: 端口扫描和指定端口登录instance
