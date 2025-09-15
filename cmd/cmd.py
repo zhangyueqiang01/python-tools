@@ -1394,6 +1394,7 @@ def print_port_cmd():
 
 TCP
 
+tcping localhost 22
 telnet localhost 2222
 nc -zv localhost 2222
 nmap -sV -p 2222 localhost
