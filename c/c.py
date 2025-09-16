@@ -710,6 +710,64 @@ unistd.h 主要用于编写 依赖 UNIX/Linux 系统特性 的程序，例如：
     系统工具（如命令行程序）、后台服务；
     进程管理、文件系统操作相关的程序；
     需要直接调用系统级接口（而非标准库封装）的场景。
+
+
+############################################################## stdlib.h ########################################################################
+
+stdlib.h（Standard Library Header）是 C 语言标准库中非常重要的头文件，提供了一系列通用工具函数，涵盖内存管理、类型转换、随机数生成、程序控制等基础功能。它的作用是封装那些不特定于输入输出、字符串操作等专项领域，但又被广泛使用的工具函数。
+
+stdlib.h 中常用的功能分类及函数
+
+
+1. 内存管理（最核心功能之一）
+提供动态内存分配与释放的函数，是 C 语言手动管理内存的基础：
+
+malloc(size_t size)
+    从堆区分配一块大小为 size 字节的连续内存，返回指向该内存的指针（未初始化，内容随机）。
+    示例：int *arr = (int*)malloc(5 * sizeof(int));（分配能存储 5 个 int 的内存）。
+calloc(size_t num, size_t size)
+    分配 num 个大小为 size 字节的连续内存（总大小 num*size），并将内存初始化为 0。
+    示例：int *arr = (int*)calloc(5, sizeof(int));（5 个 int，初始值全为 0）。
+realloc(void *ptr, size_t new_size)
+    调整已分配内存的大小（扩大或缩小），返回新内存的指针（可能移动原内存块）。
+    示例：arr = (int*)realloc(arr, 10 * sizeof(int));（将原内存扩大到能存 10 个 int）。
+free(void *ptr)
+    释放由 malloc()/calloc()/realloc() 分配的内存，避免内存泄漏。
+    示例：free(arr);（释放后需将指针置空：arr = NULL;）。
+	
+2. 类型转换函数
+用于字符串与基本数据类型的转换：
+    atoi(const char *str)：字符串转整数（如 "123" → 123）。
+    atol(const char *str)：字符串转长整数（long 类型）。
+    atof(const char *str)：字符串转浮点数（double 类型，如 "3.14" → 3.14）。
+
+3. 随机数生成
+提供伪随机数相关函数：
+
+rand(void)
+    返回一个范围在 0 到 RAND_MAX（通常为 2147483647）之间的伪随机整数。
+srand(unsigned int seed)
+    设置随机数种子（用于初始化随机数序列）。若种子相同，rand() 会生成相同的序列，因此通常用系统时间作为种子：
+	
+4. 程序控制函数
+用于控制程序的执行流程和终止：
+
+exit(int status)
+    立即终止程序，释放所有资源，并将 status 作为退出状态码返回给操作系统（0 表示正常退出，非 0 表示异常）。
+    示例：exit(0);（正常终止程序）。
+abort(void)
+    异常终止程序（类似崩溃），不执行清理操作（如 atexit() 注册的函数），通常用于调试阶段。
+system(const char *command)
+    调用系统命令（依赖操作系统），返回命令执行结果。
+    示例：system("ls");（在 Linux 中列出当前目录文件）、system("pause");（在 Windows 命令行中暂停程序）。
+	
+5. 其他常用功能
+abs(int n)：返回整数 n 的绝对值（如 abs(-5) → 5）。
+    （注：浮点数绝对值 fabs() 在 math.h 中）。
+qsort(void *base, size_t nitems, size_t size, int (*compar)(const void *, const void*))
+    快速排序函数，可对任意类型的数组排序（需自定义比较函数）。
+bsearch(const void *key, const void *base, size_t nitems, size_t size, int (*compar)(const void *, const void*))
+    二分查找函数（需在已排序的数组中使用）。
    """
     print(chpath_cmd) 
 
