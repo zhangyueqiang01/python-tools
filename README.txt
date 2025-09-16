@@ -99,6 +99,7 @@ shadow: /etc/shadow 文件详解
 port: 端口扫描和指定端口登录instance
 ipv6: ping ipv6,scan ipv6 port
 lan: 各类编程语言(机器、汇编、脚本、编译型)、编译器简介
+kpath: linux内核源码中的常见结构体(struct)、函数(function)、变量所在路径
 
 
 --show c --item current : 通过 current 宏查看进程属性的示例代码
