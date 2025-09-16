@@ -97,6 +97,7 @@ crun: 用 hello world C 语言程序说明编译和连接的详细过程
 shadow: /etc/shadow 文件详解
 port: 端口扫描和指定端口登录instance
 ipv6: ping ipv6,scan ipv6 port
+lan: 各类编程语言(机器、汇编、脚本、编译型)、编译器简介
 
 
 --show c --item current : 通过 current 宏查看进程属性的示例代码
