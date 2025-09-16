@@ -17,6 +17,7 @@ python2.7:存放python2.7版本代码的目录
 software：存放第三方应用程序指令使用帮助的目录
 sysutils：存放系统指令帮助的目录
 troubleshooting： 存放故障处理案例的目录
+src: 存放各类实用源码的的目录
 
 
 [入口程序和辅助程序介绍]
