@@ -6,3 +6,4 @@
         汇编：nasm -f elf64 hello.asm -o hello.o
         链接：ld hello.o -o hello
         执行：./hello
+4. zombie.c: 产生一个僵尸进程，编译gcc zombie.c -o zombie;打开另一个终端，使用ps aux | grep Z或ps -ef | grep defunct查看僵尸进程
