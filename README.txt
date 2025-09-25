@@ -102,6 +102,7 @@ lan: 各类编程语言(机器、汇编、脚本、编译型)、编译器简介
 kpath: linux内核源码中的常见结构体(struct)、函数(function)、变量所在路径
 chpath: 在Linux环境下c语言中常见的头文件路径和头文件包含的常见函数简介
 psstat: 进程状态解读,以及常见的示例
+asm_cmd: 汇编指令大全
 
 
 --show c --item current : 通过 current 宏查看进程属性的示例代码

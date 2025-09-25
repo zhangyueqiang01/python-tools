@@ -160,7 +160,7 @@ def main():
                                            'h3c','dp','huawei1','huawei2','zte','osp','ceph','docker','iptables','tcpdump','route',\
                                             'ip','nmcli','bond','kvm','kcompose','git','vim','bash','find','linuxbasic','dd','awk',\
 					   'sed','ubuntu','echo','grub','initramfs','zip','pam','nova','cinder','neutron','glance',\
-					   'diskio','netio','cputop10','memtop10','login','gpt','iostat','vmstat','iotop','sar','parted','systemd','mod','dracut','mount','pnet','iperf','ascii','hexdump','lamp','objdump','dline','ckernel','mysql','nginx','virsh','chntpw','time','yum','nic','newline','regularExp','nfs','kdump','losetup','xxd','dline2','ethtool','grep','dmesg','gcc','trace','c','lvm','kerneldir','wget','process','strace','chage','reboot','gnu','cpu_register','assembly','boot_fail','cpu_cache','src2bin','core_dump','gdb','top','htop','syscall','syscall_instance','launch_ipv6','shell','scp','interrupt','interrupt_instance','kthread','ps','dmidecode','lspci','sysctl','mm','poetry','keepalived','keepalived_nginx','mlag','ruijie','stp','ftp','english','elf','readelf','task_struct','elf_header','elf_program_header','elf_section_header','lsof','ltrace','smartctl','lsscsi','sub_net','arp','selinux','cpu','cpu_mode','cpu_privilege','cpu_component','mem_wr','maps','smaps','proc','iperf3','storage_unit','eg','fio','uname','crun','shadow','port','ipv6','lan','kpath','chpath','psstat','xxxx'], help="Display usage instance")
+					   'diskio','netio','cputop10','memtop10','login','gpt','iostat','vmstat','iotop','sar','parted','systemd','mod','dracut','mount','pnet','iperf','ascii','hexdump','lamp','objdump','dline','ckernel','mysql','nginx','virsh','chntpw','time','yum','nic','newline','regularExp','nfs','kdump','losetup','xxd','dline2','ethtool','grep','dmesg','gcc','trace','c','lvm','kerneldir','wget','process','strace','chage','reboot','gnu','cpu_register','assembly','boot_fail','cpu_cache','src2bin','core_dump','gdb','top','htop','syscall','syscall_instance','launch_ipv6','shell','scp','interrupt','interrupt_instance','kthread','ps','dmidecode','lspci','sysctl','mm','poetry','keepalived','keepalived_nginx','mlag','ruijie','stp','ftp','english','elf','readelf','task_struct','elf_header','elf_program_header','elf_section_header','lsof','ltrace','smartctl','lsscsi','sub_net','arp','selinux','cpu','cpu_mode','cpu_privilege','cpu_component','mem_wr','maps','smaps','proc','iperf3','storage_unit','eg','fio','uname','crun','shadow','port','ipv6','lan','kpath','chpath','psstat','asm_cmd','xxxx'], help="Display usage instance")
 
 
     parser.add_argument('--item', choices=['main','var', 'printf','macron','struct','vas','mem_consume','cpu_consume','fork','current'], help="Usage: ./mytool.py --show c --item printf")
@@ -528,6 +528,8 @@ def main():
        print_chpath_cmd()
     elif args.show == 'psstat':
        print_psstat_cmd()
+    elif args.show == 'asm_cmd':
+       print_asm_cmd_cmd()
     elif args.show == 'xxxx':
        print_xxxx_cmd()
 
