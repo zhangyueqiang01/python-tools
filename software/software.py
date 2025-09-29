@@ -265,6 +265,9 @@ sed 's/regex_pattern/new_text/' filename
 #删除行：
 sed '/pattern_to_match/d' filename
 
+# 删除空白的行
+sed -i '/^$/d' tmp.txt
+
 # Win文本文件转换成Linux文本文件
 sed -i 's/\\r$//' windowsfile.txt
 
