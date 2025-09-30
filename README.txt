@@ -106,4 +106,6 @@ cpu_flags: cpu 的各个flag所代表的意思讲解
 asm_cmd: 汇编指令大全
 
 
---show c --item current : 通过 current 宏查看进程属性的示例代码
+aa --show c --item current : 通过 current 宏查看进程属性的示例代码
+aa --show c --item cpu_consume: cpu 负载打满源代码
+
