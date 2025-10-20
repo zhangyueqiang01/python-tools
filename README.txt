@@ -104,6 +104,7 @@ chpath: 在Linux环境下c语言中常见的头文件路径和头文件包含的
 psstat: 进程状态解读,以及常见的示例
 cpu_flags: cpu 的各个flag所代表的意思讲解
 asm_cmd: 汇编指令大全
+date: 时间戳相关示例
 
 
 aa --show c --item current : 通过 current 宏查看进程属性的示例代码
