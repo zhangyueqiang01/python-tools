@@ -201,9 +201,9 @@ section .data
     hello_len equ $ - hello_msg          ; 字符串长度
 
 section .text
-    global _start
+    global _start	; global用于导出符号，让链接器（ld）在链接阶段能识别到,也就是说如果不写 global _start，链接器在生成最终的可执行文件时，就不知道程序的入口在哪儿。
 
-_start:
+_start:			; _start 可以是任意字符串,ld hello.o -o hello -e my_entry,-e my_entry 就是告诉 ld,程序入口点不叫 _start，而是 my_entry。
     ; write(int fd, const void *buf, size_t count)
     ; 调用 write 系统调用：向标准输出（屏幕）输出字符串
     ; 告诉cpu请把我内存里这个字符串（通过1号系统调用，地址在 rsi，长度在 rdx）打印到标准输出（fd = 1）上去。
