@@ -11,3 +11,4 @@
 6. my_random.py: python中random函数使用示例，Python 标准库中的random模块在random.py中，所以这里命名进行了区分
 7. random.c: c语言中random()函数的使用示例
 8. random.sh: bash中实现random函数的示例
+9. exit.asm: 最简单的汇编代码演示，只调用了sys_exit系统调用，其中包含了32和64位cpu两个版本的代码
