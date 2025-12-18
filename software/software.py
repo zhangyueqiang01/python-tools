@@ -101,21 +101,142 @@ ceph -s
 def print_docker_cmd():
     print("docker usage command:")
     docker_cmd = """
-docker image ls
-docker pull wcjiang/linux-command
+############################################################## 全局常用选项 ########################################################################
+
+docker [OPTIONS] COMMAND
+| 选项                    | 说明
+| ----------------------- | -------------------------------------
+| `-H, --host`            | 指定 Docker daemon 地址（如 tcp://、unix://）
+| `--config`              | 指定客户端配置目录（默认 `~/.docker`）
+| `--context`             | 使用指定的 Docker context
+| `--debug`               | 开启调试模式
+| `-v, --version`         | 查看 Docker 版本
+| `--tls` / `--tlsverify` | 启用 TLS 通信
+
+############################################################### 镜像相关 #########################################################################
+
+拉取镜像
+docker pull [OPTIONS] IMAGE[:TAG]
+| 选项             | 说明
+| ---------------- | -------------------
+| `-a, --all-tags` | 拉取该镜像的所有 tag
+| `--platform`     | 指定平台（如 linux/amd64）
+
+docker images [OPTIONS]
+| 选项        | 说明
+| ----------- | ------------
+| `-a`        | 显示所有镜像（含中间层）
+| `-q`        | 只显示镜像 ID
+| `--digests` | 显示 digest
+
+docker build [OPTIONS] PATH
+| 选项          | 说明
+| ------------- | -------------
+| `-t`          | 指定镜像名和 tag
+| `-f`          | 指定 Dockerfile
+| `--no-cache`  | 不使用缓存
+| `--build-arg` | 传递构建参数
+
+############################################################## 容器运行相关 #######################################################################
+
+docker run（最重要）
+docker run [OPTIONS] IMAGE [COMMAND]
+| 选项        | 说明
+| ----------- | ----------------------------------
+| `-d`        | 后台运行
+| `--rm`      | 容器退出后自动删除
+| `--restart` | 重启策略（no / always / unless-stopped）
+
+
+交互与终端
+| 选项  | 说明
+| ----- | -----------
+| `-i`  | 保持 stdin 打开
+| `-t`  | 分配伪终端
+| `-it` | 常用组合
+docker run -it centos /bin/bash
+
+网络相关
+| 选项         | 说明
+| ------------ | ------------
+| `-p`         | 端口映射（宿主机:容器）
+| `--network`  | 指定网络
+| `--name`     | 指定容器名
+| `--hostname` | 指定主机名
+docker run -d -p 8080:80 nginx
+
+存储相关
+| 选项          | 说明
+| ------------- | ------------
+| `-v`          | 绑定挂载（volume）
+| `--mount`     | 新语法，更清晰
+| `--read-only` | 容器只读
+docker run -v /data:/app/data nginx
+
+资源限制
+| 选项           | 说明
+| -------------- | ------
+| `-m`           | 内存限制
+| `--cpus`       | CPU 核数
+| `--cpu-shares` | CPU 权重
+| `--pids-limit` | 进程数限制
+docker run -m 512m --cpus=1 nginx
+
+环境与安全
+| 选项                       | 说明
+| -------------------------- | ----------------
+| `-e`                       | 设置环境变量
+| `--env-file`               | 从文件加载变量
+| `--user`                   | 指定运行用户
+| `--privileged`             | 特权模式（⚠️慎用）
+| `--cap-add` / `--cap-drop` | Linux capability
+
+
+############################################################## 容器管理命令 #########################################################################
+
 docker ps
-docker run --name linux-command -itd -p 9665:3000 wcjiang/linux-command:latest
-docker exec -it myweb /bin/bash
-docker ps -a
-docker rm d45
-docker stop d45
-docker update --restart=always 容器ID(或者容器名)
-docker run -d  -e MYSQL_ROOT_PASSWORD=redhat -p 3306:3306 docker.io/mysql:5.7
-docker inspect docker.io/michaelzhangyq/loganalyzer
-docker network create db
-docker network  ls
-docker network  ls --help
-docker network inspect db
+| 选项  | 说明
+| ---- | ------
+| `-a` | 显示所有容器
+| `-q` | 只显示 ID
+
+docker stop / start / restart 容器
+
+docker exec -it 容器 /bin/bash
+| 选项 | 说明
+| ---- | ----
+| `-i` | 交互
+| `-t` | 终端
+| `-u` | 指定用户
+
+############################################################## 日志与排错 #########################################################################
+
+docker logs [OPTIONS] 容器
+| 选项       | 说明
+| --------- | --------
+| `-f`      | 实时跟踪
+| `--tail`  | 显示最后 N 行
+| `--since` | 指定时间
+
+排查网络、挂载、IP、环境变量的神器
+docker inspect 容器
+
+############################################################## 清理相关 #########################################################################
+
+docker system prune
+| 选项         | 说明
+| ----------- | -----------
+| `-a`        | 删除所有未使用镜像
+| `--volumes` | 同时删除 volume
+
+################################################################ 总结 ###########################################################################
+
+Docker 常用选项本质就五类：
+生命周期（-d --rm）
+网络（-p --network）
+存储（-v --mount）
+资源限制（-m --cpus）
+调试排错（logs exec inspect）
    """
     print(docker_cmd)  
 
