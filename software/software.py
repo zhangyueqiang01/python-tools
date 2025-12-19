@@ -137,6 +137,18 @@ docker build [OPTIONS] PATH
 | `--no-cache`  | 不使用缓存
 | `--build-arg` | 传递构建参数
 
+# 镜像保存到本地
+docker save -o ./httpd-image.tar httpd:latest
+
+# 本地镜像导入到docker
+docker load -i ./httpd-image.tar
+
+# 查看本地镜像
+docker image list
+
+# 查看镜像相关帮助指令
+docker image --help
+
 ############################################################## 容器运行相关 #######################################################################
 
 docker run（最重要）
@@ -146,7 +158,6 @@ docker run [OPTIONS] IMAGE [COMMAND]
 | `-d`        | 后台运行
 | `--rm`      | 容器退出后自动删除
 | `--restart` | 重启策略（no / always / unless-stopped）
-
 
 交互与终端
 | 选项  | 说明
@@ -191,6 +202,8 @@ docker run -m 512m --cpus=1 nginx
 | `--privileged`             | 特权模式（⚠️慎用）
 | `--cap-add` / `--cap-drop` | Linux capability
 
+# 容器相关指令帮助
+docker run --help
 
 ############################################################## 容器管理命令 #########################################################################
 
