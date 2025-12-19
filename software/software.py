@@ -216,6 +216,62 @@ docker run -v /tmp/index.html:/usr/local/apache2/htdocs/index.html -d -p 8080:80
 # 容器相关指令帮助
 docker run --help
 
+############################################################## 网络相关 #######################################################################
+
+docker run -p 8080:80 nginx
+
+docker network ls
+
+| 网络名    | 类型    | 作用
+| --------- | ------- | -------
+| `bridge`  | bridge  | 默认容器网络
+| `host`    | host    | 使用宿主机网络
+| `none`    | null    | 无网络
+| `ingress` | overlay | Swarm 用
+
+创建自定义子网+网关的独立网络
+docker network create \\
+  --driver bridge \\ 
+  --subnet 172.20.0.0/16 \\
+  --gateway 172.20.0.1 \\
+  --dns 8.8.8.8 \\
+  --ipv6 \\             
+  --internal \\            
+  my-net
+
+查看网络内部结构
+docker network inspect NETWORK-NAME
+
+删除网络
+docker network rm mynet
+
+清理无用网络
+docker network prune
+
+启动容器时指定网络
+docker run -d --network mynet --name web nginx
+
+运行中的容器动态加入网络
+docker network connect mynet web
+一个容器可以同时在多个网络中
+
+断开容器与网络
+docker network disconnect mynet web
+
+查看端口映射关系
+docker port CONTAINER
+
+进入容器测试网络
+docker exec -it CONTAINER bash
+ip a
+ip route
+ping
+
+宿主机侧查看
+ip link
+brctl show
+iptables -t nat -L -n
+
 ############################################################## 容器管理命令 #########################################################################
 
 docker ps
