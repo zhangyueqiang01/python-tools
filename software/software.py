@@ -184,6 +184,14 @@ docker run -d -p 8080:80 nginx
 | `--read-only` | 容器只读
 docker run -v /data:/app/data nginx
 
+# 映射httpd的配置文件、自定义首页、日志配置到容器
+docker run -d \\
+  --name my-httpd \\
+  -v /host/path/httpd.conf:/etc/httpd/conf/httpd.conf:ro \  # 只读映射主配置文件
+  -v /host/path/index.html:/var/www/html/index.html \      # 映射自定义首页
+  -v /host/path/log.conf:/etc/httpd/conf.d/log.conf:ro \    # 映射日志配置文件
+  httpd:latest
+
 资源限制
 | 选项           | 说明
 | -------------- | ------
