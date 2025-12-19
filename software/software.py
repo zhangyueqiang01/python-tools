@@ -202,6 +202,9 @@ docker run -m 512m --cpus=1 nginx
 | `--privileged`             | 特权模式（⚠️慎用）
 | `--cap-add` / `--cap-drop` | Linux capability
 
+# 映射本地文件和端口到容器中
+docker run -v /tmp/index.html:/usr/local/apache2/htdocs/index.html -d -p 8080:80 --name myweb httpd
+
 # 容器相关指令帮助
 docker run --help
 
