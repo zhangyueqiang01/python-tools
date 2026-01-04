@@ -1397,6 +1397,95 @@ NamesHistory：镜像的标签历史，记录该镜像曾使用过的仓库标�
    """
     print(docker_image_cmd) 
 
+def print_docker_file_cmd():
+    docker_file_cmd = """
+
+Dockerfile 是一个用来构建 Docker 镜像的文本脚本，里面按顺序写明了：这个镜像从哪里来 → 安装什么 → 拷贝什么 → 如何启动
+本质上：Dockerfile = 镜像构建过程的“自动化说明书”
+
+######################################################## Dockerfile 的基本结构 ###################################################################
+一个典型 Dockerfile 长这样：
+
+FROM centos:7
+LABEL maintainer="admin@example.com"
+RUN yum -y install nginx
+COPY nginx.conf /etc/nginx/nginx.conf
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
+构建顺序是 自上而下，不可跳过。
+
+######################################################## Dockerfile 常用指令详解 #################################################################
+
+FROM <image>-必须是第一条，指定基础镜像，决定了 RootFS 的初始内容。
+WORKDIR <path>-相当于 cd，若目录不存在会自动创建。
+COPY <host-path> <image-path>-仅做文件拷贝，行为可控、透明。
+RUN <command>-在构建镜像阶段执行命令，会生成一个新的镜像层，结果会被永久写入镜像，非常影响镜像体积。
+ENV <name> <value>-环境变量，构建时、运行时都有效，会进入容器环境。
+EXPOSE <port-number>-声明端口，只是声明，不会真正监听端口，真正映射靠：docker run -p 8080:80 nginx。
+USER <user-or-uid>-此指令为所有后续指令设置默认用户，避免 root 运行应用，增强安全性。
+CMD ["<command>", "<arg1>"]-容器启动时执行“默认启动命令”，只能有一个（后面的会覆盖前面的），可被 docker run 覆盖。
+ENTRYPOINT ["docker-entrypoint.sh"]- 强约束启动命令，不容易被覆盖。
+
+CMD vs ENTRYPOINT：
+| 对比项      | CMD     | ENTRYPOINT
+| ----------- | ------- | ----------
+| 是否可被覆盖|  容易   |  不容易
+| 作用        | 默认参数| 固定入口
+
+Dockerfile 参考文档：https://docs.docker.com/reference/dockerfile
+
+####################################################### Dockerfile 与镜像分层的关系 ###############################################################
+
+FROM centos:7        # layer 1
+RUN yum install vim  # layer 2
+COPY a.txt /opt      # layer 3
+RUN echo hello       # layer 4
+
+最终镜像结构：
+Layer 4
+Layer 3
+Layer 2
+Layer 1 (RootFS)
+
+Dockerfile = overlay2 层的生成说明书
+
+############################################################## instance ########################################################################
+
+构建一个 CentOS 7 + Nginx 的镜像
+
+目录结构:
+docker-nginx-demo/
+├── Dockerfile
+└── index.html
+
+[root@fedora41 ~]# cat Dockerfile
+# 1. 指定基础镜像
+FROM centos:7
+# 2. 镜像元信息
+LABEL maintainer="admin@example.com"
+# 3. 安装 nginx
+RUN yum install -y epel-release \\
+    && yum install -y nginx \\
+    && yum clean all \\
+    && rm -rf /var/cache/yum
+# 4. 拷贝网页文件到 nginx 默认目录
+COPY index.html /usr/share/nginx/html/index.html
+# 5. 声明端口（只是说明）
+EXPOSE 80
+# 6. 容器启动命令
+CMD ["nginx", "-g", "daemon off;"]
+
+
+构建镜像:
+docker build -t mynginx:1.0 ./
+
+运行容器:
+docker run -d -p 8080:80 --name nginx-demo mynginx:1.0
+
+验证：
+curl localhost:8080
+"""
+    print(docker_file_cmd) 
 
 def print_neutron_cmd():
     print("neutron usage command:")
@@ -1441,3 +1530,4 @@ def print_git_cmd():
 git -s
    """
     print(git_cmd)  
+
