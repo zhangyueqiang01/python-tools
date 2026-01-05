@@ -1604,3 +1604,11 @@ sudo hwclock --hctosys
    """
     print(date_cmd) 
 
+
+def print_ansible_cmd():
+    ansible_cmd = """
+# 手动输入密码ping测试远程主机并且临时跳过密钥检查
+ansible all -i /etc/ansible/hosts -u root -k -m ping --ssh-common-args='-o StrictHostKeyChecking=no'
+   """
+    print(ansible_cmd) 
+

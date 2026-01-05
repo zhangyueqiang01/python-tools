@@ -106,6 +106,7 @@ cpu_flags: cpu 的各个flag所代表的意思讲解
 asm_cmd: 汇编指令大全
 date: 时间戳相关示例
 s2e: c和汇编从源码到可执行文件的大致过程简介
+ansible: ansible 常用指令
 docker_image: docker 镜像解读
 docker_file: docker file 解读
 
