@@ -213,6 +213,9 @@ docker run -m 512m --cpus=1 nginx
 # 映射本地文件和端口到容器中
 docker run -v /tmp/index.html:/usr/local/apache2/htdocs/index.html -d -p 8080:80 --name myweb httpd
 
+# 在容器中同时运行sshd和bash进程（进行中做好了ssh相关的配置）
+docker run -itd centos7.9:sshd /bin/bash -c "/usr/sbin/sshd -D & exec /bin/bash"
+
 # 容器相关指令帮助
 docker run --help
 
