@@ -143,6 +143,9 @@ docker save -o ./httpd-image.tar httpd:latest
 # 本地镜像导入到docker
 docker load -i ./httpd-image.tar
 
+# 将运行中的容器制作成镜像
+docker commit ContainerID centos7.9:sshd
+
 # 查看本地镜像
 docker image list
 
