@@ -1499,6 +1499,125 @@ curl localhost:8080
 """
     print(docker_file_cmd) 
 
+def print_docker_docker0_cmd():
+    docker_docker0_cmd = """
+
+docker0 是 Docker 在单机环境下提供的默认桥接网络，通过 Linux bridge + veth + iptables NAT，实现容器之间以及容器到外部网络的通信
+############################################################## overview ########################################################################
+[root@fedora]# ip a
+...
+3: docker0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default 
+    link/ether 02:42:6a:e4:59:64 brd ff:ff:ff:ff:ff:ff
+    inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::42:6aff:fee4:5964/64 scope link proto kernel_ll 
+       valid_lft forever preferred_lft forever
+5: veth7c6897c@if4: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master docker0 state UP group default 
+    link/ether 82:63:f7:14:11:9c brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet6 fe80::8063:f7ff:fe14:119c/64 scope link proto kernel_ll 
+       valid_lft forever preferred_lft forever
+7: veth6bef225@if6: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master docker0 state UP group default 
+    link/ether 3e:79:06:bb:6b:1f brd ff:ff:ff:ff:ff:ff link-netnsid 1
+    inet6 fe80::3c79:6ff:febb:6b1f/64 scope link proto kernel_ll 
+       valid_lft forever preferred_lft forever
+[root@fedora]# brctl show
+bridge name	bridge id		STP enabled	interfaces
+docker0		8000.02426ae45964	no		veth6bef225
+							veth7c6897c
+
+############################################################ docker0 是什么 ######################################################################
+
+docker0 是 Docker 在 Linux 主机上默认创建的一张网桥（bridge），用于：
+	* 连接 同一台宿主机上的容器
+	* 作为 容器访问外部网络的中转点
+	* 实现容器之间的 二层通信 + 三层转发
+本质：
+	docker0 = Linux bridge + NAT + iptables 规则
+
+####################################################### docker0 什么时候创建 #####################################################################
+
+当 Docker daemon 启动时，如果你 没有显式指定网络配置，就会：
+1、创建一个 Linux bridge：docker0
+2、给它分配一个私有 IP（通常是 172.17.0.1/16）
+3、设置一整套 iptables 规则（SNAT、FORWARD、隔离）
+
+验证方法：
+ip addr show docker0
+brctl show
+
+######################################################## docker0 的典型网络结构 ##################################################################
+
+                 外部网络
+                    |
+              [ 宿主机 eth0 ]
+                    |
+               ┌──────────┐
+               │   NAT    │  ← iptables
+               └──────────┘
+                    |
+               [ docker0 ]
+               172.17.0.1
+            ┌───────┼────────┐
+            │       │        │
+          veth0   veth1    veth2
+            │       │        │
+           容器A   容器B    容器C
+        172.17.0.2  .3        .4
+
+	   
+##################################################### 容器是如何“接入” docker0 ####################################################################
+
+每启动一个使用 bridge 网络模式 的容器，Docker 会：
+
+1、创建一对 veth pair
+    vethxxxx  <——>  eth0（容器内）
+2、一端放入容器的 network namespace
+3、另一端挂到 docker0 网桥上
+4、给容器分配 IP、网关、路由
+
+######################################################### docker0 网络通信原理 ###################################################################
+
+1、容器 ↔ 容器（同宿主机）
+   容器A → docker0 → 容器B
+    * 通过 docker0 二层转发
+    * 无需 NAT
+    * 性能接近本地网络
+	  
+2、容器 → 宿主机
+   容器A → docker0 → 宿主机eth0
+	
+3、容器 → 外网（最关键）
+   容器A → docker0 → 宿主机eth0 → docker0 → 容器A
+    1、容器发包 → docker0
+    2、iptables 做 SNAT（MASQUERADE）
+    3、从宿主机网卡发出
+    4、回包再被反向映射回容器
+	查看 NAT 规则：
+	    iptables -t nat -L -n
+	常见规则类似：
+	    MASQUERADE  all  --  172.17.0.0/16  !172.17.0.0/16
+	
+4、外部访问容器（端口映射）
+   默认 外部是不能直接访问容器 IP 的，只能通过端口映射：
+	    docker run -p 8080:80 nginx
+	iptables 做了什么：
+	    * DNAT：宿主机 8080 → 容器 80
+	    * FORWARD 放行流量
+
+############################################################## caution #########################################################################
+
+Q1：为什么关闭 iptables 容器就上不了网？
+A：docker0 严重依赖 iptables 做 NAT
+
+Q2：docker0 能不能换网段？
+A:可以，修改 Docker daemon 配置：
+{
+  "bip": "192.168.100.1/24"
+}
+然后重启 Docker。
+   """
+    print(docker_docker0_cmd) 
+
 def print_neutron_cmd():
     print("neutron usage command:")
     neutron_cmd = """
