@@ -1612,3 +1612,28 @@ ansible all -i /etc/ansible/hosts -u root -k -m ping --ssh-common-args='-o Stric
    """
     print(ansible_cmd) 
 
+
+def print_ping_cmd():
+    ping_cmd = """
+
+############################################################## overview ########################################################################
+
+# 带源地址进行ping
+ping -I <源地址/网卡名> <目标地址> [其他参数]
+
+
+# 其他常用参数：
+-c n：只发送 n 个 ICMP 包后停止（避免持续 ping）。
+-s size：指定 ping 包的大小（单位：字节，默认 56 字节，加上 8 字节 ICMP 头共 64 字节）。
+-6：使用 IPv6 进行 ping 测试（对应 ping6 命令）。
+
+
+# 若不确定网卡的具体 IP，可直接指定网卡名，系统会自动使用该网卡的主 IP 作为源地址：
+ping -I eth1 223.5.5.5
+
+
+# 指定 IPv6 源地址，测试到 IPv6 目标的连通性
+ping -6 -I 2408:84f7::100 -c 4 2400:3200::1
+   """
+    print(ping_cmd) 
+
