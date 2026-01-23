@@ -112,6 +112,7 @@ docker_file: docker file 解读
 docker_docker0: docker0详解
 ping: ping命令使用帮助
 net: Linux 内核收发网络包流程
+rootdir: Linux系统'/'目录下的目录功能简介
 
 aa --show c --item current : 通过 current 宏查看进程属性的示例代码
 aa --show c --item cpu_consume: cpu 负载打满源代码
