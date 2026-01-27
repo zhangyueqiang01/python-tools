@@ -1618,6 +1618,103 @@ A:可以，修改 Docker daemon 配置：
    """
     print(docker_docker0_cmd) 
 
+def print_linux_route_cmd():
+    linux_route_cmd = """
+
+将Linux主机配置成路由器的方法
+以下案例为将centos7.9的liux机器配置成路由器的详细步骤
+机器环境介绍：
+这访问互联网用的接口是eth0，ip是192.168.122.93/24，用于让别的机器通过这个机器上网的接口是eth1，ip是192.168.2.2/24
+
+########################################################### 开启内核 IP 转发 #####################################################################
+
+1. 临时开启（立即生效，重启后失效）
+echo 1 > /proc/sys/net/ipv4/ip_forward
+# 验证是否开启（输出1则成功）
+cat /proc/sys/net/ipv4/ip_forward
+
+2. 永久开启（重启后仍生效）
+vi /etc/sysctl.conf
+net.ipv4.ip_forward = 1
+sysctl -p
+
+############################################### 配置 iptables NAT 转发规则（实现内网上网） ##########################################################
+
+1. 停止并禁用 firewalld
+# 停止firewalld
+systemctl stop firewalld
+# 禁止开机自启
+systemctl disable firewalld
+# 验证状态（输出inactive则成功）
+systemctl status firewalld
+
+
+2. 安装并启动 iptables-services
+# 安装（若已安装则跳过）
+yum install -y iptables-services
+# 启动iptables
+systemctl start iptables
+# 开机自启
+systemctl enable iptables
+
+
+3. 配置 NAT 转发规则（核心）
+添加源地址转换（SNAT） 规则，将内网 192.168.2.0/24 的数据包，通过 eth0 的公网（内网）IP 做地址转换后访问外网，同时允许转发和相关连接：
+# 清空原有iptables规则（避免冲突，谨慎操作：若机器已有其他iptables规则，需跳过此步）
+iptables -F
+iptables -t nat -F
+
+# 1. 允许nat表中eth0的出站流量做SNAT转换（核心规则）
+iptables -t nat -A POSTROUTING -s 192.168.2.0/24 -o eth0 -j SNAT --to-source 192.168.122.93
+
+# 2. 允许内核转发所有合法的连接（INPUT/OUTPUT/FORWARD链放行）
+iptables -A FORWARD -i eth1 -o eth0 -j ACCEPT
+iptables -A FORWARD -i eth0 -o eth1 -m state --state RELATED,ESTABLISHED -j ACCEPT
+iptables -P FORWARD ACCEPT
+
+# 3. 保存iptables规则（重启后不丢失）
+service iptables save
+# 验证规则（查看nat表POSTROUTING链，能看到上述SNAT规则则成功）
+iptables -t nat -L -n --line-number
+
+
+iptables 规则说明：
+-s 192.168.2.0/24：匹配内网 192.168.2.0/24 网段的所有机器
+-o eth0：指定数据包从 eth0 口出站
+SNAT --to-source 192.168.122.93：将内网数据包的源 IP 替换为 eth0 的 IP（192.168.122.93），实现外网识别
+第二条 FORWARD 规则：允许外网的响应数据包从 eth0 回到 eth1，保证 TCP 连接正常。
+
+############################################################# 客户机器配置 #######################################################################
+
+配置默认路由
+ip route del default via 192.168.2.2
+
+############################################################## caution #########################################################################
+
+1、客户机用公网DNS即可，无需将路由器单独再配置DNS服务
+2、可以通过抓包验证
+
+客户机器
+[root@ct7_node01 ~]# ping baidu.com
+PING baidu.com (124.237.177.164) 56(84) bytes of data.
+64 bytes from 124.237.177.164 (124.237.177.164): icmp_seq=1 ttl=49 time=16.3 ms
+64 bytes from 124.237.177.164 (124.237.177.164): icmp_seq=2 ttl=49 time=16.0 ms
+
+路由器机器
+[root@ct7_node02 ~]# tcpdump -i eth1 -nvv udp port 53 
+tcpdump: listening on eth1, link-type EN10MB (Ethernet), capture size 262144 bytes
+13:52:06.677539 IP (tos 0x0, ttl 64, id 41811, offset 0, flags [DF], proto UDP (17), length 55)
+    192.168.2.1.46629 > 8.8.8.8.domain: [bad udp cksum 0xd2ed -> 0x8816!] 44395+ A? baidu.com. (27)
+13:52:06.723772 IP (tos 0x0, ttl 105, id 48946, offset 0, flags [none], proto UDP (17), length 119)
+    8.8.8.8.domain > 192.168.2.1.46629: [udp sum ok] 44395 q: A? baidu.com. 4/0/0 baidu.com. A 124.237.177.164, baidu.com. A 111.63.65.103, baidu.com. A 111.63.65.247, baidu.com. A 110.242.74.102 (91)
+13:52:06.740854 IP (tos 0x0, ttl 64, id 41825, offset 0, flags [DF], proto UDP (17), length 74)
+    192.168.2.1.44071 > 8.8.8.8.domain: [bad udp cksum 0xd300 -> 0xf672!] 38416+ PTR? 164.177.237.124.in-addr.arpa. (46)
+13:52:06.788160 IP (tos 0x0, ttl 105, id 2135, offset 0, flags [none], proto UDP (17), length 130)
+    8.8.8.8.domain > 192.168.2.1.44071: [udp sum ok] 38416 NXDomain q: PTR? 164.177.237.124.in-addr.arpa. 0/1/0 ns: 237.124.in-addr.arpa. SOA dns1.hbtele.com. root.dns1.hbtele.com. 2007011605 10800 3600 604800 3600 (102)
+
+   """
+    print(linux_route_cmd) 
+
 def print_neutron_cmd():
     print("neutron usage command:")
     neutron_cmd = """
