@@ -114,6 +114,7 @@ ping: ping命令使用帮助
 net: Linux 内核收发网络包流程
 rootdir: Linux系统'/'目录下的目录功能简介
 linux_route: 将Linux机器配置成路由器的方法
+sec_enh: Linux主机安全加固常见内容
 
 aa --show c --item current : 通过 current 宏查看进程属性的示例代码
 aa --show c --item cpu_consume: cpu 负载打满源代码
