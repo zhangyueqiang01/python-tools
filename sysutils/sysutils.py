@@ -2280,3 +2280,68 @@ nginx hard nofile 1000000
    """
     print(sec_enh_cmd) 
 
+def print_net_name_cmd():
+    net_name_cmd = """
+
+############################################################## overview ########################################################################
+
+所有带@的网卡都是虚拟网络设备（物理网卡永远无@），且@的含义分两类：
+    主从关系：@后是依附的主网卡 / 主设备（VLAN、bond、macvlan/ipvlan、bridge/team 子接口均属此类）；
+    对等关系：@后是对端设备 / 对端 ifindex（仅 veth pair 属此类，独一份）。
+
+按使用频率从高到低排序，覆盖日常工作中所有可能遇到的场景，无其他带 @的网卡类型：
+    1、veth pair：A@B/A@ifX，对等关系，跨 netns 通信核心；
+    2、VLAN 子接口：主名.VID@主名，主从关系，单网卡多 VLAN 隔离；
+    3、macvlan/ipvlan：X@主名，主从关系，单网卡多 MAC / 多 IP；
+    4、bond/team 成员口：物理名@bondX/teamX，主从关系，链路聚合；
+    5、bridge/team VLAN 子接口：桥名.VID@桥名，主从关系，小众桥接 VLAN 场景。
+
+############################################################## veth pair ########################################################################
+
+ip link add veth0 type veth peer name veth1
+
+[root@ct7_node02 ~]# ip a
+...
+6: veth1@veth0: <BROADCAST,MULTICAST,M-DOWN> mtu 1500 qdisc noop state DOWN group default qlen 1000
+    link/ether e6:a6:49:a6:d8:15 brd ff:ff:ff:ff:ff:ff
+7: veth0@veth1: <BROADCAST,MULTICAST,M-DOWN> mtu 1500 qdisc noop state DOWN group default qlen 1000
+    link/ether ee:2a:63:0d:57:22 brd ff:ff:ff:ff:ff:ff
+
+6: veth1@veth0：网卡 6 是 veth1，它的对端是 veth0
+7: veth0@veth1：网卡 7 是 veth0，它的对端是 veth1
+二者互指，证明是一对合法的 veth pair，创建成功。
+
+# 查看网卡设备的编号
+cat /sys/class/net/veth1/ifindex
+# 查看网卡对端设备编号
+cat /sys/class/net/veth1/iflink
+
+
+# 注意，如果创建network namepace并将veth pair加入ns后，在ns中网卡的名称会发生变化
+ip netns add ns1
+ip netns add ns2
+ip link set veth0 netns ns1
+ip link set veth1 netns ns2
+
+[root@ct7_node02 ~]# ip netns exec ns1 ip a
+7: veth0@if6: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000
+    link/ether 8e:c9:c2:77:38:a1 brd ff:ff:ff:ff:ff:ff link-netnsid 1
+	
+[root@ct7_node02 ~]# ip netns exec ns1 cat /sys/class/net/veth0/ifindex
+7
+[root@ct7_node02 ~]# ip netns exec ns1 cat /sys/class/net/veth0/iflink
+6
+
+以veth0@if6为例
+veth0：当前操作的命名空间内，这个 veth 网卡的名字（内核不会修改网卡本身的名字，只是显示格式变了）；
+@if6：if是ifindex的缩写，6是对端网卡（veth1）在它自己的所属 ns（ns1） 中被分配的系统索引；
+
+############################################################## overview ########################################################################
+############################################################# VLAN 子接口 #######################################################################
+########################################################### macvlan/ipvlan #####################################################################
+########################################################### bond/team 成员口 ####################################################################
+######################################################### bridge/team VLAN 子接口 ###############################################################
+
+   """
+    print(net_name_cmd) 
+
