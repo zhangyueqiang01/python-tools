@@ -2336,10 +2336,54 @@ ip link set veth1 netns ns2
 veth0：当前操作的命名空间内，这个 veth 网卡的名字（内核不会修改网卡本身的名字，只是显示格式变了）；
 @if6：if是ifindex的缩写，6是对端网卡（veth1）在它自己的所属 ns（ns1） 中被分配的系统索引；
 
-############################################################## overview ########################################################################
+
 ############################################################# VLAN 子接口 #######################################################################
-########################################################### macvlan/ipvlan #####################################################################
+
+# VLAN 子接口：主名.VID@主名，主从关系，单网卡多 VLAN 隔离；
+
+ip link add link eth0 name eth0.100 type vlan id 100
+ip addr add 192.168.100.1/24 dev eth0.100
+ip link set eth0.100 up
+
+[root@ct7_node02 ~]# ip a
+6: eth0.100@eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether 74:52:01:01:02:01 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.100.1/24 scope global eth0.100
+       valid_lft forever preferred_lft forever
+    inet6 fe80::7652:1ff:fe01:201/64 scope link
+       valid_lft forever preferred_lft forever
+
 ########################################################### bond/team 成员口 ####################################################################
+
+# 以下指令将eth2和eth3做成bond口，主备的方式
+# 只有在高版本的内核的某些操作系统上会以eth2@bond0，eth3@bond0的方式进行展示，bond0虚拟口不会有‘@’符号
+
+
+# 加载 bond 内核模块（若未加载）
+modprobe bonding
+# 创建 bond0 虚拟网卡并配置为主备模式（mode=1）
+ip link add bond0 type bond mode active-backup
+# 配置主备网卡优先级（eth2 主、eth3 备，数值越大优先级越高）
+echo 100 > /sys/class/net/bond0/bonding/miimon    # 链路检测间隔（毫秒），必配
+echo 100 > /sys/class/net/eth2/bonding_slave/priority  # eth2 优先级100（主）
+echo 50 > /sys/class/net/eth3/bonding_slave/priority   # eth3 优先级50（备）
+#将 eth2、eth3 加入 bond0 并启用从属网卡
+ip link set eth2 master bond0
+ip link set eth3 master bond0
+ip link set eth2 up
+ip link set eth3 up
+# 配置IP和子网掩码（示例：192.168.1.100/24，根据实际网段修改）
+ip addr add 192.168.1.100/24 dev bond0
+# 启用bond0
+ip link set bond0 up
+# 配置默认网关（示例：192.168.1.1，根据实际网关修改）
+ip route add default via 192.168.1.1 dev bond0
+# 验证 Bond 配置是否生效
+cat /proc/net/bonding/bond0
+# 查看网卡链路状态
+ip link show
+
+########################################################### macvlan/ipvlan #####################################################################
 ######################################################### bridge/team VLAN 子接口 ###############################################################
 
    """
