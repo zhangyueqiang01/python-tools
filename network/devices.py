@@ -17,15 +17,25 @@ display power
 display clock
 display interface brief
 
+# 查看所有聚合口
+display link-aggregation summary
+display link-aggregation verbose
 
-# 显示该接口的当前配置
+# 查看二层名称为145的聚合口
+display interface Bridge-Aggregation 145
+
+# 查看二层名称为145的聚合口下的配置
 display current-configuration interface Bridge-Aggregation 145
 
-# 显示该接口的实时状态和统计信息。
-display interface Bridge-Aggregation 145
+# 查看三层名称为30的聚合口
+dis int Route-Aggregation 30
 
 # 查看聚合口下有哪些接口
 display link-aggregation verbose Bridge-Aggregation 145
+
+# 查看接口收发光
+display transceiver diagnosis interface FortyGigE 1/0/49
+display transceiver interface FortyGigE 1/0/49
    """
     print(h3c_cmd)   
 
