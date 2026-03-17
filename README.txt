@@ -116,6 +116,8 @@ rootdir: Linux系统'/'目录下的目录功能简介
 linux_route: 将Linux机器配置成路由器的方法
 sec_enh: Linux主机安全加固常见内容
 net_name: Linux 网卡命名中带有@符号类型的网卡名称解读
+rsyslog_conf: rsyslog.conf 配置文件讲解
+rsyslogd: rsyslogd 服务介绍
 
 aa --show c --item current : 通过 current 宏查看进程属性的示例代码
 aa --show c --item cpu_consume: cpu 负载打满源代码

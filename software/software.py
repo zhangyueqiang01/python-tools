@@ -1715,6 +1715,233 @@ tcpdump: listening on eth1, link-type EN10MB (Ethernet), capture size 262144 byt
    """
     print(linux_route_cmd) 
 
+def print_rsyslog_conf_cmd():
+    print("rsyslog_conf usage command:")
+    rsyslog_conf_cmd = """
+
+############################################################## overview ########################################################################
+
+#### MODULES ####
+#### GLOBAL DIRECTIVES ####
+#### RULES ####
+### begin forwarding rule ###
+
+
+############################################################## overview ########################################################################
+
+# grep -v '#' rsyslog.conf  | grep -v ^$
+$WorkDirectory /var/lib/rsyslog
+$ActionFileDefaultTemplate RSYSLOG_TraditionalFileFormat
+$IncludeConfig /etc/rsyslog.d/*.conf
+$OmitLocalLogging on
+$IMJournalStateFile imjournal.state
+*.info;mail.none;authpriv.none;cron.none                /var/log/messages
+authpriv.*                                              /var/log/secure
+mail.*                                                  -/var/log/maillog
+cron.*                                                  /var/log/cron
+*.emerg                                                 :omusrmsg:*
+uucp,news.crit                                          /var/log/spooler
+local7.*                                                /var/log/boot.log
+
+############################################################# 配置语法基础 #######################################################################
+
+语法格式：设施.优先级 目标（目标可以是文件、用户、远程服务器等）
+设施 (facility)：日志的来源分类（如 kern 内核、authpriv 认证、mail 邮件、cron 定时任务等）
+优先级 (priority)：日志的重要程度（从低到高：debug < info < notice < warn < err < crit < alert < emerg），可以通过man syslog进行查看
+       Kernel constant   Level value   Meaning
+       KERN_EMERG             0        System is unusable
+       KERN_ALERT             1        Action must be taken immediately
+       KERN_CRIT              2        Critical conditions
+       KERN_ERR               3        Error conditions
+       KERN_WARNING           4        Warning conditions
+       KERN_NOTICE            5        Normal but significant condition
+       KERN_INFO              6        Informational
+       KERN_DEBUG             7        Debug-level messages
+特殊符号：
+    *：匹配所有（如 *.info 表示所有设施的 info 及以上级别；authpriv.* 表示 authpriv 设施的所有级别）
+    none：排除该设施的所有日志（如 mail.none 表示排除邮件相关所有日志）
+    -：文件路径前加 - 表示异步写入（提升性能，减少磁盘 IO 阻塞）
+    :omusrmsg:*：表示广播给所有登录的终端用户
+
+############################################################# 逐行解读配置 #######################################################################
+
+1. *.info;mail.none;authpriv.none;cron.none /var/log/messages
+收集所有设施的 info 及以上级别日志，但排除 mail（邮件）、authpriv（认证授权）、cron（定时任务）相关的所有日志，最终写入 /var/log/messages 文件。
+
+2. authpriv.* /var/log/secure
+收集 authpriv（认证 / 授权）设施的所有级别日志，写入 /var/log/secure 文件。
+
+3. mail.* -/var/log/maillog
+收集 mail（邮件）设施的所有级别日志，异步写入 /var/log/maillog 文件。
+
+4. cron.* /var/log/cron
+收集 cron（定时任务）设施的所有级别日志，写入 /var/log/cron 文件。
+
+5. *.emerg :omusrmsg:*
+收集所有设施的 emerg（紧急）级别日志，广播给所有当前登录的终端用户。
+*.emerg：所有日志来源的最高级别日志（系统级紧急错误，比如内核崩溃、磁盘满到无法写入等）
+:omusrmsg:*：omusrmsg 是 rsyslog 的 “用户消息输出模块”，* 表示所有登录用户（比如通过 ssh 登录的终端、本地 tty 终端）
+
+6. uucp,news.crit /var/log/spooler
+收集 uucp 设施的所有级别日志 + news 设施的 crit（严重）及以上级别日志，写入 /var/log/spooler 文件。
+uucp：早期的 Unix 间文件传输服务（现在几乎不用，但配置保留兼容）
+
+7. local7.* /var/log/boot.log
+收集 local7（本地自定义设施 7）的所有级别日志，写入 /var/log/boot.log 文件。
+local0-local7：rsyslog 预留的 8 个本地自定义设施，供用户 / 应用自定义日志分类
+local7.*：系统启动相关的服务（如 init、systemd 启动脚本）默认会把启动日志输出到 local7 设施
+
+############################################################ 设施 (facility) ####################################################################
+
+facility = 日志的「来源分类」
+可以把它理解为：
+    内核日志
+    安全认证日志
+    邮件日志
+    定时任务日志
+    自定义应用日志
+这些是 Linux 系统固定、预定义的设施：
+
+facility 名称	代号		来源/作用
+kern	         0	    内核产生的日志（硬件、驱动、内存、网络等）
+user	         1	    用户进程产生的日志
+mail	         2	    邮件系统（postfix、sendmail）
+daemon	         3	    各种系统服务（nginx、ssh、docker 等）
+auth	         4	    认证日志（登录、su、密码）
+syslog	         5	    rsyslog 自身产生的日志
+lpr			     6	    打印服务
+news	         7	    新闻组服务（几乎不用）
+uucp	         8	    uucp 旧协议（几乎不用）
+authpriv	     10	    安全/授权日志（更私密，存 /var/log/secure）
+ftp			     11	    FTP 服务
+cron		     15	    定时任务 crond
+local0 ~ local7	16~23	留给用户/应用自定义使用
+
+########################################################### others config ######################################################################
+
+1. $WorkDirectory /var/lib/rsyslog
+定义 rsyslog 服务的「工作目录」为 /var/lib/rsyslog。
+作用：rsyslog 运行时需要存放临时文件、队列文件、状态文件（比如后面的 imjournal.state），这个目录就是默认的存储位置。
+运维注意：如果 /var 磁盘满了，rsyslog 会无法写入状态文件，表现为 rsyslogd 进程卡死，需及时清理该目录下的临时文件。
+
+2. $ActionFileDefaultTemplate RSYSLOG_TraditionalFileFormat
+设置「日志文件默认模板」为 RSYSLOG_TraditionalFileFormat（传统文件格式）。
+传统格式示例：
+    Mar 17 10:01:01 ct7_node02 systemd: Started Session 2 of user root.
+作用：统一所有日志文件的输出格式，避免不同日志文件格式混乱，方便用 grep/awk 等工具分析日志。
+
+3. $IncludeConfig /etc/rsyslog.d/*.conf
+引入 /etc/rsyslog.d/ 目录下所有 .conf 后缀的配置文件。
+
+4. $OmitLocalLogging on
+关闭「本地日志重复记录」。
+系统中 journald（systemd 日志）和 rsyslog 会联动，默认情况下，rsyslog 会从两个渠道收集本地日志：
+    /dev/log 套接字（传统方式）
+    imjournal 模块（读取 journald 日志）
+如果不关闭，会导致同一条日志被记录两次（重复日志）。
+作用：禁止 rsyslog 从 /dev/log 读取本地日志，只通过 imjournal 模块读取 journald 的日志，避免重复。
+运维注意：如果你的系统没有启用 journald（比如非 systemd 系统），开启这个参数会导致本地日志收不到，需改为 off。
+
+5. $IMJournalStateFile imjournal.state
+指定 imjournal 模块的「状态文件」名为 imjournal.state（存储路径是前面的 $WorkDirectory，即 /var/lib/rsyslog/imjournal.state）。
+imjournal 模块：rsyslog 用来读取 journald 日志的核心模块（替代旧的 imuxsock）。
+
+############################################################## overview ########################################################################
+
+aa --show journald
+aa --show rsyslog
+aa --show logger
+aa --show audit
+aa --show dmesg
+
+############################################################### others #########################################################################
+
+   """
+    print(rsyslog_conf_cmd) 
+
+
+def print_rsyslogd_cmd():
+    print("rsyslogd usage command:")
+    rsyslogd_cmd = """
+
+############################################################## overview ########################################################################
+什么是系统日志 （messages，secure）
+	
+为什么需要系统日志
+
+[root@ct7_node02 ~]# rpm -qa | grep syslog
+rsyslog-8.24.0-57.el7_9.3.x86_64
+[root@ct7_node02 ~]# 
+
+[root@ct7_node02 ~]# rpm -ql rsyslog
+/etc/logrotate.d/syslog
+/etc/pki/rsyslog
+/etc/rsyslog.conf
+/etc/rsyslog.d
+/etc/sysconfig/rsyslog
+/usr/bin/rsyslog-recover-qi.pl
+/usr/lib/systemd/system/rsyslog.service
+/usr/lib64/rsyslog
+/usr/lib64/rsyslog/imdiag.so
+/usr/lib64/rsyslog/imfile.so
+...
+/usr/sbin/rsyslogd
+...
+/usr/share/doc/rsyslog-8.24.0
+/usr/share/doc/rsyslog-8.24.0/AUTHORS
+/usr/share/doc/rsyslog-8.24.0/COPYING
+/usr/share/doc/rsyslog-8.24.0/COPYING.ASL20
+/usr/share/doc/rsyslog-8.24.0/COPYING.LESSER
+/usr/share/doc/rsyslog-8.24.0/ChangeLog
+/usr/share/man/man5/rsyslog.conf.5.gz
+/usr/share/man/man8/rsyslogd.8.gz
+/var/lib/rsyslog
+
+
+AUTHORS： so many contributions
+site： http://git.adiscon.com/?p=rsyslog.git;a=summary
+COPYING： 
+
+
+############################################################## overview ########################################################################
+rsyslogd
+[root@ct7_node02 ~]# man rsyslogd
+(reverse-i-search)`s': cat /var/lib/rsyslog/imjournal.^Cate 
+[root@ct7_node02 ~]# systemctl status rsyslog
+● rsyslog.service - System Logging Service
+   Loaded: loaded (/usr/lib/systemd/system/rsyslog.service; enabled; vendor preset: enabled)
+   Active: active (running) since Fri 2026-03-13 09:52:36 CST; 55min ago
+     Docs: man:rsyslogd(8)
+           http://www.rsyslog.com/doc/
+ Main PID: 1210 (rsyslogd)
+   CGroup: /system.slice/rsyslog.service
+           └─1210 /usr/sbin/rsyslogd -n
+
+Mar 13 09:52:36 ct7_node02 systemd[1]: Starting System Logging Service...
+Mar 13 09:52:36 ct7_node02 rsyslogd[1210]:  [origin software="rsyslogd" swVersion="8.24.0-57.el7_9.3" x-pid="1210" x-info="http://www.rsyslog.com"] start
+Mar 13 09:52:36 ct7_node02 systemd[1]: Started System Logging Service.
+[root@ct7_node02 ~]# 
+
+
+SYNOPSIS
+       rsyslogd [ -d ] [ -D ] [ -f config file ] [ -i pid file ] [ -n ] [ -N level ] [ -C ] [ -v ]
+
+
+
+############################################################## overview ########################################################################
+/etc/rsyslog.conf
+
+############################################################## overview ########################################################################
+/etc/logrotate.d/syslog
+
+############################################################## overview ########################################################################
+
+
+
+   """
+    print(rsyslogd_cmd) 
+
+
 def print_neutron_cmd():
     print("neutron usage command:")
     neutron_cmd = """
