@@ -1943,11 +1943,87 @@ SYNOPSIS
 
 ############################################################## overview ########################################################################
 
-
-
    """
-    print(rsyslogd_cmd) 
+   
+def print_rsyslog_server_cmd():
+    rsyslog_server_cmd = """
 
+rsyslog 可通过 UDP/TCP 转发将日志发送到远程服务器，需要服务端和客户端都进行配置，下面是完整可直接部署的配置方案。
+
+############################################################### server #########################################################################
+
+1. 启用监听端口
+   编辑 /etc/rsyslog.conf 或 /etc/rsyslog.d/server.conf：
+   
+   # 启用 TCP 监听（推荐）
+   module(load="imtcp")
+   input(type="imtcp" port="514")
+   
+   # 启用 UDP 监听（可选）
+   module(load="imudp")
+   input(type="imudp" port="514")
+
+2. 按客户端分类存储（推荐）
+   # 定义模板：按客户端IP/主机名分目录
+   $template RemoteLogs,"/var/log/remote/%FROMHOST-IP%/%PROGRAMNAME%.log"
+   # 应用模板到所有远程日志
+   *.* ?RemoteLogs
+
+3. 目录权限与重启
+   mkdir -p /var/log/remote
+   chown -R syslog:syslog /var/log/remote  # Debian/Ubuntu
+   # chown -R root:root /var/log/remote    # RHEL/CentOS
+   systemctl restart rsyslog
+
+############################################################## customer ########################################################################
+
+1. 最简配置（推荐）
+   # 转发所有日志到远程（UDP，单@）
+   *.* @192.168.1.100:514
+   
+   # 转发所有日志到远程（TCP，双@，生产推荐）
+   *.* @@192.168.1.100:514
+   
+   # 仅转发 authpriv 日志到 TCP 服务器
+   authpriv.* @@log-central:514
+
+2. 现代模块化写法（omfwd，推荐）
+   # 所有日志通过 TCP 转发
+   action(
+     type="omfwd"
+     target="192.168.1.100"
+     port="514"
+     protocol="tcp"
+     queue.filename="fwdqueue"
+     action.resumeRetryCount="-1"
+   )
+
+3. 生效与验证
+   # 重启服务
+   systemctl restart rsyslog
+   
+   # 测试发送日志
+   logger "Test remote log from $(hostname)"
+   
+   # 在服务端查看
+   tail -f /var/log/remote/客户端主机名/messages
+
+############################################################### others #########################################################################
+
+aa --show journald
+aa --show rsyslog
+aa --show logger
+aa --show audit
+aa --show dmesg
+
+# 将日志发送到指定服务器中
+aa --show rsyslog_server
+# 将日志发送到数据库中
+aa --show rsyslog_mysql
+# 将日志通过web呈现
+aa --show rsyslog_web
+   """
+    print(rsyslog_server_cmd) 
 
 def print_neutron_cmd():
     print("neutron usage command:")
