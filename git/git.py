@@ -73,6 +73,10 @@ git log -5 --oneline src/main.js
 
 查看某个文件的修改内容及作者
 git log -p --author="John" src/main.js
+
+查看最近的commit修改的内容
+git log
+git show <commit_id>
    """
     print(git_cmd)  
 

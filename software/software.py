@@ -1854,6 +1854,13 @@ aa --show logger
 aa --show audit
 aa --show dmesg
 
+# 将日志发送到指定服务器中
+aa --show rsyslog_server
+# 将日志发送到数据库中
+aa --show rsyslog_mysql
+# 将日志通过web呈现
+aa --show rsyslog_web
+
 ############################################################### others #########################################################################
 
    """
