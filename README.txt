@@ -119,6 +119,7 @@ net_name: Linux 网卡命名中带有@符号类型的网卡名称解读
 rsyslog_conf: rsyslog.conf 配置文件讲解
 rsyslogd: rsyslogd 服务介绍
 rsyslog_server: 将日志发送到指定服务器中
+rsyslog_mysql: 将日志发送到数据库中
 
 aa --show c --item current : 通过 current 宏查看进程属性的示例代码
 aa --show c --item cpu_consume: cpu 负载打满源代码

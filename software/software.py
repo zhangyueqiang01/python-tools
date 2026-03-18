@@ -2025,6 +2025,84 @@ aa --show rsyslog_web
    """
     print(rsyslog_server_cmd) 
 
+def print_rsyslog_mysql_cmd():
+    rsyslog_mysql_cmd = """
+
+rsyslog 可通过 ommysql 模块写入 MySQL 数据库，下面是完整可直接部署的配置方案。
+
+############################################################### 安装依赖 #########################################################################
+
+# CentOS/RHEL
+yum install -y rsyslog-mysql
+yum install mariadb-server
+yum install mariadb
+
+# 创建数据库用户，并始化数据库
+mysql_secure_installation 
+
+############################################################## 准备数据库 ########################################################################
+
+-- 创建数据库
+CREATE DATABASE Syslog;
+
+-- 创建专用用户
+CREATE USER 'rsyslog'@'localhost' IDENTIFIED BY 'YourStrongPass';
+
+-- 授权
+GRANT ALL PRIVILEGES ON Syslog.* TO 'rsyslog'@'localhost';
+FLUSH PRIVILEGES;
+
+-- 导入默认表结构（文件来源于软件包rsyslog-mysql，是写好的 sql 语句）
+mysql -u root -p < /usr/share/doc/rsyslog-8.24.0/mysql-createDB.sql
+
+####################################################### rsyslog 配置（写入 MySQL） ###############################################################
+
+vim /etc/rsyslog.d/mysql.conf 
+
+# 加载 MySQL 输出模块
+module(load="ommysql")
+
+# 写入所有日志到 MySQL
+*.* action(
+  type="ommysql"
+  server="localhost"
+  db="Syslog"
+  uid="rsyslog"
+  pwd="YourStrongPass"
+  queue.filename="dbqueue"
+  action.resumeRetryCount="-1"
+)
+############################################################## 生效与验证 ########################################################################
+
+# 重启服务
+systemctl restart rsyslog
+
+# 测试发送日志
+logger "Test remote log from $(hostname)"
+
+# 在数据库中查看，日志是否写入数据库
+MariaDB [(none)]> use Syslog;
+MariaDB [Syslog]> select * from SystemEvents; 
+
+############################################################### others #########################################################################
+
+aa --show journald
+aa --show rsyslog
+aa --show logger
+aa --show audit
+aa --show dmesg
+
+# 将日志发送到指定服务器中
+aa --show rsyslog_server
+# 将日志发送到数据库中
+aa --show rsyslog_mysql
+# 将日志通过web呈现
+aa --show rsyslog_web
+
+   """
+    print(rsyslog_mysql_cmd) 
+
+
 def print_neutron_cmd():
     print("neutron usage command:")
     neutron_cmd = """
