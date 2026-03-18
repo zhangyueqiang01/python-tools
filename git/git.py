@@ -74,9 +74,20 @@ git log -5 --oneline src/main.js
 查看某个文件的修改内容及作者
 git log -p --author="John" src/main.js
 
+################################# show #######################################
+
 查看最近的commit修改的内容
 git log
 git show <commit_id>
+
+只看修改的文件列表（不看具体内容）
+git show --name-only 5f6d564
+
+会显示文件的修改状态（A = 新增，M = 修改，D = 删除等）：
+git show --name-status 5f6d564
+
+以精简格式显示修改内容，减少冗余信息：
+git show --oneline --stat 5f6d564
    """
     print(git_cmd)  
 
