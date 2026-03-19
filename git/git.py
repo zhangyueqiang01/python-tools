@@ -359,58 +359,42 @@ def print_mysql_cmd():
     print("mysql basic operate:")
     mysql_cmd = """
 
-		  	    ###############
-			    #mysql基础操作#
-			    ###############
+systemctl stop firewalld
+selinux disabled
+iptables -F
+aa --show mysql_secure_installation
 
-####################################基础操作################################
+############################################################### login ########################################################################
 
-mysql -u your_username -p
+mysql -u root -p
+mysql -u rsyslog -p -h 192.168.2.4 -P 3306
+
+############################################################### 用户管理 ########################################################################
+
+查看用户
+SELECT * FROM mysql.user;
+SELECT User, Host FROM mysql.user;
+
+############################################################### 权限管理 ########################################################################
+
+查看root用户权限
+SHOW GRANTS FOR root;
+
+-- 创建专用用户
+CREATE USER 'rsyslog'@'%' IDENTIFIED BY 'redhat';
+
+-- 授权
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'redhat' WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON Syslog.* TO 'rsyslog'@'%';
+FLUSH PRIVILEGES;
+
+############################################################## 数据库管理 ########################################################################
+
 CREATE DATABASE 数据库名;
-SHOW DATABASES;
-USE your_database;
-SHOW TABLES;
 DROP DATABASE <database_name>;
 
-
-CREATE TABLE table_name (
-    column1 datatype,
-    column2 datatype,
-    ...
-);
-
-DROP TABLE table_name;
-
-
-INSERT INTO table_name (column1, column2, column3, ...)
-VALUES (value1, value2, value3, ...);
-
-#####################################查询操作################################
-
-SELECT column1, column2, ...
-FROM table_name
-[WHERE condition]
-[ORDER BY column_name [ASC | DESC]]
-[LIMIT number];
-
-
--- 选择所有列的所有行
-SELECT * FROM users;
-
--- 选择特定列的所有行
-SELECT username, email FROM users;
-
--- 添加 WHERE 子句，选择满足条件的行
-SELECT * FROM users WHERE is_active = TRUE;
-
--- 添加 ORDER BY 子句，按照某列的升序排序
-SELECT * FROM users ORDER BY birthdate;
-
--- 添加 ORDER BY 子句，按照某列的降序排序
-SELECT * FROM users ORDER BY birthdate DESC;
-
--- 添加 LIMIT 子句，限制返回的行数
-SELECT * FROM users LIMIT 10;
+USE your_database;
+SHOW TABLES;
    """
     print(mysql_cmd) 
 
