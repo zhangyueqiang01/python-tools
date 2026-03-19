@@ -388,6 +388,9 @@ GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'redhat' WITH GRANT OPTI
 GRANT ALL PRIVILEGES ON Syslog.* TO 'rsyslog'@'%';
 FLUSH PRIVILEGES;
 
+修改指定用户的密码（明文密码，MySQL 自动加密）
+SET PASSWORD FOR 'rsyslog'@'%' = PASSWORD('redhat');
+
 ############################################################## 数据库管理 ########################################################################
 
 CREATE DATABASE 数据库名;
