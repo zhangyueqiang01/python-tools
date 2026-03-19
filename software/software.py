@@ -2102,6 +2102,73 @@ aa --show rsyslog_web
    """
     print(rsyslog_mysql_cmd) 
 
+def print_rsyslog_web_cmd():
+    rsyslog_web_cmd = """
+
+############################################################## overview ########################################################################
+
+日志web可视化，以下是一些常见的方法：
+
+1. LogAnalyzer（首选，最匹配 rsyslog+MySQL）
+rsyslog+MySQL 日志展示的开源软件是 LogAnalyzer（Adiscon 出品），它原生支持 MySQL 数据源，开箱即用、配置简单。
+优势：
+    原生支持 rsyslog 写入 MySQL 的表结构（SystemEvents），无需改表
+    支持多源：MySQL、文件、syslog 协议
+    功能：过滤、搜索、排序、导出、图表、权限
+    部署简单：PHP+MySQL，无需复杂依赖
+官网：https://loganalyzer.adiscon.com/
+适用场景：小型 / 中型日志中心，快速展示 rsyslog 入库日志
+
+2. Graylog（企业级，功能最强，适合大规模）
+3. ELK Stack（Elasticsearch + Logstash + Kibana，适合大数据）
+4. Grafana + Loki（轻量可视化）
+
+########################################################## LogAnalyzer 快速部署 #################################################################
+
+1. 环境准备（LAMP）
+yum install -y httpd php php-mysqlnd php-gd php-xml mariadb-server php-mysqlnd php-mysqli
+systemctl enable --now httpd mariadb
+systemctl start --now httpd mariadb
+# 配置数据库
+aa --show rsyslog_mysql
+mysql_secure_installation
+
+# 临时关闭 SELinux（测试用，重启后失效）
+setenforce 0
+
+# 或者永久允许 Apache 写入 config.php
+semanage fcontext -a -t httpd_sys_rw_content_t "/var/www/html/loganalyzer/config.php"
+restorecon -v /var/www/html/loganalyzer/config.php
+
+
+2. 下载安装 LogAnalyzer
+# 下载（最新版可去官网查）
+wget https://download.adiscon.com/loganalyzer/loganalyzer-4.1.13.tar.gz
+tar zxf loganalyzer-4.1.13.tar.gz
+
+# 部署到 Web 目录
+mkdir -p /var/www/html/loganalyzer
+cp -r loganalyzer-4.1.13/src/* /var/www/html/loganalyzer/
+
+# 权限设置（关键）
+touch /var/www/html/loganalyzer/config.php
+chmod 666 /var/www/html/loganalyzer/config.php
+chown -R apache:apache /var/www/html/loganalyzer  # CentOS
+
+
+3. Web 安装向导
+访问：http://服务器IP/loganalyzer
+按向导步骤
+填写 MySQL 连接信息：
+验证
+
+############################################################### others #########################################################################
+
+# 上述的操作通过docker的方式运行
+aa --show docker_LogAnalyzer
+   """
+    print(rsyslog_web_cmd) 
+
 
 def print_neutron_cmd():
     print("neutron usage command:")
