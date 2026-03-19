@@ -121,3 +121,52 @@ freedom is not free
    """
     print(english_cmd) 
 
+def print_mysql_secure_installation_cmd():
+    mysql_secure_installation_cmd = """
+
+############################################################## overview ########################################################################
+
+mysql_secure_installation 是 MySQL 官方提供的交互式安全配置脚本，专门用于快速加固 MySQL 服务器的安全设置，是新手部署 MySQL 后必做的核心操作之一。它通过引导式问答，
+帮你修复默认安装中存在的安全漏洞（比如空密码、匿名用户、远程 root 访问等）。
+
+######################################################### 核心作用（解决的问题） ###################################################################
+
+1. 核心作用（解决的问题）
+MySQL 默认安装后存在以下安全风险，该脚本可一键修复：
+root 账户默认无密码或密码过于简单；
+存在匿名用户（任何人可无需账号登录数据库）；
+root 账户允许远程主机访问（增加被攻击风险）；
+存在默认的 test 数据库（可被任意用户访问，用于测试但生产环境需删除）；
+清理权限表的冗余授权（确保权限设置生效）。
+
+######################################################### 非交互式执行（批量部署） #################################################################
+
+yum install mariadb-server -y
+systemctl start mariadb
+
+# CentOS/RHEL 7/8 系统
+yum install -y expect
+
+expect -c "
+spawn mysql_secure_installation
+expect \"Enter current password for root:\"
+send \"\r\"
+expect \"Set root password?\"
+send \"Y\r\"
+expect \"New password:\"
+send \"redhat\r\"
+expect \"Re-enter new password:\"
+send \"redhat\r\"
+expect \"Remove anonymous users?\"
+send \"Y\r\"
+expect \"Disallow root login remotely?\"
+send \"n\r\"
+expect \"Remove test database and access to it?\"
+send \"Y\r\"
+expect \"Reload privilege tables now?\"
+send \"Y\r\"
+expect eof
+"
+   """
+    print(mysql_secure_installation_cmd) 
+
