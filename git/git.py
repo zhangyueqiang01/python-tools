@@ -393,11 +393,15 @@ SET PASSWORD FOR 'rsyslog'@'%' = PASSWORD('redhat');
 
 ############################################################## 数据库管理 ########################################################################
 
+# 创建和删除数据库
 CREATE DATABASE 数据库名;
 DROP DATABASE <database_name>;
 
 USE your_database;
 SHOW TABLES;
+
+# 查看表结构
+desc TABLES;
    """
     print(mysql_cmd) 
 
