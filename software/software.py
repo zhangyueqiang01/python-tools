@@ -1809,13 +1809,13 @@ mail	         2	    邮件系统（postfix、sendmail）
 daemon	         3	    各种系统服务（nginx、ssh、docker 等）
 auth	         4	    认证日志（登录、su、密码）
 syslog	         5	    rsyslog 自身产生的日志
-lpr			     6	    打印服务
+lpr	         6	    打印服务
 news	         7	    新闻组服务（几乎不用）
 uucp	         8	    uucp 旧协议（几乎不用）
-authpriv	     10	    安全/授权日志（更私密，存 /var/log/secure）
-ftp			     11	    FTP 服务
-cron		     15	    定时任务 crond
-local0 ~ local7	16~23	留给用户/应用自定义使用
+authpriv        10	    安全/授权日志（更私密，存 /var/log/secure）
+ftp	        11	    FTP 服务
+cron	        15	    定时任务 crond
+local0 ~ local7	16~23      留给用户/应用自定义使用
 
 ########################################################### others config ######################################################################
 
@@ -2161,6 +2161,8 @@ chown -R apache:apache /var/www/html/loganalyzer  # CentOS
 按向导步骤
 填写 MySQL 连接信息：
 验证
+
+注意：web界面填写信息的时候要和数据库保持一致尤其是 Syslog SystemEvents 要大写，若是配置失败，删除配置文件 config.php 重启服务后继续配置
 
 ############################################################### others #########################################################################
 
