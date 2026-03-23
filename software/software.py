@@ -1877,7 +1877,13 @@ cron.*                                                  /var/log/cron;MyLogForma
 uucp,news.crit                                          /var/log/spooler;MyLogFormat
 local7.*                                                /var/log/boot.log;MyLogFormat
 
+
 systemctl restart rsyslog
+logger -p user.warning "这是一条警告级别测试日志"
+输出示例：
+2026-03-23T16:38:42.665614+08:00 ct7_node02 systemd: [info] Started System Logging Service.
+2026-03-23T16:38:45.347587+08:00 ct7_node02 root: [err] 测试认证错误日志
+
 
    """
     print(rsyslog_conf_cmd) 
