@@ -170,3 +170,73 @@ expect eof
    """
     print(mysql_secure_installation_cmd) 
 
+def print_journalctl_cmd():
+    journalctl_cmd = """
+
+Linux 日志有“syslog 标准作为基础”，但在 systemd 和现代应用下，已经演变为“多格式并存、中心化收集”的体系。
+
+systemd-journald.service 是 Linux 系统中 systemd 日志体系的核心服务，负责收集、存储和管理系统日志。可以把它理解成“系统日志的统一入口和缓冲中心”。
+换句话说：所有日志先汇总到 journald 日志(二进制格式),通过命令 journalctl 可以按多维度查询
+
+######################################################### 日志产生的函数和输出 ####################################################################
+
+
+| 类型       | 函数          | 写入位置     | 最终去向
+| ---------- | ------------- | ------------ | ------------------
+| 内核       | printk        | ring buffer  | journald
+| syslog程序 | syslog()      | /dev/log     | journald → rsyslog
+| systemd服务| stdout/stderr | pipe         | journald
+| 应用程序   | logging框架   | 文件/stdout  | 不固定
+| 手动写文件 | fopen         | 文件         | 文件
+| 控制台输出 | write         | /dev/console | 终端
+
+
+journald 和 rsyslog 的关系:
+程序 → journald → rsyslog → 文件
+
+############################################################## instance ########################################################################
+
+默认分页显示（类似 less），按 ↑/↓ 滚动、空格翻页、q 退出。
+
+journalctl -b          # 仅看本次启动后的日志（boot）
+journalctl -b -1       # 查看上一次启动的日志
+journalctl -k  # 等价 dmesg，只看内核日志
+journalctl -k -b  # 本次启动的内核日志
+
+
+1. 按服务（Unit）过滤（高频）
+journalctl -u nginx.service  # 查看Nginx服务日志（.service可省略）
+journalctl -u sshd -f        # 实时跟踪SSH服务日志
+journalctl -u docker -u kubelet  # 同时查看多个服务
+
+
+2. 按日志级别过滤（排查错误）
+级别从高到低（0-7）：emerg(0)、alert(1)、crit(2)、err(3)、warning(4)、notice(5)、info(6)、debug(7)。
+journalctl -p err          # 仅显示错误及以上级别（err/crit/alert/emerg）
+journalctl -p warning      # 警告及以上
+journalctl -u nginx -p err --since today  # 今天Nginx的错误日志
+
+
+3. 实时查看今天SSH服务的警告及以上日志
+journalctl -u sshd -p warning --since today -f
+
+4. 查看上一次启动的内核错误日志
+journalctl -b -1 -k -p err
+
+5. 导出最近1小时Nginx日志到文件
+journalctl -u nginx --since "1 hour ago" --no-pager > nginx_log_$(date +%Y%m%d%H%M).log
+
+6. 查看系统所有错误日志，倒序显示50行
+journalctl -p err -r -n 50
+
+############################################################### others #########################################################################
+
+aa --show journald
+aa --show rsyslog
+aa --show logger
+aa --show audit
+aa --show dmesg
+
+   """
+    print(journalctl_cmd) 
+
