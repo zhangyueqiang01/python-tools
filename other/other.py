@@ -244,3 +244,73 @@ aa --show dmesg
    """
     print(journalctl_cmd) 
 
+def print_logger_cmd():
+    logger_cmd = """
+
+############################################################## overview ########################################################################
+
+在编程和系统运维中，logger 是一个非常实用的Unix/Linux 系统命令，主要用于将自定义日志消息写入系统日志（如 /var/log/syslog 或 /var/log/messages），替代直接手动编
+辑日志文件，是标准化管理系统日志的核心工具。
+
+############################################################### option #########################################################################
+
+logger [选项] "要记录的日志消息"
+
+
+选项	全称	        作用说明												示例
+-p	--priority	指定日志优先级（格式：设施。级别），默认是 user.notice		logger -p user.warning "磁盘空间不足"
+-t	--tag	    给日志添加标签（标识日志来源），便于后续筛选				logger -t backup_script "备份完成"
+-f	--file	    将指定文件的内容作为日志写入（替代手动输入消息）			logger -f /tmp/error.log
+-i	--id	    在日志中包含 logger 进程的 PID（进程 ID），便于定位关联进程	logger -i "启动监控进程"
+-s	--stderr	同时将日志输出到标准错误（屏幕），而不仅是日志文件			logger -s "关键错误：数据库连接失败"
+-n	--server	将日志发送到远程日志服务器（需配合 -P 指定端口）			logger -n 192.168.1.100 -P 514 "远程日志测试"
+-P	--port	    指定远程日志服务器的端口（默认 514，对应 syslog 服务）		同上
+-u	--socket	将日志写入指定的 Unix 域套接字（替代默认的 /dev/log）		logger -u /dev/log_custom "自定义套接字日志"
+
+
+优先级由「设施（facility）+ 级别（level）」组成，用小数点分隔：
+
+设施：标识日志产生的来源类别，常用值：
+user（用户级消息，默认）、syslog（syslog 自身）、auth（认证相关）、cron（定时任务）、daemon（后台进程）。
+
+级别（从低到高，代表严重程度）：
+debug（调试）、info（普通信息）、notice（注意）、warning（警告）、err（错误）、crit（严重错误）、alert（紧急）、emerg（系统级故障）。
+
+
+############################################################## instance ########################################################################
+
+logger "这是一条测试日志：系统备份开始"
+
+
+# 写入带标签的日志（不写标签默认是root）
+logger -t backup_script -p user.info "备份完成：成功备份 100 个文件"
+
+# tail /var/log/messages
+Mar 23 16:14:39 ct7_node02 systemd: Started Session 1 of user root.
+Mar 23 16:14:39 ct7_node02 systemd-logind: New session 1 of user root.
+Mar 23 16:14:52 ct7_node02 backup_script: 备份完成：成功备份 100 个文件
+...
+
+
+# 既想在屏幕看到提示，又想留存日志：
+logger -s -p user.warning "警告：/home 分区使用率已达 85%"
+
+############################################################### others #########################################################################
+
+aa --show journald
+aa --show rsyslog
+aa --show logger
+aa --show journalctl
+aa --show audit
+aa --show dmesg
+
+# 将日志发送到指定服务器中
+aa --show rsyslog_server
+# 将日志发送到数据库中
+aa --show rsyslog_mysql
+# 将日志通过web呈现
+aa --show rsyslog_web
+
+   """
+    print(logger_cmd) 
+

@@ -123,6 +123,7 @@ rsyslog_mysql: 将日志发送到数据库中
 rsyslog_web: 通过 LogAnalyzer 快速展示 rsyslog 入库日志
 mysql_secure_installation: mysql 数据库初始化配置
 journalctl: journalctl and systemd-journald.service 简介
+logger: logger 指令简介
 
 aa --show c --item current : 通过 current 宏查看进程属性的示例代码
 aa --show c --item cpu_consume: cpu 负载打满源代码
