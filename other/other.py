@@ -194,6 +194,10 @@ systemd-journald.service 是 Linux 系统中 systemd 日志体系的核心服务
 journald 和 rsyslog 的关系:
 程序 → journald → rsyslog → 文件
 
+默认情况下如果关闭 systemd-journald 服务，rsyslog 配置文件中指定的 /var/log/secure /var/log/message 等文件都不会产生新的日志,logger 指令测试也无日志
+systemctl stop systemd-journald.socket
+systemctl stop systemd-journald.service
+
 ############################################################## instance ########################################################################
 
 默认分页显示（类似 less），按 ↑/↓ 滚动、空格翻页、q 退出。
