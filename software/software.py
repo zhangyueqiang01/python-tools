@@ -1863,6 +1863,22 @@ aa --show rsyslog_web
 
 ############################################################### others #########################################################################
 
+默认情况下，日志文件不会显示日志的级别，通过以下方式进行修改，日志会文件会显示日志的级别
+
+# 1. 定义自定义格式（明确包含级别）
+$template MyLogFormat,"%timegenerated:::date-rfc3339% %HOSTNAME% %syslogtag% [%syslogseverity-text%] %msg%\\n"
+
+# 2. 给每个日志文件明确指定使用自定义格式（关键：用 ;MyLogFormat 绑定格式）
+*.info;mail.none;authpriv.none;cron.none                /var/log/messages;MyLogFormat
+authpriv.*                                              /var/log/secure;MyLogFormat
+mail.*                                                  -/var/log/maillog;MyLogFormat
+cron.*                                                  /var/log/cron;MyLogFormat
+*.emerg                                                 :omusrmsg:*
+uucp,news.crit                                          /var/log/spooler;MyLogFormat
+local7.*                                                /var/log/boot.log;MyLogFormat
+
+systemctl restart rsyslog
+
    """
     print(rsyslog_conf_cmd) 
 
