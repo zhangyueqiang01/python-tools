@@ -314,3 +314,118 @@ aa --show rsyslog_web
    """
     print(logger_cmd) 
 
+def print_logrotate_cmd():
+    logrotate_cmd = """
+
+logrotate 是 Linux/Unix 系统自带的日志自动轮转、压缩、清理工具，核心作用是防止日志无限膨胀占满磁盘，同时保留历史日志用于排查与审计。它通过定时任务（cron）自动执行，也支
+持手动触发，是服务器日志管理的标配工具，man logrotate 查看详情。
+
+############################################################### 核心作用 ########################################################################
+
+自动轮转：按时间 / 大小切割日志，重命名旧日志（如 access.log → access.log.1）并创建新文件。
+自动压缩：默认 gzip 压缩旧日志，大幅节省空间。
+自动清理：保留指定数量 / 天数的历史日志，超期自动删除。
+脚本扩展：轮转前后执行自定义命令（如重启服务、通知、备份）。
+灵活触发：支持按天 / 周 / 月或文件大小触发轮转。
+
+############################################################### 工作原理 #########################################################################
+
+1、读取配置：加载全局 /etc/logrotate.conf 与 /etc/logrotate.d/ 下的应用专属配置。
+2、条件判断：检查日志是否存在、是否为空、是否达到时间 / 大小阈值。
+3、执行轮转：
+  重命名旧日志（log → log.1，旧版本依次后移）。
+  压缩（log.1 → log.1.gz）。
+  删除超期日志（按 rotate N 保留 N 份）。
+4、收尾动作：执行 postrotate 脚本（如 nginx -s reload），确保应用写入新日志。
+
+######################################################## /etc/logrotate.conf ###################################################################
+
+指令			说明					示例
+daily/weekly/monthly	轮转周期（天 / 周 / 月）		daily
+rotate N		保留 N 份历史日志			rotate 7（保留 7 天）
+size SIZE		按大小触发（k/M/G）			size 100M
+compress		压缩旧日志（gzip）			compress
+delaycompress		延迟压缩（下次轮转再压）		delaycompress
+create MODE USER GROUP	新建日志的权限与属主			create 0640 nginx nginx
+notifempty		空日志不轮转				notifempty
+missingok		日志不存在不报错			missingok
+copytruncate		先复制再截断（适配不支持 reopen 的程序）copytruncate
+postrotate/endscript	轮转后执行脚本				单独配置app的日志规则使用（例如nginx）
+
+##################################################### /etc/cron.daily/logrotate ################################################################
+
+每天自动触发 logrotate 执行日志轮转，并在执行失败时记录告警日志。
+
+cat /etc/cron.daily/logrotate 
+#!/bin/sh
+
+/usr/sbin/logrotate -s /var/lib/logrotate/logrotate.status /etc/logrotate.conf
+EXITVALUE=$?
+if [ $EXITVALUE != 0 ]; then
+    /usr/bin/logger -t logrotate "ALERT exited abnormally with [$EXITVALUE]"
+fi
+exit 0
+
+/usr/sbin/logrotate：logrotate 的主程序路径（系统默认位置）；
+-s /var/lib/logrotate/logrotate.status：
+  -s（--state）：指定状态文件路径，这个文件是 logrotate 的「记忆账本」；
+  作用：记录每个日志文件最后一次轮转的时间 / 次数，避免同一天内重复轮转（比如全局配置是 weekly，即使脚本每天执行，logrotate 也会通过这个文件判断是否满足轮转条件）；
+
+############################################################## advanced ########################################################################
+
+# create new (empty) log files after rotating old ones
+create
+
+# use date as a suffix of the rotated file
+dateext                            # 全局默认：轮转后的日志用日期作为后缀（如 access.log-20260323，而非默认的 access.log.1）
+# uncomment this if you want your log files compressed
+#compress                         # 全局默认：不压缩（注释掉了，如需压缩可取消注释，压缩格式为 gzip）
+
+dateext 是很实用的配置：相比默认的数字后缀（.1/.2），日期后缀（-20260323）更直观，能一眼看出日志对应的时间。
+create 确保轮转后应用有新的日志文件可写，不会因旧文件被重命名导致日志写入失败。
+
+wtmp 日志专属规则（系统登录日志）
+/var/log/wtmp {  # 针对 /var/log/wtmp 文件（记录用户登录/注销信息）的专属规则
+    monthly      # 覆盖全局的 weekly：每月轮转一次
+    create 0664 root utmp  # 轮转后新建 wtmp 文件，权限 0664，属主 root，属组 utmp
+	minsize 1M   # 即使到了每月轮转时间，若文件小于1M也不轮转（避免空文件/小文件频繁轮转）
+    rotate 1     # 覆盖全局的 rotate 4：只保留1份历史日志（即只保留上个月的 wtmp）
+}
+wtmp 特点：这个日志文件是二进制格式（不是纯文本），记录系统登录记录，无需保留过多历史，所以只保留 1 份（对应指令last）。
+
+
+btmp 日志专属规则（失败登录日志）
+/var/log/btmp {  # 针对 /var/log/btmp 文件（记录失败的登录尝试，如密码错误）的专属规则
+    missingok    # 即使 btmp 文件不存在，也不报错（避免空文件导致 logrotate 执行失败）
+    monthly      # 每月轮转一次
+    create 0600 root utmp  # 新建文件权限 0600（仅 root 可读可写，保障安全），属主 root，属组 utmp
+    rotate 1     # 只保留1份历史日志
+}
+btmp 特点：记录敏感的登录失败信息，所以权限设为 0600，仅 root 可访问，防止泄露（对应指令lastb）。
+
+
+系统专属日志的规则，一般推荐，建议放在 /etc/logrotate.d/ 里
+
+############################################################## instance ########################################################################
+cat /etc/logrotate.d/nginx.conf
+/var/log/nginx/*.log {
+    daily
+    missingok
+    rotate 7
+    compress
+    delaycompress
+    notifempty
+    create 0640 nginx nginx
+    sharedscripts
+    postrotate
+        if [ -f /run/nginx.pid ]; then
+            kill -USR1 `cat /run/nginx.pid`
+        fi
+    endscript
+}
+
+# sharedscripts：多日志文件只执行一次脚本。
+# kill -USR1：让 Nginx 重新打开日志文件（比 reload 更轻量）。
+   """
+    print(logrotate_cmd) 
+
