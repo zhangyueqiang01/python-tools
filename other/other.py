@@ -627,6 +627,9 @@ auth [default=die] pam_faillock.so authfail audit deny=5 unlock_time=600
 # 添加 authsucc 行，在密码验证成功后重置计数
 auth        sufficient    pam_faillock.so authsucc
 
+############################################################## caution #########################################################################
+
+在做pam登陆相关的内容修改时，先做好备份，修改完成后，打开新的窗口进行登陆测试，不要关闭老的会话，防止配置出错，无法登陆的情况发生
    """
     print(pam_cmd) 
 
