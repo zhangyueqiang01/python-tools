@@ -546,3 +546,87 @@ vi /boot/grub2/grub.cfg
    """
     print(auditd_cmd) 
 
+def print_pam_cmd():
+    pam_cmd = """
+
+############################################################## overview ########################################################################
+
+PAM 配置的第一列，定义模块作用场景：
+  auth      # 认证：验证用户身份（密码、指纹、锁定检查）
+  account   # 账户管理：检查账户是否可用（过期、限制、权限）
+  session   # 会话管理：登录/登出时执行（创建家目录、日志、资源限制）
+  password  # 密码修改：更新用户密码（复杂度、加密方式）
+
+1. 基础关键字
+控制标记（第二列，决定模块执行规则）
+关键字		含义						常用场景
+required	必须成功，失败继续执行后续模块，最终返回失败	安全检查、环境加载
+requisite	必须成功，失败立即终止，直接返回失败		快速拒绝非法请求
+sufficient	成功则立即通过，忽略后续模块；失败不影响流程	密码验证成功、解锁成功
+optional	可选模块，失败不影响整体结果			非必要功能
+include		引用其他 PAM 配置文件				复用公共配置（如 system-auth）
+
+2. 高级语法关键字
+[action=value] 自定义返回值处理：
+  default=die：默认情况直接终止（密码失败锁定专用）
+  success=ok：成功继续执行
+  ignore=ignore：忽略结果
+
+########################################################### PAM 最常用的模块 #####################################################################
+
+1. 认证相关
+  pam_faillock.so：登录失败锁定（防暴力破解）
+  pam_unix.so：传统用户名 / 密码认证
+  pam_ldap.so：LDAP 集中认证
+  pam_sss.so：系统安全服务认证
+
+2. 账户/会话相关
+  pam_env.so：加载环境变量
+  pam_limits.so：系统资源限制（最大进程、文件数）
+  pam_mkhomedir.so：自动创建用户家目录
+  pam_lastlog.so：记录上次登录信息
+
+3. 密码安全相关
+  pam_cracklib.so：密码复杂度检查（长度、大小写、字典）
+  pam_pwquality.so：新一代密码质量校验
+
+############################################################# 高频模块参数 #######################################################################
+  
+1. pam_faillock.so（登录锁定）
+  preauth：认证前检查锁定状态
+  authfail：认证失败计数 + 锁定
+  authsucc：认证成功重置计数
+  deny=5：失败 5 次锁定
+  unlock_time=600：锁定 10 分钟自动解锁
+  silent：静默不提示
+  audit：记录审计日志
+  even_deny_root：同时锁定 root 用户
+
+2. pam_unix.so（密码认证）
+  try_first_pass：尝试使用上一步输入的密码
+  nullok：允许空密码（高危，禁止使用）
+  sha512：密码用 SHA512 加密
+
+3. pam_pwquality.so（密码强度）
+  minlen=8：最小长度 8 位
+  retry=3：允许重试 3 次
+  dcredit=-1：必须包含数字
+  ucredit=-1：必须包含大写字母
+
+############################################################## instance ########################################################################
+
+# 密码错误锁定账户10分钟案例
+
+# 添加 preauth 行，在密码验证前检查锁定状态
+auth        required      pam_faillock.so preauth silent audit deny=5 unlock_time=600
+auth        sufficient    pam_unix.so try_first_pass
+
+# 修正 authfail 行，在密码验证失败后更新计数
+auth [default=die] pam_faillock.so authfail audit deny=5 unlock_time=600
+
+# 添加 authsucc 行，在密码验证成功后重置计数
+auth        sufficient    pam_faillock.so authsucc
+
+   """
+    print(pam_cmd) 
+
