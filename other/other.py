@@ -257,15 +257,15 @@ def print_logger_cmd():
 logger [选项] "要记录的日志消息"
 
 
-选项	全称	        作用说明												示例
--p	--priority	指定日志优先级（格式：设施。级别），默认是 user.notice		logger -p user.warning "磁盘空间不足"
--t	--tag	    给日志添加标签（标识日志来源），便于后续筛选				logger -t backup_script "备份完成"
--f	--file	    将指定文件的内容作为日志写入（替代手动输入消息）			logger -f /tmp/error.log
--i	--id	    在日志中包含 logger 进程的 PID（进程 ID），便于定位关联进程	logger -i "启动监控进程"
--s	--stderr	同时将日志输出到标准错误（屏幕），而不仅是日志文件			logger -s "关键错误：数据库连接失败"
--n	--server	将日志发送到远程日志服务器（需配合 -P 指定端口）			logger -n 192.168.1.100 -P 514 "远程日志测试"
--P	--port	    指定远程日志服务器的端口（默认 514，对应 syslog 服务）		同上
--u	--socket	将日志写入指定的 Unix 域套接字（替代默认的 /dev/log）		logger -u /dev/log_custom "自定义套接字日志"
+选项	全称	   作用说明						        示例
+-p	--priority 指定日志优先级（格式：设施。级别），默认是 user.notice   	logger -p user.warning "磁盘空间不足"
+-t	--tag	   给日志添加标签（标识日志来源），便于后续筛选			logger -t backup_script "备份完成"
+-f	--file	   将指定文件的内容作为日志写入（替代手动输入消息）		logger -f /tmp/error.log
+-i	--id	   在日志中包含 logger 进程的 PID（进程 ID），便于定位关联进程	logger -i "启动监控进程"
+-s	--stderr   同时将日志输出到标准错误（屏幕），而不仅是日志文件		logger -s "关键错误：数据库连接失败"
+-n	--server   将日志发送到远程日志服务器（需配合 -P 指定端口）		logger -n 192.168.1.100 -P 514 "远程日志测试"
+-P	--port	   指定远程日志服务器的端口（默认 514，对应 syslog 服务）	同上
+-u	--socket   将日志写入指定的 Unix 域套接字（替代默认的 /dev/log）	logger -u /dev/log_custom "自定义套接字日志"
 
 
 优先级由「设施（facility）+ 级别（level）」组成，用小数点分隔：
