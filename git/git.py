@@ -402,6 +402,37 @@ SHOW TABLES;
 
 # 查看表结构
 desc TABLES;
+
+########################################################### data_log_path ####################################################################
+
+数据存放位置：
+    /var/lib/mysql/
+    数据库文件夹：每个库对应同名目录（如 test_db/）
+
+日志信息可以进入到数据库中通过指令查询：
+日志存放位置：
+    1. 查询所有日志状态和路径等信息
+    show variables like '%log%';
+
+    2. 错误日志（最重要）
+    show variables like 'log_error';
+
+    3. 二进制日志 binlog（数据恢复、主从同步）
+    show variables like 'log_bin';
+    show variables like 'datadir';  -- binlog 通常和数据放在一起
+
+    4. 慢查询日志（优化 SQL）
+    show variables like 'slow_query_log_file';
+
+    5. 通用查询日志（所有执行的 SQL）
+    show variables like 'general_log_file';
+
+日志类型	最常见路径
+错误日志	/var/log/mysqld.log
+二进制日志	/var/lib/mysql/mysql-bin.*
+慢查询日志	/var/lib/mysql/*-slow.log
+通用查询日志	/var/lib/mysql/*.log
+InnoDB 日志	/var/lib/mysql/ib_logfile0/1
    """
     print(mysql_cmd) 
 
