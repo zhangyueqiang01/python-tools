@@ -633,3 +633,63 @@ auth        sufficient    pam_faillock.so authsucc
    """
     print(pam_cmd) 
 
+def print_hosts_allow_cmd():
+    hosts_allow_cmd = """
+
+/etc/hosts.allow 是 Linux/Unix 系统中 TCP Wrappers（TCP 包装器）的核心配置文件，用于白名单放行特定客户端对系统服
+务的访问，常与 /etc/hosts.deny 配合实现精细化访问控制。
+
+############################################################# 核心定位与原理 ######################################################################
+
+作用：定义允许哪些主机 / 网络访问哪些服务（如 sshd、vsftpd、telnet 等）。
+依赖：服务需编译时启用 libwrap.so 库（TCP Wrappers），或由 xinetd 管理。
+匹配规则（优先级最高）：
+   1、优先检查 /etc/hosts.allow，匹配即放行，不再检查 hosts.deny。
+   2、未匹配则检查 /etc/hosts.deny，匹配则拒绝。
+   3、均不匹配 → 默认允许访问。
+
+验证服务是否支持：
+ldd $(which sshd) | grep libwrap
+有输出则支持 TCP Wrappers。
+
+############################################################ 文件格式与语法 #######################################################################
+
+文件格式与语法
+daemon_list : client_list [: shell_command]
+daemon_list：服务名（如 sshd、vsftpd、httpd）；ALL 代表所有服务。
+   client_list：允许的客户端，支持：
+   单个 IP：192.168.1.100
+   IP 段：192.168.1.0/24、192.168.1.
+   主机名 / 域名：host.example.com、.example.com（域下所有主机）
+   通配符：ALL（所有客户端）、LOCAL（本地主机）
+shell_command（可选）：匹配时执行的命令（如日志、告警）。
+
+############################################################## instance ########################################################################
+
+# 允许 192.168.1.100 访问 SSH
+sshd: 192.168.1.100
+
+# 允许 192.168.1.0/24 网段访问 FTP
+vsftpd: 192.168.1.0/24
+
+# 允许 example.com 域所有主机访问所有服务
+ALL: .example.com
+
+# 允许本地主机访问所有服务
+ALL: LOCAL
+
+# 允许 SSH 并记录日志
+sshd: 192.168.1.0/24 : spawn /bin/echo "SSH access from %c" >> /var/log/ssh_allow.log
+
+# 安全最佳实践（白名单模式）
+先全局拒绝（/etc/hosts.deny）：
+ALL: ALL
+再在 hosts.allow 中放行可信源（最小权限）。
+
+############################################################ 与防火墙的区别 #######################################################################
+
+TCP Wrappers：应用层控制，仅对支持 libwrap 的服务生效。
+iptables/firewalld：网络层过滤，控制所有网络流量。
+   """
+    print(hosts_allow_cmd) 
+
