@@ -127,11 +127,23 @@ logger: logger 指令简介
 logrotate: 日志轮询备份简介
 auditd: 日志审计简介
 pam: 相关信息速查
-ntp:
-rpm:
-yum:
 hosts_allow: /etc/hosts.allow 文件简介
 hosts_deny: /etc/hosts.deny 文件简介,通上(aa --show hosts_allow)
+ntp:
+chrony:
+rpm:
+yum:
+chkconfig: 开机自启动指令chkconfig讲解
+chkrootkit: Linux杀毒软件讲解
+host_conf: /etc/host.conf文件讲解 multi off / nospoof on (ip 绑定，ip 伪装功能)
+rc.d:
+xinetd:
+login_defs: /etc/login.defs文件讲解
+tuned:
+dhclient: dhclient 指令讲解
+NetworkManager: 网络管理服务NetworkManager和network服务的区别
+network_service: 
+eth0: 网卡eth0下的每一个参数进行详细的讲解
 
 aa --show c --item current : 通过 current 宏查看进程属性的示例代码
 aa --show c --item cpu_consume: cpu 负载打满源代码
