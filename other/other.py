@@ -693,3 +693,70 @@ iptables/firewalld：网络层过滤，控制所有网络流量。
    """
     print(hosts_allow_cmd) 
 
+def print_gs_cmd():
+    gs_cmd = """
+
+############################################################### 宿主机 ##########################################################################
+
+查看当前zone信息
+gs zone list
+
+查看所有host信息
+gs host list
+
+查看所有主机规格信息
+gs flavor list
+
+查看主机信息
+gs host show <host name>
+
+启动宿主机
+gs host enable <host id>
+
+禁用宿主机
+gs host disable <host id>
+
+############################################################### 虚拟机 ##########################################################################
+
+查看vm列表
+gs instance list
+
+查看vm 信息
+gs instance show <vm id>
+
+删除vm（软删除and硬删除）
+gs instance delete <vm id>
+gs instance delete <vm id> --hard
+
+启动vm
+gs instance start <vm id>
+
+关闭vm
+gs instance stop [--hard] <vm id>
+
+重启vm
+gs instance reboot [--hard] <vm id>
+
+变配vm
+gs instance resize <vm id> --flavor <flavor id>
+
+冷迁移vm(指定与不指定host)
+gs instance migrate <vm id> [--host_id <hostid>]
+
+确认迁移
+gs instance migrate-confirm <vm id> 
+
+热迁移vm
+gs instance live-migrate <vm id> [--host_id <hostid>]
+
+重置vm状态
+gs instance reset <vm id> [--status <status>]
+
+恢复vm
+gs instance restore <vm id> 
+
+重建vm
+gs instance rebuild <vm id> [--image <imageid>]
+   """
+    print(gs_cmd) 
+

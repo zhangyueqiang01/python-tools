@@ -129,6 +129,7 @@ auditd: 日志审计简介
 pam: 相关信息速查
 hosts_allow: /etc/hosts.allow 文件简介
 hosts_deny: /etc/hosts.deny 文件简介,通上(aa --show hosts_allow)
+gs: 天翼云 4.0 gostack gs常用指令
 ntp:
 chrony:
 rpm:
