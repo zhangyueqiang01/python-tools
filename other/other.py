@@ -757,6 +757,9 @@ gs instance restore <vm id>
 
 重建vm
 gs instance rebuild <vm id> [--image <imageid>]
+
+ECS疏散
+gs instance evacuate <ECS id>
    """
     print(gs_cmd) 
 
