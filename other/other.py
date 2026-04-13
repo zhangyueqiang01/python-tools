@@ -721,6 +721,9 @@ gs host disable <host id>
 查看vm列表
 gs instance list
 
+查看宿主机上的所有vm
+gs instance list --host-name <host name>
+
 查看vm 信息
 gs instance show <vm id>
 
