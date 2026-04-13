@@ -1650,6 +1650,9 @@ Linux 的 NTP 有安全保护,如果系统时间和真实时间差 > 1000 秒, N
 若手动同步后，timedatectl 还显示 synchronized：no ，重启服务即可
 systemctl restart chronyd
    
+配置文件/etc/chrony.conf 实例
+server time2.tencentyun.com iburst
+iburst 意思：快速同步模式,刚启动时，一次性多发几个包，快速把时间校准对
    """
     print(date_cmd) 
 
