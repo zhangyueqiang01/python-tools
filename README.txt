@@ -141,6 +141,9 @@ rc.d:
 xinetd:
 login_defs: /etc/login.defs文件讲解
 tuned:
+snmp:
+Grafana:
+numa:
 dhclient: dhclient 指令讲解
 NetworkManager: 网络管理服务NetworkManager和network服务的区别
 network_service: 
