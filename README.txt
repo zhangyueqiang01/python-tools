@@ -139,11 +139,14 @@ chkrootkit: Linux杀毒软件讲解
 host_conf: /etc/host.conf文件讲解 multi off / nospoof on (ip 绑定，ip 伪装功能)
 rc.d:
 xinetd:
+jobs: 前台后台进程切换，终端退出，进程不退出的方法
 login_defs: /etc/login.defs文件讲解
 tuned:
 snmp:
 Grafana:
 numa:
+rabbitmq:
+tmux:
 dhclient: dhclient 指令讲解
 NetworkManager: 网络管理服务NetworkManager和network服务的区别
 network_service: 
