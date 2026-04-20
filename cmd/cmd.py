@@ -1750,3 +1750,37 @@ disown %1  # 把任务从当前Shell的作业表中移除，脱离终端管理
    """
     print(jobs_cmd) 
 
+def print_k8s_cmd():
+    k8s_cmd = """
+
+############################################################## overview ########################################################################
+
+查看所有pod
+kubectl get pod -A
+
+查看某一个 Pod 运行在哪台 Node（机器）上
+kubectl get pod gemini-agent-x86-5xc75 -n vm-az1 -o wide
+
+查看所有 Pod 运行在哪些 Node（机器）上
+kubectl get pod -A -o wide
+
+查看某一个pod的具体描述信息
+kubectl describe pod gemini-agent-x86-5xc75 -n vm-az1
+
+查看某一个pod中都有哪些容器在运行
+kubectl get pod gemini-agent-x86-5xc75 -n vm-az1 -o wide
+kubectl get pod gemini-agent-x86-5xc75 -n vm-az1 -o jsonpath='{.spec.containers[*].name}'
+
+查看pod所在节点上所有运行的容器
+ssh 目标主机 -> crictl ps
+
+
+############################################################## caution #########################################################################
+
+有的 K8s 用的是 containerd，不是 Docker，所以没有 docker 命令。
+在节点上查看容器直接用：
+crictl 指令即可，crictl 命令的选项和参数和docker基本一致
+
+   """
+    print(k8s_cmd) 
+
