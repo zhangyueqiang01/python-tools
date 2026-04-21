@@ -968,6 +968,12 @@ glance --debug image-create --name "Michael_test" \
 --owner TEST_OWNER_ID \
 --progress
 
+# 获取后端存储信息
+glance stores-info
+
+# 同步镜像到后端存储
+glance image-sync --dest_backend <存储后端名称> <镜像id>
+
 # 给用户删除镜像的权利
 glance image-update --protected False IMAGE_ID
 
