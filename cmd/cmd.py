@@ -1805,3 +1805,40 @@ crictl 指令即可，crictl 命令的选项和参数和docker基本一致
    """
     print(k8s_cmd) 
 
+def print_kubectl_cmd():
+    kubectl_cmd = """
+############################################################## instance ########################################################################
+[root@xinan1-region-k8s-master02 ~]# k get node -A -o wide
+NAME                                                 STATUS     ROLES                  AGE    VERSION   INTERNAL-IP    EXTERNAL-IP   OS-IMAGE        KERNEL-VERSION                      CONTAINER-RUNTIME
+xinan1-az1-compute-s7-7e231e192e11                   Ready      <none>                 653d   v1.20.2   7.231.192.11   <none>        ctyunos 2.0.1   4.19.90-2102.2.0.0062.ctl2.x86_64   containerd://1.5.8
+xinan1-az1-compute-s7-7e231e192e12                   Ready      <none>                 653d   v1.20.2   7.231.192.12   <none>        ctyunos 2.0.1   4.19.90-2102.2.0.0062.ctl2.x86_64   containerd://1.5.8
+
+CONTAINER-RUNTIME 是容器运行时，它是 Kubernetes 节点上负责真正启动、管理、销毁容器的核心软件，是 Kubernetes 和容器之间的 “桥梁”。
+1. 常见的容器运行时
+containerd（你当前在用）
+	Kubernetes 1.24+ 版本默认首选，也是生产环境主流选择
+	兼容 Docker、Kubernetes 生态
+Docker
+	早期 Kubernetes 默认运行时
+	Kubernetes 1.20+ 已弃用直接支持，现在也可以通过 cri-dockerd 适配
+CRI-O
+	专为 Kubernetes 设计的轻量运行时
+
+############################################################## instance ########################################################################
+[root@xinan1-region-k8s-master02 ~]# k get pod -A -o wide
+NAMESPACE              NAME                                                              READY   STATUS         RESTARTS   AGE    IP              NODE                                                 NOMINATED NODE   READINESS GATES
+cttg-az1               cttg-monitor-deployment-5bcff6cccd-fsgkb                          1/1     Running        0          632d   10.233.168.2    xinan1-az1-cttg-monitor-7e231e199e76                 <none>           <none>
+idrs                   idrs-capacity-service-5984b8bf66-9nh89                            0/1     NodeAffinity   0          653d   <none>          xinan1-region-idrs-7e231e199e45                      <none>           <none>
+
+NAMESPACE:(命名空间可以理解成 K8s 里的分组、文件夹、隔离环境)
+NAME(这个 Pod 的完整名字)
+READY( 1/1 的意思(1/1 = 这个 Pod 里总共有 1 个容器，其中 1 个已经正常就绪（Ready）))
+STATUS(NodeAffinity(这个 Pod 被 “规则限制” 了，只能运行在特定节点上，现在找不到符合条件的节点，所以启动不了))
+IP(Pod 的 IP 地址)
+RESTARTS(这个 Pod 重启过多少次)
+AGE( 就是这个 Pod 已经创建、存在了多长时间)
+NOMINATED NODE( 翻译过来就是：被提名的节点)
+READINESS GATES(就绪门 / 就绪网关)
+   """
+    print(kubectl_cmd) 
+

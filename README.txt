@@ -148,6 +148,12 @@ numa:
 rabbitmq:
 tmux:
 k8s: k8s 相关的指令kubectl,crictl
+kubectl: k8s 指令讲解
+crictl:
+haproxy:
+sort:
+uniq:
+etcd:
 dhclient: dhclient 指令讲解
 NetworkManager: 网络管理服务NetworkManager和network服务的区别
 network_service: 
