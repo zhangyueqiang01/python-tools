@@ -10,6 +10,9 @@ openstack endpoint list
 openstack compute service list
 openstack server show 6e18eca1-497b-4071-ab93-0fd905aba22d
 
+# 查考宿主机上虚拟机最少的宿主机
+openstack server list --all-projects --long -c Host | grep -v 'Host' | grep -v '^--' | sort | uniq -c | sort -n | head -n1
+
 
 [nova]
 nova show 6e18eca1-497b-4071-ab93-0fd905aba22d
