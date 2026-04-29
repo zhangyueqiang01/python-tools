@@ -158,7 +158,7 @@ etcd:
 dhclient:
 LVS:
 cfs:
-ovs:
+ovs: ovs 相关的一些指令
 ovs-tcpdump:
 dpdk:
 efi:
