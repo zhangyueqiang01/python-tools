@@ -149,6 +149,7 @@ rabbitmq:
 tmux:
 k8s: k8s 相关的指令kubectl,crictl
 kubectl: k8s 指令输出讲解
+在k8s上运行nginx(网络、镜像):
 crictl:
 haproxy:
 sort:
@@ -156,6 +157,14 @@ uniq:
 etcd:
 dhclient:
 LVS:
+cfs:
+ovs:
+ovs-tcpdump:
+dpdk:
+efi:
+threads: 线程概述
+gpucmd:
+nvidia-smi:
 NetworkManager: 网络管理服务NetworkManager和network服务的区别
 network_service: 
 eth0: 网卡eth0下的每一个参数进行详细的讲解
