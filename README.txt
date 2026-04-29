@@ -163,6 +163,9 @@ ovs-tcpdump:
 dpdk:
 efi:
 threads: 线程概述
+lscpu:
+hypervisor:
+ceph: ceph 相关的指令速查
 gpucmd:
 nvidia-smi:
 NetworkManager: 网络管理服务NetworkManager和network服务的区别
