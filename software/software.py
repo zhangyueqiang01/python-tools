@@ -2412,7 +2412,6 @@ aa --show docker_LogAnalyzer
    """
     print(rsyslog_web_cmd) 
 
-
 def print_neutron_cmd():
     print("neutron usage command:")
     neutron_cmd = """
@@ -2437,11 +2436,140 @@ ovs -s
     print(zip_cmd)  
 
 def print_ovs_cmd():
-    print("ovs usage command:")
     ovs_cmd = """
-ovs -s
+
+##################################################### ovs-vsctl（核心配置：网桥、端口、控制器） #####################################################
+1. 查看信息
+ovs-vsctl show                # 查看所有网桥、端口、控制器完整信息
+ovs-vsctl list-br             # 仅列出所有网桥名称
+ovs-vsctl list-ports br0      # 列出br0上所有端口
+ovs-vsctl list controller      # 查看所有控制器
+
+2. 网桥管理
+ovs-vsctl add-br br0          # 创建网桥 br0
+ovs-vsctl del-br br0          # 删除网桥 br0
+ovs-vsctl --may-exist add-br br0  # 存在则不报错（安全创建）
+
+3. 端口管理（物理 / 虚拟 / 隧道）
+# 添加物理端口
+ovs-vsctl add-port br0 eth1    # 把 eth1 加入 br0
+# 添加内部端口（如虚拟机端口、k8s ovs端口）
+ovs-vsctl add-port br0 vnet0 -- set interface vnet0 type=internal
+# 添加 VXLAN/GRE 隧道端口
+ovs-vsctl add-port br0 vxlan0 -- set interface vxlan0 type=vxlan options:remote_ip=192.168.1.100 options:key=100
+ovs-vsctl add-port br0 gre0 -- set interface gre0 type=gre options:remote_ip=192.168.1.100
+# 删除端口
+ovs-vsctl del-port br0 eth1    # 从 br0 删除 eth1
+
+
+4. 控制器 & OpenFlow 版本
+# 设置控制器（tcp:IP:6633）
+ovs-vsctl set-controller br0 tcp:192.168.1.10:6633
+# 删除控制器
+ovs-vsctl del-controller br0
+
+# 指定 OpenFlow 版本（常用 1.3）
+ovs-vsctl set bridge br0 protocols=OpenFlow13
+# 清除协议限制（自动协商）
+ovs-vsctl clear bridge br0 protocols
+
+
+5. VLAN / Trunk / Access
+# 端口设为 Access（VLAN 10）
+ovs-vsctl set port eth1 tag=10
+
+# 端口设为 Trunk（允许 VLAN 10,20,30）
+ovs-vsctl set port eth1 trunks=10,20,30
+
+# 端口设为 Trunk 允许所有 VLAN
+ovs-vsctl set port eth1 trunks=[]
+
+6. 高级：STP/RSTP/ 组播
+ovs-vsctl set Bridge br0 stp_enable=true       # 开启 STP{insert\_element\_0\_}
+ovs-vsctl set Bridge br0 rstp_enable=true      # 开启 RSTP{insert\_element\_1\_}
+ovs-vsctl set Bridge br0 mcast_snooping_enable=true  # 组播侦听{insert\_element\_2\_}
+
+################################################# ovs-ofctl（流表管理：增删改查、匹配、动作） ########################################################
+
+常用参数：
+	-O OpenFlow13：指定协议版本（推荐）
+	dump-flows：查看流表
+	add-flow/mod-flows/del-flows：增 / 改 / 删流
+
+1. 查看
+ovs-ofctl show br0                # 查看 br0 端口、table 信息
+ovs-ofctl dump-flows br0          # 查看所有流
+ovs-ofctl -O OpenFlow13 dump-flows br0  # 指定 OF13 查看
+ovs-ofctl dump-tables br0         # 查看表统计{insert\_element\_3\_}
+
+2. 常用流规则示例
+# 1. 允许 ICMP（ping）走普通 L2 转发
+ovs-ofctl add-flow br0 "icmp,actions=NORMAL"
+
+# 2. 从端口1进 → 从端口2出
+ovs-ofctl add-flow br0 "in_port=1,actions=output:2"
+
+# 3. 丢弃所有 ARP
+ovs-ofctl add-flow br0 "arp,actions=drop"
+
+# 4. 匹配目标IP → 转发
+ovs-ofctl add-flow br0 "ip,nw_dst=192.168.1.100,actions=output:3"
+
+# 5. VLAN 10 → 转发到端口4
+ovs-ofctl add-flow br0 "dl_vlan=10,actions=output:4"
+
+# 6. 优先级（priority=高优先）
+ovs-ofctl add-flow br0 "priority=100,icmp,actions=normal"
+ovs-ofctl add-flow br0 "priority=10,ip,actions=drop"
+
+
+3. 删除流
+ovs-ofctl del-flows br0                     # 清空所有流{insert\_element\_4\_}
+ovs-ofctl del-flows br0 "icmp"              # 仅删除 icmp 流
+ovs-ofctl -O OpenFlow13 del-flows br0
+
+###################################################### ovs-appctl（运行时状态、调试、日志） ########################################################
+
+# 查看 vswitchd 状态
+ovs-appctl -t ovs-vswitchd status
+
+# 查看网桥/端口统计
+ovs-appctl -t ovs-vswitchd bridge/show br0
+ovs-appctl -t ovs-vswitchd interface/show eth1
+
+# 查看 OVS 日志级别
+ovs-appctl vlog/list
+
+# 设置日志级别（临时）
+ovs-appctl vlog/set vswitchd:file:dbg
+
+#################################################### ovs-dpctl（数据路径 dp 层：内核态） ###########################################################
+
+ovs-dpctl show                # 查看 datapath
+ovs-dpctl show-system-all     # 查看所有 dp 及端口
+ovs-dpctl dump-flows          # 查看内核态已加速流（datapath 流）
+
+########################################################### 常用组合场景速查 #####################################################################
+
+创建网桥 + 加端口 + 控制器
+ovs-vsctl add-br br0
+ovs-vsctl add-port br0 eth0
+ovs-vsctl set-controller br0 tcp:192.168.1.10:6633
+ovs-vsctl set bridge br0 protocols=OpenFlow13
+
+创建内部端口（给虚拟机 / 容器用）
+ovs-vsctl add-br br-int
+ovs-vsctl add-port br-int vif1.0 -- set interface vif1.0 type=internal
+ip link set vif1.0 up
+ip addr add 192.168.1.10/24 dev vif1.0
+
+清空 OVS 所有配置（重置）
+ovs-vsctl del-br br0
+ovs-vsctl del-br br-int
+# ... 依次删除所有网桥
    """
-    print(ovs_cmd)  
+    print(ovs_cmd) 
+
 
 def print_php_cmd():
     print("php usage command:")
