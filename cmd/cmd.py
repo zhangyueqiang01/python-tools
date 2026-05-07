@@ -1672,34 +1672,14 @@ systemctl restart chronyd
 
 ############################################################ timedatectl #######################################################################
 
-[root@zyq ~]# timedatectl 
-               Local time: Mon 2026-04-13 13:49:56 CST
-           Universal time: Mon 2026-04-13 05:49:56 UTC
-                 RTC time: Mon 2026-04-13 05:49:57
-                Time zone: Asia/Shanghai (CST, +0800)
-System clock synchronized: yes
-              NTP service: active
-          RTC in local TZ: no
-
-本地时间：当前系统显示的时间
-CST = China Standard Time（中国标准时间，东八区）
-
-UTC 世界标准时间（UTC = Coordinated Universal Time）
-比北京时间晚 8 小时，完全正常
-
-硬件时钟（ RTC = Real-Time 主板上的硬件时钟芯片，断电靠纽扣电池继续走时）
-这里按 UTC 存储，和系统时间基本一致，误差 1 秒属正常
-
-时区：亚洲 / 上海，即北京时间
-偏移 +0800，东八区，配置正确
-
-系统时钟已同步，说明时间是准的
-
-NTP 时间同步服务已启用并运行
-系统会自动校准时间，不用手动改
-
-硬件时钟不使用本地时区，而是使用 UTC
-这是 Linux 标准且推荐的设置，避免时区切换、夏令时导致时间错乱
+[root@zyq ~]# timedatectl
+               Local time: Mon 2026-04-13 13:49:56 CST		//当前系统显示的时间,CST = China Standard Time（中国标准时间，东八区）
+           Universal time: Mon 2026-04-13 05:49:56 UTC		//UTC 世界标准时间（UTC = Coordinated Universal Time）,比北京时间晚 8 小时，完全正常
+                 RTC time: Mon 2026-04-13 05:49:57		//硬件时钟（ RTC = Real-Time 主板上的硬件时钟芯片，断电靠纽扣电池继续走时）,这里按 UTC 存储，和系统时间基本一致，误差 1 秒属正常
+                Time zone: Asia/Shanghai (CST, +0800)		//时区：亚洲 / 上海，即北京时间,偏移 +0800，东八区，配置正确
+System clock synchronized: yes				//系统时钟已同步，说明时间是准的
+              NTP service: active			//NTP 时间同步服务已启用并运行,系统会自动校准时间，不用手动改
+          RTC in local TZ: no		//硬件时钟不使用本地时区，而是使用 UTC,这是 Linux 标准且推荐的设置，避免时区切换、夏令时导致时间错乱
 
 ############################################################## caution #########################################################################
 
