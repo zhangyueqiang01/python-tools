@@ -97,7 +97,7 @@ uname: 内核版本号(kernel version)解读
 crun: 用 hello world C 语言程序说明编译和连接的详细过程
 shadow: /etc/shadow 文件详解
 port: 端口扫描和指定端口登录instance
-ipv6: ping ipv6,scan ipv6 port
+ipv6: ipv6 相关内容讲解
 lan: 各类编程语言(机器、汇编、脚本、编译型)、编译器简介
 kpath: linux内核源码中的常见结构体(struct)、函数(function)、变量所在路径
 chpath: 在Linux环境下c语言中常见的头文件路径和头文件包含的常见函数简介
@@ -159,6 +159,7 @@ dhclient:
 LVS:
 cfs:
 ovs: ovs 相关的一些指令
+nslookup:
 ovs-tcpdump:
 dpdk:
 efi:
