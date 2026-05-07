@@ -1921,3 +1921,53 @@ READINESS GATES(就绪门 / 就绪网关)
    """
     print(kubectl_cmd) 
 
+
+def print_nslookup_cmd():
+    nslookup_cmd = """
+
+nslookup 是一个用来查询 DNS（域名解析）信息的命令行工具，主要用于排查域名解析问题、查看域名对应的 IP、反向解析等。在日常运维、网络排障中非常常用。
+
+############################################################### usage ##########################################################################
+
+1、查询域名对应 IP
+nslookup www.baidu.com
+
+2、指定 DNS 服务器查询
+nslookup www.baidu.com 8.8.8.8
+
+3、查询 MX（邮件服务器记录）
+nslookup -type=mx gmail.com
+
+4、查询 NS（权威 DNS）
+nslookup -type=ns baidu.com
+
+############################################################## instance ########################################################################
+
+[root@VM ~]# nslookup www.baidu.com 114.114.114.114
+Server:		114.114.114.114			//使用的 DNS：114.114.114.114
+Address:	114.114.114.114#53		//端口：53（DNS 标准端口）
+
+Non-authoritative answer:			//返回结果不是权威 DNS ,而是 DNS 缓存服务器（114DNS）返回的结果
+www.baidu.com	canonical name = www.a.shifen.com.		//www.baidu.com 不是直接解析 IP,而是先被解析成：www.a.shifen.com,这个叫CNAME（别名记录）
+Name:	www.a.shifen.com			//可以理解为,www.baidu.com → www.a.shifen.com → IP地址
+Address: 180.101.51.73				//IPv4 地址（A记录）,两个 IPv4,说明：负载均衡 / 多节点部署,客户端可能随机访问其中一个
+Name:	www.a.shifen.com
+Address: 180.101.49.44
+Name:	www.a.shifen.com
+Address: 240e:e9:6002:1ac:0:ff:b07e:36c5		//IPv6 地址（AAAA记录）,如果客户端支持 IPv6，可能优先走 IPv6
+Name:	www.a.shifen.com
+Address: 240e:e9:6002:1fd:0:ff:b0e1:fe69
+
+############################################################## caution #########################################################################
+
+# 对比不同 DNS 结果
+nslookup example.com 114.114.114.114
+nslookup example.com 8.8.8.8
+
+############################################################### others #########################################################################
+
+在生产环境中快速排查用nslookup,深度分析用dig
+aa --show dig
+   """
+    print(nslookup_cmd) 
+
