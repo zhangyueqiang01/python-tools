@@ -338,11 +338,11 @@ ps： 可以使用 ps 命令查看线程列表
 	top -b -n 1 > top_snapshot.txt
 
 4、 查看高负载的进程中的线程使用了哪些cpu 
-	top -H -p <PID>
-	在 top 界面中：
-		按 f → 选择 j 选项（显示 P 列：Last used CPU）
-		按 P 或 Shift+P：按 CPU 使用率排序
-		P 列代表线程最近运行在哪个 CPU 上（例如 CPU 0、CPU 3 等）
+        top -H -p <PID>
+        在 top 界面中：
+                按 f → 选择 j 选项（显示 P 列：Last used CPU）
+                按 P 或 Shift+P：按 CPU 使用率排序
+                P 列代表线程最近运行在哪个 CPU 上（例如 CPU 0、CPU 3 等）
    """
     print(top_cmd) 
 
