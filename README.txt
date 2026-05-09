@@ -60,7 +60,7 @@ kthread: 常见内核线程功能概述
 lspci/dmidecode: 硬件信息查看
 sysctl: 系统级行为调优
 keepalived: 实现 VIP 在两台主机上漂移
-keepalived_nginx：实现 nginx 的高可用
+keepalived_nginx：实现 nginx 的高可用(仅供参考，推荐使用haproxy)
 stp: 生成树基本概念介绍
 mlag: 多机箱链路聚合基本概念介绍
 ftp: ftp交互模式下常用的指令
