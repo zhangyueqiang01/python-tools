@@ -1923,6 +1923,9 @@ nslookup -type=mx gmail.com
 4、查询 NS（权威 DNS）
 nslookup -type=ns baidu.com
 
+4、查询域名的ipv6地址
+nslookup -type=AAAA www.baidu.com
+
 ############################################################## instance ########################################################################
 
 [root@VM ~]# nslookup www.baidu.com 114.114.114.114
