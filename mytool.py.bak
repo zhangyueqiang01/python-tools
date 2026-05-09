@@ -160,7 +160,7 @@ def main():
                                            'h3c','dp','huawei1','huawei2','zte','osp','ceph','docker','iptables','tcpdump','route',\
                                             'ip','nmcli','bond','kvm','kcompose','git','vim','bash','find','linuxbasic','dd','awk',\
 					   'sed','ubuntu','echo','grub','initramfs','zip','pam','nova','cinder','neutron','glance',\
-					   'diskio','netio','cputop10','memtop10','login','gpt','iostat','vmstat','iotop','sar','parted','systemd','mod','dracut','mount','pnet','iperf','ascii','hexdump','lamp','objdump','dline','ckernel','mysql','nginx','virsh','chntpw','time','yum','nic','newline','regularExp','nfs','kdump','losetup','xxd','dline2','ethtool','grep','dmesg','gcc','trace','c','lvm','kerneldir','wget','process','strace','chage','reboot','gnu','cpu_register','assembly','boot_fail','cpu_cache','src2bin','core_dump','gdb','top','htop','syscall','syscall_instance','launch_ipv6','shell','scp','interrupt','interrupt_instance','kthread','ps','dmidecode','lspci','sysctl','mm','poetry','keepalived','keepalived_nginx','mlag','ruijie','stp','ftp','english','elf','readelf','task_struct','elf_header','elf_program_header','elf_section_header','lsof','ltrace','smartctl','lsscsi','sub_net','arp','selinux','cpu','cpu_mode','cpu_privilege','cpu_component','mem_wr','maps','smaps','proc','xxxx'], help="Display usage instance")
+					   'diskio','netio','cputop10','memtop10','login','gpt','iostat','vmstat','iotop','sar','parted','systemd','mod','dracut','mount','pnet','iperf','ascii','hexdump','lamp','objdump','dline','ckernel','mysql','nginx','virsh','chntpw','time','yum','nic','newline','regularExp','nfs','kdump','losetup','xxd','dline2','ethtool','grep','dmesg','gcc','trace','c','lvm','kerneldir','wget','process','strace','chage','reboot','gnu','cpu_register','assembly','boot_fail','cpu_cache','src2bin','core_dump','gdb','top','htop','syscall','syscall_instance','launch_ipv6','shell','scp','interrupt','interrupt_instance','kthread','ps','dmidecode','lspci','sysctl','mm','poetry','keepalived','keepalived_nginx','mlag','ruijie','stp','ftp','english','elf','readelf','task_struct','elf_header','elf_program_header','elf_section_header','lsof','ltrace','smartctl','lsscsi','sub_net','arp','selinux','cpu','cpu_mode','cpu_privilege','cpu_component','mem_wr','maps','smaps','proc','iperf3','storage_unit','eg','fio','uname','crun','shadow','port','ipv6','lan','kpath','chpath','psstat','asm_cmd','cpu_flags','date','s2e','docker_image','docker_file','ansible','docker_docker0','ping','net','rootdir','linux_route','sec_enh','net_name','rsyslog_conf','rsyslogd','rsyslog_server','rsyslog_mysql','rsyslog_web','mysql_secure_installation','journalctl','logger','logrotate','auditd','pam','hosts_allow','gs','jobs','k8s','kubectl','threads','ovs','nslookup','haproxy','xxxx'], help="Display usage instance")
 
 
     parser.add_argument('--item', choices=['main','var', 'printf','macron','struct','vas','mem_consume','cpu_consume','fork','current'], help="Usage: ./mytool.py --show c --item printf")
@@ -500,6 +500,100 @@ def main():
        print_maps_cmd()
     elif args.show == 'smaps':
        print_smaps_cmd()
+    elif args.show == 'proc':
+       print_proc_cmd()
+    elif args.show == 'iperf3':
+       print_iperf3_cmd()
+    elif args.show == 'storage_unit':
+       print_storage_unit_cmd()
+    elif args.show == 'eg':
+       print_eg_cmd()
+    elif args.show == 'fio':
+       print_fio_cmd()
+    elif args.show == 'uname':
+       print_uname_cmd()
+    elif args.show == 'crun':
+       print_crun_cmd()
+    elif args.show == 'shadow':
+       print_shadow_cmd()
+    elif args.show == 'port':
+       print_port_cmd()
+    elif args.show == 'ipv6':
+       print_ipv6_cmd()
+    elif args.show == 'lan':
+       print_lan_cmd()
+    elif args.show == 'kpath':
+       print_kpath_cmd()
+    elif args.show == 'chpath':
+       print_chpath_cmd()
+    elif args.show == 'psstat':
+       print_psstat_cmd()
+    elif args.show == 'asm_cmd':
+       print_asm_cmd_cmd()
+    elif args.show == 'cpu_flags':
+       print_cpu_flags_cmd()
+    elif args.show == 'date':
+       print_date_cmd()
+    elif args.show == 's2e':
+       print_s2e_cmd()
+    elif args.show == 'docker_image':
+       print_docker_image_cmd()
+    elif args.show == 'docker_file':
+       print_docker_file_cmd()
+    elif args.show == 'ansible':
+       print_ansible_cmd()
+    elif args.show == 'docker_docker0':
+       print_docker_docker0_cmd()
+    elif args.show == 'ping':
+       print_ping_cmd()
+    elif args.show == 'net':
+       print_net_cmd()
+    elif args.show == 'rootdir':
+       print_rootdir_cmd()
+    elif args.show == 'linux_route':
+       print_linux_route_cmd()
+    elif args.show == 'sec_enh':
+       print_sec_enh_cmd()
+    elif args.show == 'net_name':
+       print_net_name_cmd()
+    elif args.show == 'rsyslog_conf':
+       print_rsyslog_conf_cmd()
+    elif args.show == 'rsyslogd':
+       print_rsyslogd_cmd()
+    elif args.show == 'rsyslog_server':
+       print_rsyslog_server_cmd()
+    elif args.show == 'rsyslog_mysql':
+       print_rsyslog_mysql_cmd()
+    elif args.show == 'rsyslog_web':
+       print_rsyslog_web_cmd()
+    elif args.show == 'mysql_secure_installation':
+       print_mysql_secure_installation_cmd()
+    elif args.show == 'journalctl':
+       print_journalctl_cmd()
+    elif args.show == 'logger':
+       print_logger_cmd()
+    elif args.show == 'logrotate':
+       print_logrotate_cmd()
+    elif args.show == 'auditd':
+       print_auditd_cmd()
+    elif args.show == 'pam':
+       print_pam_cmd()
+    elif args.show == 'hosts_allow':
+       print_hosts_allow_cmd()
+    elif args.show == 'gs':
+       print_gs_cmd()
+    elif args.show == 'jobs':
+       print_jobs_cmd()
+    elif args.show == 'k8s':
+       print_k8s_cmd()
+    elif args.show == 'kubectl':
+       print_kubectl_cmd()
+    elif args.show == 'threads':
+       print_threads_cmd()
+    elif args.show == 'ovs':
+       print_ovs_cmd()
+    elif args.show == 'nslookup':
+       print_nslookup_cmd()
     elif args.show == 'xxxx':
        print_xxxx_cmd()
 
