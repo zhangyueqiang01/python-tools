@@ -2570,6 +2570,122 @@ ovs-vsctl del-br br-int
    """
     print(ovs_cmd) 
 
+def print_haproxy_cmd():
+    haproxy_cmd = """
+
+HAProxy（High Availability Proxy）是一款非常经典的高性能负载均衡器和反向代理软件，广泛应用在互联网架构和云平台
+
+########################################################### HAProxy 是干嘛的 #####################################################################
+
+它主要干三件事：
+	负载均衡
+		把请求分发到多台后端服务器
+		防止单点压力过大
+	反向代理
+		客户端只访问 HAProxy
+		后端真实服务被隐藏
+	高可用
+		某台后端挂了自动摘除（健康检查）
+
+########################################################## HAProxy vs Nginx ####################################################################
+|   对比项   | HAProxy | Nginx |
+| ---------- | ------- | ----- |
+| 四层能力   | 强      | 一般    |
+| 七层能力   | 强      | 强     |
+| 负载均衡   | 专业级  | 可用    |
+| 配置复杂度 | 偏运维  | 偏开发   |
+| 数据库代理 | 👍      | 一般    |
+
+做基础设施 → HAProxy更专业
+做Web服务 → Nginx更灵活
+
+############################################################## instance ########################################################################
+
+# 前提：web已配置好
+HAProxy节点：192.168.2.1
+Web1：192.168.2.2:80
+Web2：192.168.2.3:80
+对外提供服务端口：80
+
+		  localhost:80
+                       |
+                 +------------+
+                 |  HAProxy   |
+                 +------------+
+                       |
+          ------------------------------
+          |                            |
+       node-2(web1)  		  node-3(web2)
+       192.168.2.2   		  192.168.2.3
+
+[root@ct7_node01 haproxy]# yum install haproxy -y
+[root@ct7_node01 haproxy]# cat haproxy.cfg
+global					# 表示全局配置段
+    log /dev/log local0			# 把日志发送给 syslog（通常是 rsyslog）
+    log /dev/log local1 notice		# 这是 syslog 的 facility（分类标签），local0：一般用于普通访问日志，local1 notice：只记录 notice 级别及以上日志
+    daemon				# 让 HAProxy 以守护进程（后台进程）运行，等价于：haproxy -D
+    maxconn 4096			# 整个 HAProxy 进程允许的最大并发连接数（同时最多处理 4096 个连接，超过的连接 → 排队 / 拒绝）
+
+defaults				# 默认参数模板”——所有 frontend / backend / listen，如果没有显式覆盖，就会继承这里的配置。
+    mode http				# 表示：HAProxy工作在七层（HTTP层），四层代理写tcp （长用于 MySQL / Redis / SSH）
+    log global                      # 继承 global 段的日志配置
+    option httplog                  # 使用 HTTP 专用日志格式
+    option dontlognull              # 不记录“空连接”日志
+    timeout connect 5s              # 连接后端服务器的超时时间
+    timeout client  30s             # 客户端连接最大空闲时间
+    timeout server  30s             # 后端响应超时时间
+    retries 3                       # 连接失败时重试次数
+
+frontend http_front			# 前端配置：接收用户请求
+    bind *:80				# 绑定当前机器的所有ip地址的80断开
+    default_backend web_backend         # 默认使用的 backend 是下面的 web_backend
+
+backend web_backend			# 后端配置：负载均衡到两个web节点
+    balance roundrobin			# 轮询（最常用），leastconn（连接数最少优先，更适合长连接）
+
+    option httpchk GET /		# HAProxy会定期请求 /，如果返回不是 200，会自动摘除该节点
+
+    server web1 192.168.2.2:80 check	# 增强写法（server web1 192.168.2.2:80 check inter 2000 fall 3 rise 2），inter 2000：每2秒检测一次，fall 3：连续3次失败才认为down，rise 2：恢复2次才认为up
+    server web2 192.168.2.3:80 check
+
+[root@ct7_node01 haproxy]# systemctl start haproxy
+[root@ct7_node01 haproxy]# systemctl enable haproxy
+
+# 在ct7_node01上访问curl localhost发现会来回切换web，若关掉web1，会自动剔除web1
+
+############################################################## caution #########################################################################
+
+1、 haproxy 默认没有日志需要单独配置
+	vim /etc/rsyslog.d/haproxy.conf
+	local0.*    /var/log/haproxy-access.log
+	local1.*    /var/log/haproxy-error.log
+	
+	touch /var/log/haproxy-access.log
+	touch /var/log/haproxy-error.log
+	chmod 644 /var/log/haproxy-*.log
+
+	systemctl restart rsyslog
+	systemctl restart haproxy
+	aa --show rsyslog_conf
+
+2、 如果需要会话保持，修改后端配置
+backend web_backend
+    balance roundrobin
+    cookie SERVERID insert indirect nocache
+
+    server web1 192.168.2.2:80 check cookie web1
+    server web2 192.168.2.3:80 check cookie web2
+	
+3、 支持真实IP（生产必备），后端就能拿到X-Forwarded-For即，真正访问web的ip（非haproxy ip）
+frontend http_front
+    bind *:80
+    option forwardfor
+	
+4、 目前haproxy是单点，正确的HA应该：HAProxy + Keepalived（VIP漂移）
+   aa --show keepalived
+
+   """
+    print(haproxy_cmd) 
 
 def print_php_cmd():
     print("php usage command:")

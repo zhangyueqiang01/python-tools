@@ -151,7 +151,7 @@ k8s: k8s 相关的指令kubectl,crictl
 kubectl: k8s 指令输出讲解
 在k8s上运行nginx(网络、镜像):
 crictl:
-haproxy:
+haproxy: HA 10秒快速入门
 sort:
 uniq:
 etcd:
