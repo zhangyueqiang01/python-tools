@@ -1956,3 +1956,79 @@ aa --show dig
    """
     print(nslookup_cmd) 
 
+def print_docker_run_cmd():
+    docker_run_cmd = """
+docker run -itd \\
+  # 容器基本信息
+  --name my-httpd \\
+  --hostname httpd-server \\
+  --restart unless-stopped \\
+
+  # 权限与用户
+  --privileged=false \\
+  --user 1000:1000 \\
+
+  # 端口映射
+  --publish 8080:80 \\
+  --publish 8443:443 \\
+  --expose 80 \\
+  --expose 443 \\
+
+  # 环境变量
+  --env TZ=Asia/Shanghai \\
+  --env LANG=C.UTF-8 \\
+  --env HTTPD_PREFIX=/usr/local/apache2 \\
+
+  # 数据卷挂载
+  --volume /data/httpd/html:/usr/local/apache2/htdocs:ro \\
+  --volume /data/httpd/conf:/usr/local/apache2/conf \\
+  --volume /data/httpd/logs:/usr/local/apache2/logs \\
+
+  # 临时文件系统
+  --tmpfs /tmp:rw,noexec,nosuid,size=64m \\
+
+  # 工作目录
+  --workdir /usr/local/apache2 \\
+
+  # 资源限制
+  --memory 512m \\
+  --memory-swap 1g \\
+  --cpus="1.5" \\
+  --cpu-shares 512 \\
+  --pids-limit 100 \\
+
+  # 文件描述符限制
+  --ulimit nofile=65535:65535 \\
+
+  # 日志配置
+  --log-driver json-file \\
+  --log-opt max-size=10m \\
+  --log-opt max-file=3 \\
+
+  # 健康检查
+  --health-cmd="curl -f http://localhost/ || exit 1" \\
+  --health-interval=30s \\
+  --health-timeout=5s \\
+  --health-retries=3 \\
+
+  # 网络配置
+  --network bridge \\
+  --add-host myhost:192.168.1.100 \\
+  --dns 8.8.8.8 \\
+  --dns-search localdomain \\
+
+  # 安全配置
+  --cap-drop ALL \\
+  --cap-add NET_BIND_SERVICE \\
+  --security-opt no-new-privileges \\
+  --read-only \\
+
+  # 镜像
+  httpd
+  
+# 加工后再运行,更具自己的需求进行调整  
+[root@ct7_node01 ~]# grep -v '#' tmp.txt  | grep -v ^$
+
+   """
+    print(docker_run_cmd) 
+

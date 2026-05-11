@@ -110,6 +110,7 @@ ansible: ansible 常用指令
 docker_image: docker 镜像解读
 docker_file: docker file 解读
 docker_docker0: docker0详解
+docker_run: docker 运行容器时可添加的各类选项大全
 ping: ping命令使用帮助
 net: Linux 内核收发网络包流程
 rootdir: Linux系统'/'目录下的目录功能简介
@@ -174,6 +175,8 @@ network_service:
 eth0: 网卡eth0下的每一个参数进行详细的讲解
 nslookup: nslookup 指令使用帮助(DNS)
 dig:
+curl:
+guestmount:
 
 aa --show c --item current : 通过 current 宏查看进程属性的示例代码
 aa --show c --item cpu_consume: cpu 负载打满源代码
