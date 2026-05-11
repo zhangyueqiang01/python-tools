@@ -131,53 +131,57 @@ pam: 相关信息速查
 hosts_allow: /etc/hosts.allow 文件简介
 hosts_deny: /etc/hosts.deny 文件简介,通上(aa --show hosts_allow)
 gs: 天翼云 4.0 gostack gs常用指令
+chkconfig: 开机自启动指令chkconfig讲解
+chkrootkit: Linux杀毒软件讲解
+host_conf: /etc/host.conf文件讲解 multi off / nospoof on (ip 绑定，ip 伪装功能)
+jobs: 前台后台进程切换，终端退出，进程不退出的方法(fg,bg,nohub,disown,tmux)
+login_defs: /etc/login.defs文件讲解
+k8s: k8s 相关的指令kubectl,crictl
+kubectl: k8s 指令输出讲解
+haproxy: HA 10秒快速入门
+ovs: ovs 相关的一些指令
+threads: 线程概述
+ceph: ceph 相关的指令速查
+NetworkManager: 网络管理服务NetworkManager和network服务的区别
+eth0: 网卡eth0下的每一个参数进行详细的讲解
+nslookup: nslookup 指令使用帮助(DNS)
+
+aa --show c --item current : 通过 current 宏查看进程属性的示例代码
+aa --show c --item cpu_consume: cpu 负载打满源代码
+
+############################################################### next to do #########################################################################
+
+# 这里显示的都是没来及做的，做完后，移动到上面
+dockerfs: docker image file system introduce (overlay fs)
 ntp:
 chrony:
 rpm:
 yum:
-chkconfig: 开机自启动指令chkconfig讲解
-chkrootkit: Linux杀毒软件讲解
-host_conf: /etc/host.conf文件讲解 multi off / nospoof on (ip 绑定，ip 伪装功能)
 rc.d:
 xinetd:
-jobs: 前台后台进程切换，终端退出，进程不退出的方法(fg,bg,nohub,disown,tmux)
-login_defs: /etc/login.defs文件讲解
 tuned:
 snmp:
 Grafana:
 numa:
 rabbitmq:
 tmux:
-k8s: k8s 相关的指令kubectl,crictl
-kubectl: k8s 指令输出讲解
 在k8s上运行nginx(网络、镜像):
 crictl:
-haproxy: HA 10秒快速入门
 sort:
 uniq:
 etcd:
 dhclient:
 LVS:
 cfs:
-ovs: ovs 相关的一些指令
 nslookup:
 ovs-tcpdump:
 dpdk:
 efi:
-threads: 线程概述
 lscpu:
 hypervisor:
-ceph: ceph 相关的指令速查
 gpucmd:
 nvidia-smi:
-NetworkManager: 网络管理服务NetworkManager和network服务的区别
 network_service: 
-eth0: 网卡eth0下的每一个参数进行详细的讲解
-nslookup: nslookup 指令使用帮助(DNS)
 dig:
 curl:
 guestmount:
-
-aa --show c --item current : 通过 current 宏查看进程属性的示例代码
-aa --show c --item cpu_consume: cpu 负载打满源代码
-
