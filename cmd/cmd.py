@@ -2027,8 +2027,7 @@ docker run -itd \\
   httpd
   
 # 加工后再运行,更具自己的需求进行调整  
-[root@ct7_node01 ~]# grep -v '#' tmp.txt  | grep -v ^$
-
+aa --show docker_run | grep '\\'
    """
     print(docker_run_cmd) 
 
