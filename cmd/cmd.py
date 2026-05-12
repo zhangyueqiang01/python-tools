@@ -2033,3 +2033,72 @@ aa --show docker_run | grep '\\\\'
    """
     print(docker_run_cmd) 
 
+def print_dnf_cmd():
+    dnf_cmd = """
+
+################################################################ what ##########################################################################
+
+DNF (Dandified YUM) 是 YUM (Yellowdog Updater, Modified) 的下一代替代品，是目前 RHEL 8+/CentOS 8+/Fedora/Rocky Linux 等系统的默认包管理器。语法高度兼容 YUM，
+可以把它理解为 “升级版 yum”。
+
+YUM：传统 RPM 包管理器（CentOS 7/RHEL 7 及更早默认）
+DNF：新一代包管理器（CentOS 8+/RHEL 8+/Fedora 默认）
+	基于 libsolv 依赖解析库，更快、更准、更稳定
+	支持模块化、事务回滚、API 更健壮
+	多数命令 直接替换 yum → dnf 即可使用
+
+################################################################ why ###########################################################################
+
+依赖解析更强
+	YUM 用老的递归算法，复杂依赖容易慢 / 出错
+	DNF 用 libsolv，求解速度、准确性大幅提升
+性能更好
+	内存占用更低、下载更快、缓存更干净
+	大系统 / 大量包时差异明显
+功能更现代
+	支持 模块化（module）
+	事务可 撤销 / 重做
+	自动清理无用依赖（clean_requirements_on_remove 默认开启）
+完全兼容旧用法
+	几乎所有 yum 指令都能直接改成 dnf
+	很多系统里 yum 本身就是指向 dnf 的软链接
+
+################################################################ how ###########################################################################
+
+1. 安装 / 卸载 / 更新
+功能	            YUM 命令	        DNF 命令
+安装包	            yum install nginx	dnf install nginx
+reinstall	    yum reinstall nginx	dnf reinstall nginx
+卸载包	            yum remove nginx	dnf remove nginx
+更新所有包	    yum update	        dnf update
+更新单个包	    yum update nginx	dnf update nginx
+检查可更新	    yum check-update	dnf check-update
+升级系统（含废弃）  yum upgrade	        dnf upgrade
+
+2. 查询 / 搜索
+功能	        YUM 命令	                DNF 命令
+搜索包	        yum search nginx	        dnf search nginx
+包详情	        yum info nginx	                dnf info nginx
+列出已安装	yum list installed	        dnf list --installed
+列出可用包	yum list available	        dnf list --available
+哪个包提供文件	yum provides /bin/ls	        dnf provides /bin/ls
+列出软件组	yum grouplist	                dnf group list
+安装组	        yum groupinstall "Web Server"	dnf group install "Web Server"
+
+3. 仓库 / 缓存
+功能	        YUM 命令	        DNF 命令
+查看仓库	yum repolist	        dnf repolist
+生成缓存	yum makecache	        dnf makecache
+清理缓存	yum clean all	        dnf clean all
+查看历史	yum history	        dnf history
+撤销历史事务	yum history undo 编号	dnf history undo 编号
+
+############################################################### option #########################################################################
+
+常用选项
+-y：自动确认（yum -y install → dnf -y install）
+--nogpgcheck：跳过 GPG 检查
+--enablerepo / --disablerepo：临时启用 / 禁用仓库
+   """
+    print(dnf_cmd) 
+
