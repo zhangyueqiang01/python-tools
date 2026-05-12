@@ -149,6 +149,7 @@ dnf: dnf 命令简介
 rpm: rpm 命令使用帮助
 yum: yum cmd usage
 curl: curl cmd usage
+gotty: 将Linux的命令行通过web展示的方法，需要 AI/工程师 远程支撑,又不方便提供ssh账号密码的情况下使用
 
 aa --show c --item current : 通过 current 宏查看进程属性的示例代码
 aa --show c --item cpu_consume: cpu 负载打满源代码
@@ -161,7 +162,6 @@ podman: podman 简介
 systemctl: systemctl 命令介绍
 rpm_build: 制作 rpm 包
 createrepo: 制作yum仓库
-gotty: Linux 命令行内网穿透方法，AI/工程师 远程支撑
 ntp:
 chrony:
 rc.d:
