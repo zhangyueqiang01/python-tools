@@ -152,7 +152,9 @@ aa --show c --item cpu_consume: cpu 负载打满源代码
 ############################################################### next to do #########################################################################
 
 # 这里显示的都是没来及做的，做完后，移动到上面
-dockerfs: docker image file system introduce (overlay fs)
+dockerfs: docker image file system introduce (OverlayFS)
+podman: podman 简介
+dnf: dnf 命令简介
 ntp:
 chrony:
 rpm:
