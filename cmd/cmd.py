@@ -2445,3 +2445,134 @@ gpgcheck=1
    """
     print(yum_cmd) 
 
+def print_curl_cmd():
+    curl_cmd = """
+############################################################### option #########################################################################
+| 选项 | 长选项              | 作用               | 示例
+| ---- | ------------------- | ------------------ | ----------------------------------
+| `-o` | `--output`          | 保存为指定文件     | `curl -o a.html URL`
+| `-O` | —                   | 使用远程文件名保存 | `curl -O URL`
+| `-L` | `--location`        | 跟随重定向         | `curl -L URL`
+| `-I` | `--head`            | 只获取响应头       | `curl -I URL`
+| `-i` | `--include`         | 显示响应头+正文    | `curl -i URL`
+| `-v` | `--verbose`         | 显示详细调试信息   | `curl -v URL`
+| `-s` | `--silent`          | 静默模式           | `curl -s URL`
+| `-k` | `--insecure`        | 忽略 HTTPS 证书    | `curl -k URL`
+| `-X` | `--request`         | 指定请求方法       | `curl -X POST URL`
+| `-d` | `--data`            | 发送 POST 数据     | `curl -d "a=1"`
+| `-F` | `--form`            | 表单上传           | `curl -F file=@a.txt`
+| `-H` | `--header`          | 添加请求头         | `curl -H "token:1"`
+| `-A` | `--user-agent`      | 指定 User-Agent    | `curl -A "Chrome"`
+| `-e` | `--referer`         | 指定 Referer       | `curl -e URL`
+| `-u` | `--user`            | 用户认证           | `curl -u admin:123`
+| `-x` | `--proxy`           | 使用代理           | `curl -x proxy:8080`
+| `-b` | `--cookie`          | 发送 Cookie        | `curl -b "a=1"`
+| `-c` | `--cookie-jar`      | 保存 Cookie        | `curl -c cookie.txt`
+| `-C` | `--continue-at`     | 断点续传           | `curl -C - -O URL`
+| `-T` | `--upload-file`     | 上传文件           | `curl -T a.txt ftp://`
+| `-r` | `--range`           | 范围下载           | `curl -r 0-1024 URL`
+| `-m` | `--max-time`        | 最大执行时间       | `curl -m 10 URL`
+| —    | `--connect-timeout` | 连接超时           | `curl --connect-timeout 5`
+| —    | `--retry`           | 失败重试           | `curl --retry 3 URL`
+| —    | `--limit-rate`      | 限速               | `curl --limit-rate 1M`
+| —    | `--interface`       | 指定网卡           | `curl --interface eth0`
+| `-4` | —                   | 强制 IPv4          | `curl -4 URL`
+| `-6` | —                   | 强制 IPv6          | `curl -6 URL`
+| —    | `--dns-servers`     | 指定 DNS           | `curl --dns-servers 8.8.8.8`
+| —    | `--resolve`         | 自定义域名解析     | `curl --resolve a.com:443:1.1.1.1`
+| `-w` | `--write-out`       | 输出格式化信息     | `curl -w "%{http_code}"`
+
+############################################################## instance ########################################################################
+| 功能            | 示例                                                        | 说明
+| --------------- | ----------------------------------------------------------- | ---------------
+| 访问网页        | `curl https://www.baidu.com`                                | 获取网页源码
+| 下载文件        | `curl -O https://test.com/a.iso`                            | 使用原文件名下载
+| 指定文件名下载  | `curl -o test.iso https://test.com/a.iso`                   | 自定义保存文件名
+| 显示响应头      | `curl -I https://www.baidu.com`                             | 查看 HTTP Header
+| 显示详细过程    | `curl -v https://www.baidu.com`                             | 调试网络请求
+| 跟随重定向      | `curl -L http://test.com`                                   | 自动跳转 301/302
+| POST 请求       | `curl -X POST https://api.test.com`                         | 发送 POST
+| POST 表单       | `curl -d "name=tom&age=20" URL`                             | 提交表单数据
+| POST JSON       | `curl -H "Content-Type: application/json" -d '{"a":1}' URL` | 提交 JSON
+| 上传文件        | `curl -F "file=@a.txt" URL`                                 | multipart 上传
+| 指定请求头      | `curl -H "token:123"`                                       | 自定义 Header
+| 使用 Basic 认证 | `curl -u user:pass URL`                                     | HTTP Basic Auth
+| 指定代理        | `curl -x http://proxy:8080 URL`                             | 使用代理
+| 限速下载        | `curl --limit-rate 1M -O URL`                               | 限制下载速度
+| 断点续传        | `curl -C - -O URL`                                          | 继续下载
+| 忽略 HTTPS 证书 | `curl -k URL`                                               | 跳过证书验证
+| 指定超时时间    | `curl --connect-timeout 5 URL`                              | 连接超时
+| 查看公网 IP     | `curl ifconfig.me`                                          | 查询公网 IP
+| 仅获取状态码    | `curl -o /dev/null -s -w "%{http_code}" URL`                | 获取 HTTP 状态码
+
+############################################################ HTTP 请求示例 ######################################################################
+
+1、GET 请求
+curl https://api.test.com/users
+
+2、POST 表单
+curl -X POST \\
+     -d "username=admin&password=123456" \\
+     https://api.test.com/login
+
+3、POST JSON
+curl -X POST \\
+     -H "Content-Type: application/json" \\
+     -d '{"name":"tom","age":20}' \\
+     https://api.test.com/user
+
+4、PUT 请求
+curl -X PUT \\
+     -H "Content-Type: application/json" \\
+     -d '{"name":"new"}' \\
+     https://api.test.com/user/1
+
+5、DELETE 请求
+curl -X DELETE https://api.test.com/user/1
+
+############################################################# 文件下载相关 ########################################################################
+| 功能           | 示例
+| -------------- | -------------------------------
+| 下载文件       | `curl -O URL`
+| 指定文件名     | `curl -o file.iso URL`
+| 后台下载       | `curl -O URL &`
+| 断点续传       | `curl -C - -O URL`
+| 限速下载       | `curl --limit-rate 500K -O URL`
+| 多线程下载（需 aria2） | `aria2c URL`
+
+
+############################################################# HTTPS 与证书 ######################################################################
+| 功能         | 示例
+| ------------ | ---------------------------------------------
+| 忽略证书检查 | `curl -k URL`
+| 指定 CA 证书 | `curl --cacert ca.pem URL`
+| 双向证书认证 | `curl --cert client.pem --key client.key URL`
+
+######################################################### 调试网络非常有用的选项 ###################################################################
+| 命令                           | 作用
+| ------------------------------ | ------------------
+| `curl -v URL`                  | 查看 TCP/SSL/HTTP 过程
+| `curl --trace trace.log URL`   | 保存完整调试日志
+| `curl -I URL`                  | 查看响应头
+| `curl -w "%{http_code}" URL`   | 查看状态码
+| `curl --connect-timeout 5 URL` | 测试连接超时
+| `curl -k -v https://IP`        | 调试 HTTPS
+
+########################################################### 运维场景经典用法 #######################################################################
+检查网站状态
+curl -I https://www.baidu.com
+
+获取 HTTP 状态码
+curl -o /dev/null -s -w "%{http_code}\\n" https://www.baidu.com
+
+查看公网 IP
+curl ifconfig.me
+
+测试 IPv6
+curl -6 ifconfig.me
+
+测试接口耗时
+curl -o /dev/null -s -w "time:%{time_total}\\n" URL
+   """
+    print(curl_cmd) 
+

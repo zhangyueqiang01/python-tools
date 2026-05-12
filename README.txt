@@ -148,6 +148,7 @@ nslookup: nslookup 指令使用帮助(DNS)
 dnf: dnf 命令简介
 rpm: rpm 命令使用帮助
 yum: yum cmd usage
+curl: curl cmd usage
 
 aa --show c --item current : 通过 current 宏查看进程属性的示例代码
 aa --show c --item cpu_consume: cpu 负载打满源代码
@@ -160,6 +161,7 @@ podman: podman 简介
 systemctl: systemctl 命令介绍
 rpm_build: 制作 rpm 包
 制作yum仓库
+Linux 内网远程帮助实现方法
 ntp:
 chrony:
 rc.d:
@@ -188,5 +190,4 @@ gpucmd:
 nvidia-smi:
 network_service: 
 dig:
-curl:
-guestmount:
+guestmount: 宿主机上直接挂载kvm系统盘的方法
