@@ -146,6 +146,7 @@ NetworkManager: 网络管理服务NetworkManager和network服务的区别
 eth0: 网卡eth0下的每一个参数进行详细的讲解
 nslookup: nslookup 指令使用帮助(DNS)
 dnf: dnf 命令简介
+rpm: rpm 命令使用帮助
 
 aa --show c --item current : 通过 current 宏查看进程属性的示例代码
 aa --show c --item cpu_consume: cpu 负载打满源代码
@@ -157,7 +158,6 @@ dockerfs: docker image file system introduce (OverlayFS)
 podman: podman 简介
 ntp:
 chrony:
-rpm:
 yum:
 rc.d:
 xinetd:
