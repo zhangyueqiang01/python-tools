@@ -160,8 +160,8 @@ dockerfs: docker image file system introduce (OverlayFS)
 podman: podman 简介
 systemctl: systemctl 命令介绍
 rpm_build: 制作 rpm 包
-制作yum仓库
-Linux 内网远程帮助实现方法
+createrepo: 制作yum仓库
+gotty: Linux 命令行内网穿透方法，AI/工程师 远程支撑
 ntp:
 chrony:
 rc.d:
@@ -174,12 +174,12 @@ rabbitmq:
 tmux:
 在k8s上运行nginx(网络、镜像):
 crictl:
-sort:
-uniq:
+sort: 排序指令使用帮助
+uniq: 去重指令使用帮助
 etcd:
 dhclient:
 LVS:
-cfs:
+cfs: 进程调度算法概述（process scheduler）
 nslookup:
 ovs-tcpdump:
 dpdk:
@@ -190,4 +190,7 @@ gpucmd:
 nvidia-smi:
 network_service: 
 dig:
-guestmount: 宿主机上直接挂载kvm系统盘的方法
+guestmount:
+gpt: gpt 分区概述
+net_namespace: 网络命名空间概述
+
