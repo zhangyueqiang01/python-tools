@@ -1189,6 +1189,7 @@ def print_eg_cmd():
 ################################################################ what ##########################################################################
 ################################################################ why ###########################################################################
 ################################################################ how ###########################################################################
+############################################################### config #########################################################################
 ############################################################## overview ########################################################################
 ############################################################### option #########################################################################
 ############################################################## instance ########################################################################
@@ -2270,4 +2271,177 @@ RPM
     └── --nodeps
    """
     print(rpm_cmd) 
+
+def print_yum_cmd():
+    yum_cmd = """
+################################################################ what ##########################################################################
+YUM 全称是 Yellowdog Updater, Modified，是早期 Red Hat Red Hat 官方网站系 Linux（比如 Red Hat Enterprise Linux、CentOS）最核心的软件包管理工具之一。
+
+它的本质：
+    基于 RPM 包管理
+    自动解决依赖关系
+    自动从软件仓库下载软件
+    自动安装、升级、删除软件
+
+YUM 工作流程：
+    用户执行 yum install nginx
+            ↓
+    读取 repo 配置
+            ↓
+    访问仓库 metadata
+            ↓
+    分析依赖关系
+            ↓
+    下载 RPM
+            ↓
+    调用 rpm 安装
+            ↓
+    更新本地数据库
+################################################################ why ###########################################################################
+
+因为安装一个软件时，经常会报：
+    软件之间互相依赖
+    一个软件可能依赖几十个库
+    需要手动下载
+    顺序还不能错
+于是 YUM 出现了。
+
+YUM 的核心价值：
+1. 自动解决依赖
+2. 统一软件仓库
+3. 批量更新系统
+
+############################################################### config #########################################################################
+
+主配置：/etc/yum.conf
+仓库配置：/etc/yum.repos.d/*.repo
+
+yum.conf 配置项速查表
+| 配置项                | 示例                                    | 作用说明                 | 企业环境常见设置
+| --------------------- | --------------------------------------- | -------------------- | -----------
+| `cachedir`            | `cachedir=/var/cache/yum`               | YUM 缓存目录             | 默认即可
+| `keepcache`           | `keepcache=1`                           | 是否保留下载的 RPM 包        | 离线环境常设 `1`
+| `debuglevel`          | `debuglevel=2`                          | 日志详细级别               | 通常 `2`
+| `logfile`             | `logfile=/var/log/yum.log`              | YUM 日志文件路径           | 默认即可
+| `exactarch`           | `exactarch=1`                           | 是否严格匹配架构             | 通常开启
+| `obsoletes`           | `obsoletes=1`                           | 是否允许废弃包替换            | 通常开启
+| `gpgcheck`            | `gpgcheck=1`                            | 是否检查 RPM 签名          | 生产必须开启
+| `plugins`             | `plugins=1`                             | 是否启用插件               | 通常开启
+| `installonly_limit`   | `installonly_limit=3`                   | 保留的内核数量              | 常设 3~5
+| `bugtracker_url`      | `bugtracker_url=http://...`             | Bug 提交地址             | 默认即可
+| `distroverpkg`        | `distroverpkg=centos-release`           | 决定 `$releasever` 的来源 | 默认即可
+| `reposdir`            | `reposdir=/etc/yum.repos.d`             | repo 仓库配置目录          | 默认即可
+| `exclude`             | `exclude=kernel*`                       | 排除某些软件包              | 生产常排除内核
+| `proxy`               | `proxy=http://ip:port`                  | 使用代理访问仓库             | 内网常见
+| `proxy_username`      | `proxy_username=admin`                  | 代理用户名                | 代理认证环境
+| `proxy_password`      | `proxy_password=123456`                 | 代理密码                 | 代理认证环境
+| `timeout`             | `timeout=30`                            | 下载超时时间（秒）            | 常设 30~60
+| `retries`             | `retries=3`                             | 下载失败重试次数             | 常设 3
+| `metadata_expire`     | `metadata_expire=6h`                    | metadata 缓存过期时间      | 常设数小时
+| `multilib_policy`     | `multilib_policy=best`                  | 多架构包策略               | 通常 `best`
+| `ip_resolve`          | `ip_resolve=4`                          | 指定 IPv4 或 IPv6       | 网络问题时常用
+| `sslverify`           | `sslverify=1`                           | 是否验证 SSL 证书          | 生产建议开启
+| `http_caching`        | `http_caching=packages`                 | HTTP 缓存策略            | 默认即可
+| `assumeyes`           | `assumeyes=1`                           | 自动 yes               | 自动化环境常用
+| `tolerant`            | `tolerant=1`                            | 忽略轻微错误               | 特殊环境使用
+| `diskspacecheck`      | `diskspacecheck=1`                      | 检查磁盘空间               | 建议开启
+| `installroot`         | `installroot=/mnt/sysroot`              | 指定安装根目录              | chroot/救援环境
+| `persistdir`          | `persistdir=/var/lib/yum`               | YUM 持久数据目录           | 默认即可
+| `usercache`           | `usercache=0`                           | 是否允许用户缓存             | 一般关闭
+| `enablegroups`        | `enablegroups=1`                        | 是否启用软件组              | 通常开启
+| `group_package_types` | `group_package_types=mandatory,default` | 软件组安装策略              | 默认即可
+
+
+例如：
+[base]
+name=CentOS-$releasever - Base
+baseurl=http://mirror.centos.org/centos/$releasever/os/$basearch/
+enabled=1
+gpgcheck=1
+
+含义：
+| 参数     | 作用
+| -------- | ------
+| [base]   | 仓库ID
+| name     | 仓库名称
+| baseurl  | 仓库地址
+| enabled  | 是否启用
+| gpgcheck | 是否检查签名
+
+############################################################### option #########################################################################
+| 选项               | 完整写法      | 作用说明            | 常见示例
+| ------------------ | ------------- | --------------- | -----------------------------------------------------
+| `-y`               | `--assumeyes` | 自动回答 yes        | `yum -y install nginx`
+| `-q`               | `--quiet`     | 静默模式，减少输出       | `yum -q install nginx`
+| `-v`               | `--verbose`   | 显示详细信息          | `yum -v repolist`
+| `-h`               | `--help`      | 查看帮助            | `yum -h`
+| `--nogpgcheck`     | —             | 不检查 GPG 签名      | `yum --nogpgcheck install nginx`
+| `--enablerepo=`    | —             | 临时启用仓库          | `yum --enablerepo=epel install htop`
+| `--disablerepo=`   | —             | 临时禁用仓库          | `yum --disablerepo=base install nginx`
+| `--disableplugin=` | —             | 禁用插件            | `yum --disableplugin=fastestmirror install nginx`
+| `--downloadonly`   | —             | 仅下载，不安装         | `yum install --downloadonly nginx`
+| `--downloaddir=`   | —             | 指定下载目录          | `yum install --downloadonly --downloaddir=/tmp nginx`
+| `-c`               | `--config=`   | 指定配置文件          | `yum -c myyum.conf install nginx`
+| `--installroot=`   | —             | 指定安装根目录         | `yum --installroot=/mnt/sysroot install bash`
+| `--releasever=`    | —             | 指定发行版版本         | `yum --releasever=7 install nginx`
+| `--setopt=`        | —             | 临时修改配置参数        | `yum --setopt=keepcache=1 install nginx`
+| `--skip-broken`    | —             | 跳过损坏依赖          | `yum update --skip-broken`
+| `--exclude=`       | —             | 排除某软件           | `yum update --exclude=kernel*`
+| `--security`       | —             | 仅安装安全更新         | `yum update --security`
+| `--bugfix`         | —             | 仅安装 bug 修复更新    | `yum update --bugfix`
+| `--obsoletes`      | —             | 启用 obsolete 包处理 | `yum update --obsoletes`
+| `--showduplicates` | —             | 显示所有版本          | `yum list nginx --showduplicates`
+| `--color=`         | —             | 设置颜色输出          | `yum --color=never list`
+| `--assumeno`       | —             | 自动回答 no         | `yum --assumeno update`
+| `--cacheonly`      | —             | 只使用缓存           | `yum --cacheonly list`
+| `--refresh`        | —             | 强制刷新缓存          | `yum --refresh update`
+| `--best`           | —             | 安装最佳版本（DNF 常见）  | `yum --best install nginx`
+| `--allowerasing`   | —             | 允许替换冲突包（DNF 常见） | `yum --allowerasing update`
+
+############################################################## instance ########################################################################
+| 分类     | 命令                                     | 作用说明
+| -------- | -------------------------------------- | ----------------
+| 软件安装 | `yum install nginx`                    | 安装软件
+| 软件安装 | `yum -y install nginx`                 | 自动确认安装
+| 软件安装 | `yum install nginx httpd`              | 安装多个软件
+| 软件安装 | `yum localinstall xxx.rpm`             | 安装本地 RPM，并自动解决依赖
+| 软件删除 | `yum remove nginx`                     | 删除软件
+| 软件删除 | `yum erase nginx`                      | 删除软件（等同 remove）
+| 软件更新 | `yum update`                           | 更新所有软件
+| 软件更新 | `yum update openssl`                   | 更新指定软件
+| 软件更新 | `yum check-update`                     | 检查可更新的软件
+| 软件更新 | `yum upgrade`                          | 升级系统软件
+| 软件查询 | `yum search nginx`                     | 搜索软件
+| 软件查询 | `yum info nginx`                       | 查看软件详细信息
+| 软件查询 | `yum list installed`                   | 查看已安装软件
+| 软件查询 | `yum list updates`                     | 查看可更新软件
+| 软件查询 | `yum list available`                   | 查看可安装软件
+| 软件查询 | `yum list installed nginx`             | 查看某软件是否安装
+| 仓库管理 | `yum repolist`                         | 查看启用的仓库
+| 仓库管理 | `yum repolist all`                     | 查看所有仓库
+| 仓库管理 | `yum --enablerepo=epel install htop`   | 临时启用某仓库
+| 仓库管理 | `yum --disablerepo=epel install nginx` | 临时禁用某仓库
+| 缓存管理 | `yum makecache`                        | 生成缓存
+| 缓存管理 | `yum clean all`                        | 清理全部缓存
+| 缓存管理 | `yum clean metadata`                   | 清理仓库元数据
+| 缓存管理 | `yum clean packages`                   | 清理 RPM 缓存包
+| 依赖分析 | `yum deplist nginx`                    | 查看软件依赖
+| 依赖分析 | `yum provides /usr/sbin/nginx`         | 查看文件属于哪个 RPM
+| 依赖分析 | `yum whatprovides ifconfig`            | 查看命令由哪个包提供
+| 软件组   | `yum grouplist`                        | 查看软件组
+| 软件组   | `yum groupinstall "Development Tools"` | 安装开发工具组
+| 软件组   | `yum groupremove "Development Tools"`  | 删除开发工具组
+| 历史记录 | `yum history`                          | 查看历史操作
+| 历史记录 | `yum history info 10`                  | 查看某次事务详情
+| 历史记录 | `yum history undo 10`                  | 回滚某次操作
+| RPM 下载 | `yum install --downloadonly nginx`     | 只下载不安装
+| 自动化   | `yum -y install wget vim`              | 自动确认安装多个软件
+| 自动化   | `yum -q install nginx`                 | 静默安装
+| 自动化   | `yum --nogpgcheck install nginx`       | 忽略 GPG 检查
+| 自动化   | `yum -c xxx.conf install nginx`        | 指定配置文件
+| 企业运维 | `yum -y update`                        | 企业批量更新系统
+| 企业运维 | `yum -y install wget vim net-tools`    | 安装基础运维工具
+| 企业运维 | `yum clean all && yum makecache`       | 修复缓存问题
+   """
+    print(yum_cmd) 
 
