@@ -2648,3 +2648,48 @@ gotty \\
    """
     print(gotty_cmd) 
 
+def print_alias_cmd():
+    alias_cmd = """
+#################################################### 定义临时别名（当前终端有效，关闭即失效） #########################################################
+1. 定义临时别名（当前终端有效，关闭即失效）
+# 常用文件列表
+alias ll='ls -alh'    # 详细列表（含隐藏、可读大小）
+alias la='ls -A'      # 仅隐藏文件
+alias l='ls -CF'      # 简洁列表
+
+# Git 快捷操作
+alias gs='git status'
+alias ga='git add .'
+alias gc='git commit -m'
+alias gp='git push'
+
+# 系统维护
+alias update='sudo apt update && sudo apt upgrade -y'  # Ubuntu/Debian
+alias rm='rm -i'    # 删除前确认（防误删）
+########################################################## 查看 / 删除别名 #######################################################################
+
+# 查看所有别名
+alias
+
+# 查看单个别名（如 ll）
+alias ll
+
+# 删除指定别名
+unalias ll
+
+# 删除所有别名
+unalias -a
+######################################################### 永久生效（写入配置文件） #################################################################
+
+# 1. 编辑配置文件
+vim ~/.bashrc   # 或 ~/.zshrc
+
+# 2. 末尾添加别名（示例）
+alias ll='ls -alh'
+alias update='sudo apt update && sudo apt upgrade -y'
+
+# 3. 立即生效（不重启终端）
+source ~/.bashrc  # 或 source ~/.zshrc
+   """
+    print(alias_cmd) 
+

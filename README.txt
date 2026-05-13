@@ -203,7 +203,7 @@ kubeadm: k8s 集群建造师
 kubelet: k8s 节点代理人
 kubectl: k8s 集群管理员(upgrade)
 cgroup :
-journalctl:(upgrade)
 ctr: k8s 镜像管理，导入
+alias: 别名快捷设置
 watch:
 snapshot:
