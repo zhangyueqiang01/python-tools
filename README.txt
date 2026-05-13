@@ -158,10 +158,14 @@ aa --show c --item cpu_consume: cpu 负载打满源代码
 
 # 这里显示的都是没来及做的，做完后，移动到上面
 dockerfs: docker image file system introduce (OverlayFS)
+overlay-network:
 podman: podman 简介
 systemctl: systemctl 命令介绍
 rpm_build: 制作 rpm 包
 createrepo: 制作yum仓库
+aiagent: 在linux上安装一个ai助手，帮助完成所有的操作
+virsh: 指令需要补全
+kvm:
 ntp:
 chrony:
 rc.d:
@@ -193,4 +197,13 @@ dig:
 guestmount:
 gpt: gpt 分区概述
 net_namespace: 网络命名空间概述
-
+bash 命令行中，多进程是怎么运行的，分前后还是并发的
+yum-config-manager:
+kubeadm: k8s 集群建造师
+kubelet: k8s 节点代理人
+kubectl: k8s 集群管理员(upgrade)
+cgroup :
+journalctl:(upgrade)
+ctr: k8s 镜像管理，导入
+watch:
+snapshot:

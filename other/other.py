@@ -198,6 +198,35 @@ journald 和 rsyslog 的关系:
 systemctl stop systemd-journald.socket
 systemctl stop systemd-journald.service
 
+
+############################################################### option #########################################################################
+| 选项                 | 作用                        | 示例
+| -------------------- | --------------------------- | ------------------------------------------
+| `-n`                 | 显示最后 N 行日志           | `journalctl -n 50`
+| `-f`                 | 实时追踪日志（类似 tail -f）| `journalctl -f`
+| `-u`                 | 查看指定 systemd 服务日志   | `journalctl -u sshd`
+| `-b`                 | 查看本次启动日志            | `journalctl -b`
+| `-k`                 | 查看内核日志                | `journalctl -k`
+| `-p`                 | 按日志级别过滤              | `journalctl -p err`
+| `--since`            | 指定开始时间                | `journalctl --since "1 hour ago"`
+| `--until`            | 指定结束时间                | `journalctl --until "2026-05-13 10:00:00"`
+| `-r`                 | 倒序显示（最新在前）        | `journalctl -r`
+| `-e`                 | 跳转到日志末尾              | `journalctl -e`
+| `-x`                 | 显示额外解释信息            | `journalctl -x`
+| `-o`                 | 指定输出格式                | `journalctl -o json`
+| `--no-pager`         | 不分页输出                  | `journalctl --no-pager`
+| `--disk-usage`       | 查看日志占用空间            | `journalctl --disk-usage`
+| `--vacuum-size`      | 按大小清理日志              | `journalctl --vacuum-size=500M`
+| `--vacuum-time`      | 按时间清理日志              | `journalctl --vacuum-time=7d`
+| `--vacuum-files`     | 按文件数量清理              | `journalctl --vacuum-files=10`
+| `--list-boots`       | 查看历史启动记录            | `journalctl --list-boots`
+| `--boot=-1`          | 查看上一次启动日志          | `journalctl -b -1`
+| `_PID=`              | 按进程 PID 过滤             | `journalctl _PID=1234`
+| `_COMM=`             | 按进程名过滤                | `journalctl _COMM=sshd`
+| `_EXE=`              | 按可执行文件过滤            | `journalctl _EXE=/usr/sbin/sshd`
+| `_UID=`              | 按用户 ID 过滤              | `journalctl _UID=0`
+| `SYSLOG_IDENTIFIER=` | 按 syslog 标识过滤          | `journalctl SYSLOG_IDENTIFIER=kernel`
+
 ############################################################## instance ########################################################################
 
 默认分页显示（类似 less），按 ↑/↓ 滚动、空格翻页、q 退出。
