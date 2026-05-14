@@ -2698,7 +2698,6 @@ source ~/.bashrc  # 或 source ~/.zshrc
 
 def print_pstree_cmd():
     pstree_cmd = """
-
 ############################################################## install #########################################################################
 yum install psmisc -y
 
@@ -2713,8 +2712,6 @@ yum install psmisc -y
 | `-H PID` | 高亮指定 PID         | `pstree -H 1234`
 | `-g`     | 显示进程组 PGID      | `pstree -g`
 | `-s`     | 显示指定进程的父链   | `pstree -s PID`
-| `-T`     | 不显示线程           | `pstree -T`
-| `-t`     | 显示线程名           | `pstree -t`
 | `-c`     | 不压缩相同子树       | `pstree -c`
 | `-l`     | 不截断长行           | `pstree -l`
 | `-A`     | 使用 ASCII 字符显示树| `pstree -A`
@@ -2736,11 +2733,27 @@ pstree -ap
 # 查看某个进程的祖先链
 pstree -s 1234
 
-# 显示线程
-pstree -t
-
 # 查看某个用户的进程树
 pstree username
+   
+# 进程和线程
+[zyq@zyq tmp]$ pstree -a | grep kvm
+  |-qemu-kvm -name ct7_node01-docker -S -machine pc-i440fx-rhel7.0.0,accel=kvm,usb=off,dump-guest-core=off -cpuSkylake-Cli   # 没有花括号：代表进程（Process）
+  |   `-5*[{qemu-kvm}]        # 有花括号 {进程名}：代表该进程下的线程（Thread/LWP）,有5个线程
+  |-qemu-kvm -name ct9_node11 -S -machine pc-i440fx-rhel7.0.0,accel=kvm,usb=off,dump-guest-core=off -cpuSkylake-Client,+ds
+  |   `-48*[{qemu-kvm}]
+  |               |-grep --color=auto kvm
+
+[zyq@zyq tmp]$ pstree -ap | grep kvm
+  |-qemu-kvm,16861 -name ct7_node01-docker -S -machine pc-i440fx-rhel7.0.0,accel=kvm,usb=off,dump-guest-core=off -cpuSkylake-Cli   # 没有花括号：代表进程（Process）
+  |   |-{qemu-kvm},16959   # 有花括号 {进程名}：代表该进程下的线程（Thread/LWP），进程16861下的五个线程详情
+  |   |-{qemu-kvm},16960
+  |   |-{qemu-kvm},16961
+  |   |-{qemu-kvm},16962
+  |   `-{qemu-kvm},16963
+  |-qemu-kvm,17026 -name ct9_node11 -S -machine pc-i440fx-rhel7.0.0,accel=kvm,usb=off,dump-guest-core=off -cpuSkylake-Client,+ds
+  |   |-{qemu-kvm},17071
+  |   |-{qemu-kvm},17078
    """
     print(pstree_cmd) 
 
