@@ -150,6 +150,7 @@ rpm: rpm 命令使用帮助
 yum: yum cmd usage
 curl: curl cmd usage
 gotty: 将Linux的命令行通过web展示的方法，需要 AI/工程师 远程支撑,又不方便提供ssh账号密码的情况下使用
+alias: 别名快捷设置
 
 aa --show c --item current : 通过 current 宏查看进程属性的示例代码
 aa --show c --item cpu_consume: cpu 负载打满源代码
@@ -204,6 +205,14 @@ kubelet: k8s 节点代理人
 kubectl: k8s 集群管理员(upgrade)
 cgroup :
 ctr: k8s 镜像管理，导入
-alias: 别名快捷设置
 watch:
 snapshot:
+docker_repo:
+go 语言入门
+docker 容器运行起来的详细过程是啥
+pstree: 进程/线程树查看
+魔方高阶玩儿法：
+docker_theory: docker 理论知识概述
+resume:构建了个人知识库开源项目，融汇了个人毕生所学运维知识
+man: 帮助手册 man man
+astyyle:代码自动格式化

@@ -337,6 +337,9 @@ ps： 可以使用 ps 命令查看线程列表
 3、 将输出重定向为静态快照：
 	top -b -n 1 > top_snapshot.txt
 
+4、 实时查看某一个进程的运行情况
+    top -p <pid>
+
 4、 查看高负载的进程中的线程使用了哪些cpu 
         top -H -p <PID>
         在 top 界面中：
@@ -2692,4 +2695,52 @@ alias update='sudo apt update && sudo apt upgrade -y'
 source ~/.bashrc  # 或 source ~/.zshrc
    """
     print(alias_cmd) 
+
+def print_pstree_cmd():
+    pstree_cmd = """
+
+############################################################## install #########################################################################
+yum install psmisc -y
+
+############################################################### option #########################################################################
+| 选项     | 作用                 | 示例
+| -------- | -------------------- | ----------------
+| `-a`     | 显示完整命令行参数   | `pstree -a`
+| `-p`     | 显示 PID             | `pstree -p`
+| `-u`     | 显示进程所属用户变化 | `pstree -u`
+| `-n`     | 按 PID 排序          | `pstree -n`
+| `-h`     | 高亮当前进程及父进程 | `pstree -h`
+| `-H PID` | 高亮指定 PID         | `pstree -H 1234`
+| `-g`     | 显示进程组 PGID      | `pstree -g`
+| `-s`     | 显示指定进程的父链   | `pstree -s PID`
+| `-T`     | 不显示线程           | `pstree -T`
+| `-t`     | 显示线程名           | `pstree -t`
+| `-c`     | 不压缩相同子树       | `pstree -c`
+| `-l`     | 不截断长行           | `pstree -l`
+| `-A`     | 使用 ASCII 字符显示树| `pstree -A`
+| `-G`     | 使用 VT100 图形字符  | `pstree -G`
+| `-U`     | 使用 UTF-8 线条字符  | `pstree -U`
+| `-Z`     | 显示 SELinux 安全上下文 | `pstree -Z`
+| `-y`     | 显示 age（部分版本支持）| `pstree -y`
+| `-V`     | 查看版本             | `pstree -V`
+| `--help` | 查看帮助             | `pstree --help`
+
+############################################################## instance ########################################################################
+
+# 显示完整命令行
+pstree -a
+
+# 显示 PID + 完整参数
+pstree -ap
+
+查看某个进程的祖先链
+pstree -s 1234
+
+显示线程
+pstree -t
+
+查看某个用户的进程树
+pstree username
+   """
+    print(pstree_cmd) 
 
