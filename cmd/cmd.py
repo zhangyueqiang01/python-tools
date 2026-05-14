@@ -2733,13 +2733,13 @@ pstree -a
 # 显示 PID + 完整参数
 pstree -ap
 
-查看某个进程的祖先链
+# 查看某个进程的祖先链
 pstree -s 1234
 
-显示线程
+# 显示线程
 pstree -t
 
-查看某个用户的进程树
+# 查看某个用户的进程树
 pstree username
    """
     print(pstree_cmd) 
