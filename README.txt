@@ -113,7 +113,7 @@ docker_docker0: docker0详解
 docker_run: docker 运行容器时可添加的各类选项大全
 ping: ping命令使用帮助
 net: Linux 内核收发网络包流程
-rootdir: Linux系统'/'目录下的目录功能简介
+rootdir: Linux系统'/'目录下的目录功能简介(根目录下文件)
 linux_route: 将Linux机器配置成路由器的方法
 sec_enh: Linux主机安全加固常见内容
 net_name: Linux 网卡命名中带有@符号类型的网卡名称解读
@@ -216,3 +216,6 @@ docker_theory: docker 理论知识概述
 resume:构建了个人知识库开源项目，融汇了个人毕生所学运维知识
 man: 帮助手册 man man
 astyyle:代码自动格式化
+进程的命名空间详解
+sys: /sys 目录下各文件介绍
+
