@@ -152,6 +152,7 @@ curl: curl cmd usage
 gotty: 将Linux的命令行通过web展示的方法，需要 AI/工程师 远程支撑,又不方便提供ssh账号密码的情况下使用
 alias: 别名快捷设置
 ps: ps 命令使用示例
+fs: Linux 下的文件系统大全
 
 aa --show c --item current : 通过 current 宏查看进程属性的示例代码
 aa --show c --item cpu_consume: cpu 负载打满源代码
@@ -227,8 +228,8 @@ lsns: 查看命名空间namespace
 readlink:
 unshare: 创建命名空间namespace
 mount: 挂载命令使用案例(upgrade)
-fs: 各种文件系统类型简介
 symbol: bash 下各类常见的符号示例($$ $1 $#)
+vfs: 虚拟文件系统简介
 
 
 ############################################################# Business Plan ########################################################################

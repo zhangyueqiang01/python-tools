@@ -1146,3 +1146,70 @@ top -H 线程模式：第一列 = 线程 TID
    """
     print(threads_cmd) 
 
+def print_fs_cmd():
+    fs_cmd = """
+################################################################ what ##########################################################################
+Linux 世界中的文件系统非常多，可以从不同维度分类：
+    本地磁盘文件系统
+    网络文件系统
+    内存文件系统
+    集群文件系统
+    虚拟文件系统
+    容器相关文件系统
+    只读压缩文件系统
+    特殊用途文件系统
+查看系统支持哪些文件系统：
+cat /proc/filesystems
+
+查看已挂载文件系统
+mount
+df -hT -a
+
+####################################################### Linux 文件系统生态结构 ####################################################################
+Linux 文件系统生态
+
+磁盘文件系统        网络文件系统           虚拟文件系统                 容器文件系统            内存文件系统         分布式文件系统
+Disk Filesystem     Network Filesystem     Virtual/Pseudo Filesystem    Container Filesystem    Memory Filesystem    Distributed Filesystem
+├── ext             ├── nfs                ├── proc                     ├── overlayfs           ├── tmpfs            ├── cephfs
+├── ext2            ├── nfsv3              ├── sysfs                    ├── overlay2            ├── ramfs            ├── glusterfs
+├── ext3            ├── nfsv4              ├── cgroupfs                 ├── aufs                ├── hugetlbfs        ├── lustre
+├── ext4            ├── cifs               ├── cgroup2fs                ├── unionfs             ├── shm              ├── moosefs
+├── xfs             ├── smbfs              ├── devtmpfs                 ├── fuse-overlayfs      ├── memfd            ├── seaweedfs
+├── btrfs           ├── sshfs              ├── devpts                   ├── devicemapper        └── brd (ramdisk)    ├── hdfs
+├── zfs             ├── ftpfs              ├── securityfs               ├── btrfs-driver                             ├── orangefs
+├── jfs             ├── curlftpfs          ├── configfs                 ├── zfs-driver                               ├── beeGFS
+├── reiserfs        ├── davfs2 (WebDAV)    ├── debugfs                  ├── vfs-driver                               ├── quantcastfs
+├── f2fs            ├── afpfs              ├── tracefs                  └── snapshotter                              ├── ibrix
+├── nilfs2          ├── 9p                 ├── selinuxfs                    ├── stargz                               ├── maprfs
+├── minix           ├── orangefs           ├── pstore                       ├── nydus                                └── openafs
+├── vfat            ├── gfs                ├── efivarfs                     └── overlay snapshotter
+├── fat32           ├── gfs2               ├── autofs
+├── exfat           ├── ocfs2              ├── mqueue
+├── ntfs            ├── cephfs-client      ├── pipefs
+├── iso9660         ├── glusterfs-client   ├── sockfs
+├── udf             └── lustre-client      ├── binfmt_misc
+├── hfs                                    ├── hugetlbfs
+├── hfs+                                   ├── fusectl
+├── squashfs                               └── rpc_pipefs
+├── cramfs
+├── erofs
+└── swap
+
+FUSE 用户态文件系统      只读压缩文件系统                  日志型文件系统           Copy-on-Write 文件系统 集群文件系统         特殊用途文件系统                云原生存储生态
+Userspace Filesystem     Compressed Read-Only Filesystem   Journaling Filesystem    COW Filesystem         Cluster Filesystem   Special Purpose Filesystem      Cloud Native Storage  
+├── fuse                 ├── squashfs                      ├── ext3                 ├── btrfs              ├── gfs              ├── swap                        ├── CSI  
+├── sshfs                ├── cramfs                        ├── ext4                 ├── zfs                ├── gfs2             ├── autofs                      ├── Rook-Ceph  
+├── ntfs-3g              ├── erofs                         ├── xfs                  ├── overlayfs          ├── ocfs2            ├── ecryptfs                    ├── Longhorn  
+├── exfat-fuse           ├── romfs                         ├── jfs                  ├── aufs               ├── vmfs             ├── overlay                     ├── OpenEBS  
+├── mergerfs             └── iso9660                       ├── reiserfs             ├── unionfs            ├── vxfs             ├── dm-verity                   ├── JuiceFS  
+├── encfs                                                  ├── btrfs                └── nilfs2             ├── cephfs           ├── fs-verity                   ├── Mayastor  
+├── bindfs                                                 ├── zfs                                         ├── lustre           ├── aufs                        ├── Portworx  
+├── s3fs                                                   └── ocfs2                                       └── beeGFS           ├── snapfs                      ├── LINSTOR  
+├── gcsfuse                                                                                                                     ├── qcow2 backing fs            ├── DRBD  
+├── rclone mount                                                                                                                └── loopfs                      ├── local-path-provisioner  
+├── archivemount                                                                                                                                                └── TopoLVM  
+├── curlftpfs
+└── gvfs
+   """
+    print(fs_cmd) 
+
