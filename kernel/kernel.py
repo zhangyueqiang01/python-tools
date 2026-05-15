@@ -1210,6 +1210,28 @@ Userspace Filesystem     Compressed Read-Only Filesystem   Journaling Filesystem
 ├── archivemount                                                                                                                                                └── TopoLVM  
 ├── curlftpfs
 └── gvfs
+
+###################################################### 伪文件系统 VS 内存文件系统 ##################################################################
+
+| 对比项                   | proc/sysfs（伪文件系统） | tmpfs（内存文件系统）
+| ------------------------ | ------------------------ | -------------
+| 主要目的                 | 暴露内核信息             | 存储数据
+| 文件内容来源             | 内核实时生成             | 用户真正写入
+| 是否真正保存文件数据     | 通常不保存               | 真正保存
+| 文件大小                 | 动态变化                 | 真实占用内存
+| 用户能否自由创建普通文件 | 基本不行                 | 可以
+| 是否有真实文件内容       | 很多没有                 | 有
+| 是否对应真实存储         | 不对应                   | 对应 RAM
+| 文件是否长期存在         | 内核状态变化即变化       | 用户删除前一直存在
+
+proc 文件很多根本不是“真正文件,tmpfs 则是真实存储在 RAM 页缓存，proc 更像“内核 API，函数调用结果”
+通过 df -hT -a 查看，伪文件系统不会展示Use%，而内存文件系统会展示，如下：
+[root@VM]# df -hT -a
+Filesystem     Type         Size  Used Avail Use% Mounted on
+sysfs          sysfs           0     0     0    - /sys
+proc           proc            0     0     0    - /proc
+devtmpfs       devtmpfs     840M     0  840M   0% /dev
+tmpfs          tmpfs        858M  232K  857M   1% /dev/shm
    """
     print(fs_cmd) 
 
