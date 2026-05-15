@@ -151,6 +151,7 @@ yum: yum cmd usage
 curl: curl cmd usage
 gotty: 将Linux的命令行通过web展示的方法，需要 AI/工程师 远程支撑,又不方便提供ssh账号密码的情况下使用
 alias: 别名快捷设置
+ps: ps 命令使用示例
 
 aa --show c --item current : 通过 current 宏查看进程属性的示例代码
 aa --show c --item cpu_consume: cpu 负载打满源代码
@@ -213,9 +214,15 @@ docker 容器运行起来的详细过程是啥
 pstree: 进程/线程树查看
 魔方高阶玩儿法：
 docker_theory: docker 理论知识概述
-resume:构建了个人知识库开源项目，融汇了个人毕生所学运维知识
+resume:构建了个人知识库开源项目，融汇了个人毕生所学运维知识(包含了数十款运维小工具)
 man: 帮助手册 man man
 astyyle:代码自动格式化
-进程的命名空间详解
+/proc/<pid>/ns进程的命名空间详解
 sys: /sys 目录下各文件介绍
-
+pidof:
+用python3新建一个专门运行自己开发的程序的工具助手：
+ps: upgrade(ps 所有的选项)
+process_ns: 进程命名空间概述namespace
+lsns: 查看命名空间namespace
+readlink:
+unshare: 创建命名空间namespace
