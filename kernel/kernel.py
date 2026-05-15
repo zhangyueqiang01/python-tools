@@ -1168,7 +1168,7 @@ df -hT -a
 ####################################################### Linux 文件系统生态结构 ####################################################################
 Linux 文件系统生态
 
-磁盘文件系统        网络文件系统           虚拟文件系统                 容器文件系统            内存文件系统         分布式文件系统
+磁盘文件系统        网络文件系统           伪文件系统                   容器文件系统            内存文件系统         分布式文件系统
 Disk Filesystem     Network Filesystem     Virtual/Pseudo Filesystem    Container Filesystem    Memory Filesystem    Distributed Filesystem
 ├── ext             ├── nfs                ├── proc                     ├── overlayfs           ├── tmpfs            ├── cephfs
 ├── ext2            ├── nfsv3              ├── sysfs                    ├── overlay2            ├── ramfs            ├── glusterfs
