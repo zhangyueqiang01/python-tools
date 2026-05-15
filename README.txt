@@ -226,3 +226,28 @@ process_ns: 进程命名空间概述namespace
 lsns: 查看命名空间namespace
 readlink:
 unshare: 创建命名空间namespace
+mount: 挂载命令使用案例(upgrade)
+fs: 各种文件系统类型简介
+symbol: bash 下各类常见的符号示例($$ $1 $#)
+
+
+############################################################# Business Plan ########################################################################
+
+1、实现 mini docker 付费课程
+用：
+unshare
+chroot
+veth
+bridge
+cgroup
+
+手写一个容器。
+
+这个过程会让你真正理解 Docker。
+
+
+2、 mini openstack 付费课程
+
+3、 mini linux os 付费课程
+
+4、安全加固pam 付费课程
