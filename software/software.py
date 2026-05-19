@@ -2687,6 +2687,28 @@ frontend http_front
    """
     print(haproxy_cmd) 
 
+def print_docker_repo_cmd():
+    docker_repo_cmd = """
+# 配置文件路径
+[root@ct7_node01 ~]# cat /etc/docker/daemon.json
+{
+  "registry-mirrors": [
+    "https://docker.1ms.run",
+    "https://docker.chenby.cn"
+  ]
+}
+
+# 查看仓库是否生效
+[root@ct7_node01 ~]# docker info
+...
+ Registry Mirrors:
+  https://docker.1ms.run/
+  https://docker.chenby.cn/
+ Live Restore Enabled: false
+...
+   """
+    print(docker_repo_cmd) 
+
 def print_php_cmd():
     print("php usage command:")
     php_cmd = """

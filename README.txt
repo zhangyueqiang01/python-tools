@@ -153,6 +153,8 @@ gotty: 将Linux的命令行通过web展示的方法，需要 AI/工程师 远程
 alias: 别名快捷设置
 ps: ps 命令使用示例
 fs: Linux 下的文件系统大全
+ns: namespace 简介
+docker_repo: 国内可用的公网docker repo
 
 aa --show c --item current : 通过 current 宏查看进程属性的示例代码
 aa --show c --item cpu_consume: cpu 负载打满源代码
@@ -209,7 +211,6 @@ cgroup :
 ctr: k8s 镜像管理，导入
 watch:
 snapshot:
-docker_repo:
 go 语言入门
 docker 容器运行起来的详细过程是啥
 pstree: 进程/线程树查看
@@ -232,7 +233,6 @@ symbol: bash 下各类常见的符号示例($$ $1 $#)
 vfs: 虚拟文件系统简介
 mkdir: mkdir -p /tmp/mycontainer/rootfs/{proc,sys,dev,root,tmp}
 EOF:
-ns: namespace 简介
 
 
 ############################################################# Business Plan ########################################################################
