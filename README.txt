@@ -230,6 +230,9 @@ unshare: 创建命名空间namespace
 mount: 挂载命令使用案例(upgrade)
 symbol: bash 下各类常见的符号示例($$ $1 $#)
 vfs: 虚拟文件系统简介
+mkdir: mkdir -p /tmp/mycontainer/rootfs/{proc,sys,dev,root,tmp}
+EOF:
+ns: namespace 简介
 
 
 ############################################################# Business Plan ########################################################################

@@ -1235,3 +1235,108 @@ tmpfs          tmpfs        858M  232K  857M   1% /dev/shm
    """
     print(fs_cmd) 
 
+def print_ns_cmd():
+    ns_cmd = """
+在 Linux 中，“命名空间（namespace）”是内核提供的一种机制，用于隔离内核资源。每个命名空间隔离的是特定类型的资源，而进程只是使用这些资源的一个实体。
+################################################################ what ##########################################################################
+
+[root@k8s-allinone ~]# ll /proc/self/ns/
+lrwxrwxrwx 1 root root 0 May 19 09:49 cgroup -> 'cgroup:[4026531835]'
+lrwxrwxrwx 1 root root 0 May 19 09:49 ipc -> 'ipc:[4026531839]'
+lrwxrwxrwx 1 root root 0 May 19 09:49 mnt -> 'mnt:[4026531841]'
+lrwxrwxrwx 1 root root 0 May 19 09:49 net -> 'net:[4026531840]'
+lrwxrwxrwx 1 root root 0 May 19 09:49 pid -> 'pid:[4026531836]'
+lrwxrwxrwx 1 root root 0 May 19 09:49 pid_for_children -> 'pid:[4026531836]'
+lrwxrwxrwx 1 root root 0 May 19 09:49 time -> 'time:[4026531834]'
+lrwxrwxrwx 1 root root 0 May 19 09:49 time_for_children -> 'time:[4026531834]'
+lrwxrwxrwx 1 root root 0 May 19 09:49 user -> 'user:[4026531837]'
+lrwxrwxrwx 1 root root 0 May 19 09:49 uts -> 'uts:[4026531838]'
+文件名: （如 cgroup, ipc）表示命名空间类型
+[数字]: 表示该命名空间的 内核标识符（inode-like ID），是内核用来识别命名空间对象的 ID。多个进程如果在同一个命名空间中，会有相同的数字。
+
+| 命名空间类型          | 隔离对象                           | 说明
+| --------------------- | ---------------------------------- | -------------------------------
+| **Mount (mnt)**       | 文件系统挂载点                     | 不同命名空间可以有不同的根目录、挂载点
+| **UTS**               | 主机名、域名                       | 可以让同一台机器上的不同进程看到不同的 hostname
+| **IPC**               | System V IPC, POSIX message queues | 进程间通信对象隔离
+| **PID**               | 进程 ID                            | 进程在不同 PID 命名空间中可以有不同的 PID，隔离进程树
+| **Network (net)**     | 网络接口、IP 地址、路由表          | 每个 namespace 可以有独立的网络栈
+| **User**              | UID/GID                            | 可以让容器内的 root 实际上是非特权用户
+| **Cgroup**            | 控制组                             | 用于资源限制与计量
+| **Time** (Linux 5.6+) | 系统时间、单调时钟                 | 允许进程看到不同的系统时间
+
+命名空间是对资源的隔离机制。
+进程只是命名空间的“承载者”，它可以被创建在不同类型的命名空间里。
+
+############################################################## src_code ########################################################################
+在 Linux 内核中，task_struct 是进程描述符，它记录了进程的大量信息。和命名空间相关的字段主要是：
+| 字段名                                | 类型 | 对应命名空间                  | 说明
+| ------------------------------------- | -- | ------------------------------- | -----------------------------
+| `struct nsproxy *nsproxy`             | 指针 | 所有 namespace（除了 cgroup） | `nsproxy` 是一个指向命名空间集合的结构体
+| `struct cred *cred`                   | 指针 | 用户 namespace                | 通过 `cred->user_ns` 间接引用用户命名空间
+| `struct signal_struct *signal`        | 指针 | PID namespace                 | PID namespace 信息在信号结构里部分关联
+| `struct cgroup_subsys_state *cgroups` | 指针 | cgroup namespace              | 通过 cgroup 子系统关联
+
+nsproxy 是 task_struct 中的核心，它实际上是把各种命名空间聚合起来：
+struct nsproxy {
+    struct mnt_namespace *mnt_ns;
+    struct uts_namespace *uts_ns;
+    struct ipc_namespace *ipc_ns;
+    struct net *net_ns;
+    struct cgroup_namespace *cgroup_ns;
+    struct pid_namespace *pid_ns_for_children;
+    struct user_namespace *user_ns;
+    ...
+};
+
+每个命名空间是 单独的结构体，不是直接嵌套在 task_struct 中。
+task_struct 通过 指针引用 nsproxy，nsproxy 再引用各个具体的命名空间对象。
+
+############################################################## instance ########################################################################
+
+实验一：创建一个新的 PID Namespace
+unshare --fork --pid --mount-proc bash
+| 参数           | 作用
+| -------------- | ----------------------
+| `--pid`        | 创建新的 PID namespace
+| `--fork`       | fork 一个子进程进入 namespace
+| `--mount-proc` | 重新挂载 proc 文件系统
+| `bash`         | 启动 shell
+
+
+进阶实验二：nsenter 进入 namespace
+nsenter -t 23580 -p -m bash
+| 参数 | 作用
+| ---- | ------------------
+| `-t` | 目标 PID
+| `-p` | 进入 PID namespace
+| `-m` | 进入 mount namespace
+
+
+实验三：创建 PID Namespace + Mount Namespace
+unshare --fork --pid --mount bash
+| 参数    | 作用
+| ------- | --------------------
+| --fork  | 创建子进程
+| --pid   | 创建新的 PID Namespace
+| --mount | 创建新的 Mount Namespace
+| bash    | 启动新的 shell
+
+mount -t proc proc /proc
+/proc 不是普通目录，它是内核暴露进程信息的接口,哪个命名空间挂载它，它就展示哪个空间的进程
+在新的 PID 命名空间里挂载了 /proc，所以它只会展示当前命名空间里的进程,绝对看不到宿主机的进程
+
+mkdir /tmp/myproc
+mount -t tmpfs tmpfs /tmp/myproc
+在新的 PID 命名空间里可以看到这个挂载点，在宿主机上看不到，并且退出这个命名空间不会影响宿主机的挂载，因为 Mount Namespace 隔离了挂载点。
+
+UTS Namespace（Unix Time Sharing Namespace） 本质是：“给不同进程组提供不同的系统标识（名字空间）”
+它不影响：CPU、内存、文件系统、网络；它只改变“你看到的这台机器叫什么名字”
+
+实验四：加 UTS Namespace
+unshare -u bash
+hostname uts-test
+新的命名空间里会有新的主机名，宿主机的主机名还是原来的主机名
+   """
+    print(ns_cmd) 
+
