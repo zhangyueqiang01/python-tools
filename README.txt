@@ -156,9 +156,31 @@ fs: Linux 下的文件系统大全
 ns: namespace 简介
 docker_repo: 国内可用的公网docker repo
 docker_theory: docker 理论知识概述
+cgroup: cgroup 简介
 
 aa --show c --item current : 通过 current 宏查看进程属性的示例代码
 aa --show c --item cpu_consume: cpu 负载打满源代码
+
+############################################################# Business Plan ########################################################################
+
+1、实现 mini docker 付费课程
+用：
+unshare
+chroot
+veth
+bridge
+cgroup
+
+手写一个容器。
+
+这个过程会让你真正理解 Docker。
+
+
+2、 mini openstack 付费课程
+
+3、 mini linux os 付费课程
+
+4、安全加固pam 付费课程
 
 ############################################################### next to do #########################################################################
 
@@ -208,7 +230,7 @@ yum-config-manager:
 kubeadm: k8s 集群建造师
 kubelet: k8s 节点代理人
 kubectl: k8s 集群管理员(upgrade)
-cgroup :
+cgroup_ns: cgroup name space 简介
 ctr: k8s 镜像管理，导入
 watch:
 snapshot:
@@ -233,25 +255,7 @@ symbol: bash 下各类常见的符号示例($$ $1 $#)
 vfs: 虚拟文件系统简介
 mkdir: mkdir -p /tmp/mycontainer/rootfs/{proc,sys,dev,root,tmp}
 EOF:
-
-
-############################################################# Business Plan ########################################################################
-
-1、实现 mini docker 付费课程
-用：
-unshare
-chroot
-veth
-bridge
-cgroup
-
-手写一个容器。
-
-这个过程会让你真正理解 Docker。
-
-
-2、 mini openstack 付费课程
-
-3、 mini linux os 付费课程
-
-4、安全加固pam 付费课程
+unit_files: systemd下的unit文件配置示例
+systemctl: systemctl 指令使用示例
+tree: tree -L 2 /sys/fs/cgroup
+systemd: update 进程启动流程

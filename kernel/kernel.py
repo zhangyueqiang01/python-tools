@@ -1340,3 +1340,154 @@ hostname uts-test
    """
     print(ns_cmd) 
 
+def print_cgroup_cmd():
+    cgroup_cmd = """
+################################################################ what ##########################################################################
+
+Linux 中的 cgroup（Control Group，控制组）是一种 “对进程进行资源隔离、限制、统计、控制” 的内核机制。它是 Linux 容器技术（如 Docker、Kubernetes）的核心基础之一。可以把
+它理解成 Linux 内核提供的一套“资源管理系统”，用于把一组进程组织起来，然后统一管理它们能使用多少 CPU、内存、磁盘 IO 等资源。
+
+################################################################ why ###########################################################################
+
+Linux 默认情况下：				cgroup 树形层级结构
+    所有进程共享系统资源                       /sys/fs/cgroup 
+    谁抢到 CPU 谁就运行                        ├── system.slice 
+    某个进程可能吃光内存                       ├── user.slice 
+    某个程序可能把 IO 打满                     ├── docker
+这种死循环可能：                               │   ├── container1
+    占满 CPU                                   │   └── container2
+    导致系统卡死
+    影响其他业务
+于是就有了cgroup
+
+注意：
+不是控制单个进程，而是“把进程分组，然后对组进行资源控制”
+
+########################################################### cgroup v1 与 v2 ####################################################################
+
+cgroup v1 与 v2
+[root@k8s-allinone ~]# mount | grep cgroup
+
+cgroup v1（旧）                   cgroup v2（新）现在主流 
+特点：                            特点：
+  每种资源一个独立层级                 统一层级 
+  结构复杂                           所有 controller 一棵树 
+  controller 分散                   接口更清晰
+例如：                            例如：
+  /sys/fs/cgroup/memory            /sys/fs/cgroup/
+  /sys/fs/cgroup/cpu              统一管理：
+问题：                              CPU
+  管理复杂                           Memory 
+  controller 不统一                 IO
+                                   PID
+                                  例如之前看到的：
+                                  0::/user.slice/user-0.slice/session-5.scope
+
+cgroup v2 的格式
+| 字段            | 意义
+| --------------- | ---------------------
+| 0               | hierarchy id（v2 固定 0）
+| ::              | 没有单独 controller
+| /user.slice/... | 当前进程所在 cgroup 路径
+
+################################################# instance1 cgroup v2 下限制 CPU 使用率 ###########################################################
+
+# 启动一个疯狂消耗 CPU 的进程：
+yes > /dev/null &
+
+# 查看 PID（假设得到12345）
+echo $!
+
+# 查看 CPU 使用率（使用率100%）
+top -p 12345
+
+# 创建 cgroup（这个路径下会自动产生大量控制文件）
+mkdir /sys/fs/cgroup/mycpu
+# 其实这就是一个新的资源控制组
+
+# 把进程加入 cgroup
+echo 12345 > /sys/fs/cgroup/mycpu/cgroup.procs
+
+# 限制 CPU（表示每100ms 最多运行10ms，即CPU = 10%）
+echo "10000 100000" > /sys/fs/cgroup/mycpu/cpu.max
+
+# 观察效果（原来 100% 现在CPU ≈ 10%）
+top -p 12345
+
+################################################# instance1 cgroup v2 下限制 MEM 使用率 ###########################################################
+
+# 启动一个不断申请内存的进程：
+cat > mem.py <<'EOF'
+a=[]
+
+while True:
+    a.append('A'*1024*1024)
+EOF
+
+python mem.py
+
+# 新建 cgroup
+mkdir /sys/fs/cgroup/mymem
+
+# 设置最大内存使用为100MB
+echo 104857600 > /sys/fs/cgroup/mymem/memory.max
+
+# 把进程加入 cgroup （假设 PID 是5678）
+echo 5678 > /sys/fs/cgroup/mymem/cgroup.procs
+
+# 观察结果（进程继续申请内存，达到100M时，进程直接被杀）
+dmesg | tail
+# 可能看到 out of memory
+
+############################################# instance1 cgroup v2 下限制 MEM+MEM 使用率 ##########################################################
+
+# 创建新的cgroup
+mkdir /sys/fs/cgroup/myapp
+
+# 限制 CPU（20%）
+echo "20000 100000" > /sys/fs/cgroup/myapp/cpu.max
+
+# 限制内存 200M
+echo 200M > /sys/fs/cgroup/myapp/memory.max
+
+# 加入进程：
+echo PID > /sys/fs/cgroup/myapp/cgroup.procs
+
+# 检查（看到0::/myapp）
+cat /proc/PID/cgroup
+# 表示该进程已经属于/sys/fs/cgroup/myapp 资源组
+
+############################################################## caution #########################################################################
+
+内核并不是给单个进程限资源，而是给一个“进程组”设定资源配额，所有加入该 cgroup 的进程共享这些限制，这就是 Control Group（控制组） 名字的由来。
+
+Docker、Kubernetes 容器编排工具只是自动帮你完成以上这些操作而已。
+
+Q: 明明只是创建了一个目录/sys/fs/cgroup/mycpu，为什么内核自动给我生成了这么多文件?
+A: 因为 /sys/fs/cgroup 不是普通文件系统，而是 cgroup 文件系统（cgroupfs），这些文件根本不是磁盘上的真实文件，而是内核动态创建的接口。
+
+Q: sshd.service 和 /system.slice/sshd.service 这个 cgroup 到底是怎么关联起来的,sshd.service 配置文件里面没有写任何 cgroup 配置？
+A: systemd 本身就是 cgroup v2 的管理者（manager），它启动服务时会自动创建对应的 cgroup。
+执行 systemctl start sshd 时
+systemd
+   │
+   ├── 创建 cgroup
+   │      /system.slice/sshd.service
+   │
+   ├── fork()
+   │
+   ├── 将子进程加入
+   │      /system.slice/sshd.service
+   │
+   └── execve()
+          /usr/sbin/sshd
+
+可以在配置文件中添加资源限制（systemctl edit sshd）
+[Service]
+
+CPUQuota=20%
+MemoryMax=200M
+TasksMax=50
+   """
+    print(cgroup_cmd) 
+
