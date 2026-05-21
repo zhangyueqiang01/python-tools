@@ -157,6 +157,7 @@ ns: namespace 简介
 docker_repo: 国内可用的公网docker repo
 docker_theory: docker 理论知识概述
 cgroup: cgroup 简介
+cgroup_ns: cgroup name space 简介
 
 aa --show c --item current : 通过 current 宏查看进程属性的示例代码
 aa --show c --item cpu_consume: cpu 负载打满源代码
@@ -230,7 +231,6 @@ yum-config-manager:
 kubeadm: k8s 集群建造师
 kubelet: k8s 节点代理人
 kubectl: k8s 集群管理员(upgrade)
-cgroup_ns: cgroup name space 简介
 ctr: k8s 镜像管理，导入
 watch:
 snapshot:

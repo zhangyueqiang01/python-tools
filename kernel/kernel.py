@@ -1491,3 +1491,30 @@ TasksMax=50
    """
     print(cgroup_cmd) 
 
+def print_cgroup_ns_cmd():
+    cgroup_ns_cmd = """
+以下是cgroup namespace实验，让你直观地理解cgroup namespace的作用：隔离不同进程看到的cgroup层级
+
+############################################################## instance ########################################################################
+
+步骤 1：查看宿主机的 cgroup
+echo "[宿主机 cgroup]"
+cat /proc/self/cgroup
+
+步骤 2：创建一个 cgroup namespace
+sudo unshare --fork --pid --mount-proc --cgroup bash
+cat /proc/self/cgroup
+
+解释：在新 namespace 中，看到的 cgroup 路径被隔离了，几乎“重置”了，和宿主机不一样。
+旧： 0::/user.slice/user-0.slice/session-1.scope
+新： 0::/
+
+步骤 3：创建一个新 cgroup 并进入（会看到进程的 cgroup 路径更新为 testgroup 下）
+mkdir /sys/fs/cgroup/testgroup
+echo $$ > /sys/fs/cgroup/testgroup/cgroup.procs
+
+步骤 4：对比宿主机和 namespace 内进程
+宿主机看到的 cgroup 路径仍然是原来的路径，没有变化
+   """
+    print(cgroup_ns_cmd) 
+
