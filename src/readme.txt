@@ -12,3 +12,4 @@
 7. random.c: c语言中random()函数的使用示例
 8. random.sh: bash中实现random函数的示例
 9. exit.asm: 最简单的汇编代码演示，只调用了sys_exit系统调用，其中包含了32和64位cpu两个版本的代码
+10. readjson.py: 将json格式的数据转换成人类可读的格式，使用方法 ./readjson.py <json file>
