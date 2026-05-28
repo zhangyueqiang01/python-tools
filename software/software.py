@@ -2782,17 +2782,122 @@ Docker Daemon
    """
     print(docker_theory_cmd) 
 
-def print_php_cmd():
-    print("php usage command:")
-    php_cmd = """
-php -s
-   """
-    print(php_cmd)  
+def print_dockerdir_cmd():
+    dockerdir_cmd = """
+/var/lib/docker/ 是 Docker 的核心数据根目录，Docker 所有镜像、容器、卷、网络、日志、缓存全都存在这里
+############################################################## overview ########################################################################
+[root@ct7_node02 ~]# ll /var/lib/docker/             | 作用
+total 4                                              | -------------------------------------------------------------------------------------------------
+drwx--x--x  4 root root  120 May 11 09:33 buildkit   | BuildKit 构建缓存目录，Docker 在构建镜像时使用 BuildKit，会把中间层缓存、build 状态等存这里。
+drwx--x---  3 root root   78 May 11 16:53 containers | 存储每个容器的运行状态、日志和元数据。里面每个子目录就是一个容器的 ID。
+drwx------  3 root root   22 May 11 09:33 image      | Docker 镜像存储目录，里面有不同存储驱动的具体实现（比如 overlay2 的元数据），以及 image 的元数据（manifest、layer info）。
+drwxr-x---  3 root root   19 May 11 09:33 network    | Docker 网络相关的配置文件，比如 bridge、overlay 网络的配置信息、子网、IP 分配表等。
+drwx--x--- 11 root root 4096 May 22 09:07 overlay2   | Docker 使用 OverlayFS 存储镜像层（image layer）和容器层（container layer）的地方
+drwx------  4 root root   32 May 11 09:33 plugins    | Docker 插件目录，比如存储 volume plugin、network plugin 等插件信息。
+drwx------  2 root root    6 May 22 09:07 runtimes   | Docker 容器运行时目录，存放 runc 或其他容器运行时的相关文件。
+drwx------  2 root root    6 May 11 09:33 swarm      | 如果 Docker 作为 swarm manager 使用，这里存储 swarm 集群相关的状态信息，包括服务、节点、任务信息。
+drwx------  2 root root    6 May 22 09:07 tmp        | 临时目录，用于存放 Docker 临时文件。
+drwx------  2 root root    6 May 11 09:33 trust      | Docker Content Trust 的相关信息，签名和信任策略存储目录。
+drwx-----x  2 root root   50 May 22 09:07 volumes    | Docker volume 的数据存储目录，每个 volume 都会对应一个子目录，里面存储具体 volume 的数据。
 
-def print_git_cmd():
-    print("git usage command:")
-    git_cmd = """
-git -s
+# /var/lib/docker/ 下的这些目录都不是通过 RPM 包直接安装的文件，它们是 Docker 在运行过程中动态创建的，属于 Docker 的“运行数据目录”，而不是某个 rpm 包自带的静态文件。
+
+############################################################## buildkit ########################################################################
+############################################################# containers #######################################################################
+是 Docker 在宿主机上为某个容器保存的“运行时元数据目录”。
+[root@ct7_node02 ~]# tree /var/lib/docker/containers/
+/var/lib/docker/containers/
+└── 1cf27835ba7562b7d6a8e5dca48c3bcba31d89d354a6ec8c2f82033fc2996a61     # 每个子目录就是一个容器的 ID ，当前系统只有一个容器，所以就这一个目录
+    ├── 1cf27835ba7562b7d6a8e5dca48c3bcba31d89d354a6ec8c2f82033fc2996a61-json.log     # 容器内的服务产生的日志
+    ├── checkpoints         # 用于容器冻结/迁移，会保存进程状态、内存、namespace等等
+    ├── config.v2.json      # 容器自身配置（核心元数据），记录容器 ID、镜像、环境变量、网络 namespace、挂载点等等
+    ├── hostconfig.json     # 描述容器如何运行在宿主机上，包含cgroup 配置、namespace 配置、端口映射、restart policy等等
+    ├── hostname            # 容器 hostname
+    ├── hosts               # 容器自己的 /etc/hosts，Docker 自动生成
+    ├── mounts              # 目录，运行时 mount 数据（volume、tmpfs、bind mount...）
+    ├── resolv.conf         # 容器 DNS 配置
+    └── resolv.conf.hash    # resolv.conf 的 hash 校验值
+
+3 directories, 7 files
+[root@ct7_node02 ~]# docker ps -a
+CONTAINER ID   IMAGE     COMMAND              CREATED       STATUS                  PORTS     NAMES
+1cf27835ba75   httpd     "httpd-foreground"   2 weeks ago   Exited (0) 5 days ago             my-httpd
+[root@ct7_node02 ~]#
+
+############################################################### image ##########################################################################
+Docker 镜像存储目录，里面有不同存储驱动的具体实现（比如 overlay2 的元数据），以及 image 的元数据（manifest、layer info）。
+[root@ct7_node02 ~]# tree /var/lib/docker/image
+/var/lib/docker/image		# Docker 统一存放所有存储驱动镜像元数据的地方
+└── overlay2				# 当前使用的是 overlay2 存储驱动（Linux 标准、默认、最高效）
+    ├── distribution		# 存放远程仓库相关元数据，镜像从哪个 registry 拉取、认证信息、manifest 信息
+    ├── imagedb             # 镜像的元数据（image metadata），即每个镜像的“身份证”，包括它的 sha256 校验值、创建时间、标签、层结构等。
+    │   ├── content
+    │   │   └── sha256
+    │   │       └── 627c383437d53d53f027b45edd5bf611313e47d619852f995fa81d966ff543cc   # 镜像的内容元信息，内容通常是 JSON 文件，记录了这个镜像的具体信息。
+    │   └── metadata        # 镜像元数据（创建时间、作者、架构等）
+    │       └── sha256
+    ├── layerdb         # 镜像层数据库，管理每个镜像层（layer）的实际存储信息。Docker 镜像其实是由一层一层叠加起来的，每一层都有自己的 SHA256 哈希值。
+    │   ├── mounts        # 记录挂载信息，每次容器启动时，Docker 会用这些信息挂载 overlayfs 来组合镜像层。
+    │   │   └── 1cf27835ba7562b7d6a8e5dca48c3bcba31d89d354a6ec8c2f82033fc2996a61
+    │   │       ├── init-id     # 用于管理挂载关系和层级父子关系。
+    │   │       ├── mount-id    # 用于管理挂载关系和层级父子关系。
+    │   │       └── parent      # 用于管理挂载关系和层级父子关系。
+    │   ├── sha256        # 所有镜像层的元数据
+    │   │   ├── 77a2b55fbe8b9984ce0af3ffc0b0ab62507668e63306ec161a585e587a3eb164
+    │   │   │   ├── cache-id      # 层的缓存 ID，用于加速镜像复用。
+    │   │   │   ├── diff          # 这一层的实际文件差异（差异文件的路径），这个目录通常存储 tarball 解压后的文件。
+    │   │   │   ├── size          # 这一层的大小。
+    │   │   │   └── tar-split.json.gz    # 记录了 tar 文件的拆分索引信息，Docker 用它来快速重建镜像层。
+    │   │   ├── 9a07d3e82a97e3f52170400ec091d741b11cacc33187b216fd46700dbbbc4ead
+    │   │   │   ├── cache-id
+    │   │   │   ├── diff
+    │   │   │   ├── parent        # 父层 ID，用于构建叠加关系。
+    │   │   │   ├── size
+    │   │   │   └── tar-split.json.gz
+    ─   ─   ─
+    │   │   └── fad25bac695630eaa3fb18b590efbd3bf07f432c8a6bb66dd1dd2bda182b03e2
+    │   │       ├── cache-id
+    │   │       ├── diff
+    │   │       ├── parent
+    │   │       ├── size
+    │   │       └── tar-split.json.gz
+    │   └── tmp             # 临时目录，用于存储在镜像创建或拉取过程中的中间数据。
+    └── repositories.json        # 记录镜像名 <-> 镜像 ID 的映射关系，比如：ubuntu:22.04 对应哪个 sha256 镜像 ID，docker images 命令就是读这个文件
+
+############################################################# network ##########################################################################
+############################################################# overlay2 #########################################################################
+Docker 使用 OverlayFS 存储镜像层（image layer）和容器层（container layer）的地方
+[root@ct7_node02 ~]# ll /var/lib/docker/overlay2/
+total 0
+drwx--x--- 4 root root     72 May 11 16:49 28456a2e0a852003abd4b16fc449142d14f789de793fac23d534b5c5786b27d4       # 代表一个镜像层（readonly layer）或者一个容器层（rw layer），本质上就是 OverlayFS 的一个 layer。
+drwx--x--- 4 root root     72 May 11 16:49 5d1944ed32f8650227bbb31813a8f0b40a2599647b3917d77d9168c4d80b5103       #
+drwx--x--- 4 root root     72 May 11 16:49 620138cef18ae43eb981431ebbd7a8c92fe09914a50810ef716bf3b0dfc5fb3b       #
+drwx--x--- 4 root root     55 May 22 11:01 86e12c2956c478543f56676b01aafa3aaab4b5e09d2362485f44bc2df5e28834       #
+drwx--x--- 4 root root     72 May 11 16:53 86e12c2956c478543f56676b01aafa3aaab4b5e09d2362485f44bc2df5e28834-init  # 容器初始化层
+drwx--x--- 3 root root     47 May 11 16:49 877f1a33fdba17813a845c83299cdf20f0ee0c4f0c6c9fad43b5640c74bdc56e       #
+drwx--x--- 4 root root     72 May 11 16:49 89756c93d920c9f925b1fbe5d5e768239d79ed1601bc37bc0341705ccf4bb8b5       #
+drwx--x--- 4 root root     72 May 11 16:53 ae628d06fd0881c519cbde170a34716f42cf68f80d2dfe21a9d87a2e86b5d01e       #
+brw------- 1 root root 253, 0 May 22 09:07 backingFsBlockDev                                                      #
+drwx------ 2 root root    278 May 11 16:53 l    # overlay2 做的短链接优化
+[root@ct7_node02 ~]# 
+
+目录里的核心文件作用
+1. diff/: 这一层对文件系统做出的修改。
+2. lower: cat lower 可能看到l/AAA:l/BBB:l/CCC,意思是当前层的下面还有AAA layer,BBB layer,CCC layer OverlayFS 会把这些层叠加起来。
+3. merged/: 容器最终看到的根文件系统(容器里的 /),只有运行中的容器才有,停止的容器 merged 也会消失
+4. work/: 内核专用,用于copy-up、rename、whiteout、元数据同步等，用户一般不碰
+5. committed: 这一层已经提交完成,通常镜像层、已稳定的 layer
+6. link: 解决 Linux mount 参数长度限制
+
+overlay2 本质： 很多只读镜像层 + 一个容器可写层 + OverlayFS 联合挂载 = 容器根文件系统
+
+############################################################# plugins ##########################################################################
+############################################################# runtimes #########################################################################
+############################################################### swarm ##########################################################################
+################################################################ tmp ###########################################################################
+############################################################### trust ##########################################################################
+############################################################## volumes #########################################################################
+
    """
-    print(git_cmd)  
+    print(dockerdir_cmd) 
 
