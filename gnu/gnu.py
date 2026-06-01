@@ -104,9 +104,10 @@ gcc -v
 
 gcc source.c -o output	## 基本用法
 gcc -c hello.c   		# 生成 hello.o
-gcc main.c util.c -o app	#链接多个源文件
-gcc -g test.c -o test		#开启调试信息（用于 gdb 调试）
-gcc -O2 main.c -o main		#开启优化（适合发布版本）
+gcc main.c util.c -o app	# 链接多个源文件
+gcc -g test.c -o test		# 开启调试信息（用于 gdb 调试）
+gcc -O2 main.c -o main		# 开启优化（适合发布版本）
+gcc -static -o hello hello.c    # 静态编译，不依赖任何动态库(ldd hello 会输出 not a dynamic executable)
 
 动态库（.so）的生成步骤：
 	1. 编写源文件，例如 add.c
