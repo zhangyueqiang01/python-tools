@@ -2790,9 +2790,9 @@ def print_dockerdir_cmd():
 total 4                                              | -------------------------------------------------------------------------------------------------
 drwx--x--x  4 root root  120 May 11 09:33 buildkit   | BuildKit 构建缓存目录，Docker 在构建镜像时使用 BuildKit，会把中间层缓存、build 状态等存这里。
 drwx--x---  3 root root   78 May 11 16:53 containers | 存储每个容器的运行状态、日志和元数据。里面每个子目录就是一个容器的 ID。
-drwx------  3 root root   22 May 11 09:33 image      | Docker 镜像存储目录，里面有不同存储驱动的具体实现（比如 overlay2 的元数据），以及 image 的元数据（manifest、layer info）。
+drwx------  3 root root   22 May 11 09:33 image      | 存镜像元数据、层级关系、配置、索引，是管理目录，几乎不占大磁盘。
 drwxr-x---  3 root root   19 May 11 09:33 network    | Docker 网络相关的配置文件，比如 bridge、overlay 网络的配置信息、子网、IP 分配表等。
-drwx--x--- 11 root root 4096 May 22 09:07 overlay2   | Docker 使用 OverlayFS 存储镜像层（image layer）和容器层（container layer）的地方
+drwx--x--- 11 root root 4096 May 22 09:07 overlay2   | 存镜像层真实文件、容器读写层，是数据目录，磁盘占用最大。
 drwx------  4 root root   32 May 11 09:33 plugins    | Docker 插件目录，比如存储 volume plugin、network plugin 等插件信息。
 drwx------  2 root root    6 May 22 09:07 runtimes   | Docker 容器运行时目录，存放 runc 或其他容器运行时的相关文件。
 drwx------  2 root root    6 May 11 09:33 swarm      | 如果 Docker 作为 swarm manager 使用，这里存储 swarm 集群相关的状态信息，包括服务、节点、任务信息。
