@@ -995,8 +995,9 @@ dracut -f /boot/initramfs-2.6.32-573.8.1.el6.x86_64.img
     print(dracut_cmd) 
 
 def print_mount_cmd():
-    print("mount usage command:")
     mount_cmd = """
+############################################################## overview ########################################################################
+
 # 基本语法：
 mount [-t 文件系统类型] [-o 选项] 设备文件名 挂载点
 
@@ -1006,21 +1007,51 @@ mount [-t 文件系统类型] [-o 选项] 设备文件名 挂载点
 # 重新已读写的方式进行挂载
 mount -o remount,rw /sysroot
 
-
 # 绑定挂载一个目录到另一个目录，即两个目录将共享相同的内容
 mount --bind /dev /sysroot/dev
-
 
 # 挂载NFS服务器192.168.1.100上的/exported/share目录到本地的/mnt/nfs_share目录：
 sudo mount -t nfs <服务器IP或主机名>:<远程目录> <本地挂载点>
 sudo mount -t nfs 192.168.1.100:/exported/share /mnt/nfs_share
 
-# 添加到/etc/fstab文件中自动挂载
-192.168.1.100:/exported/share /mnt/nfs_share nfs defaults 0 0
-
 # 使用mount命令将镜像文件挂载为loop设备：
 sudo mount -o loop /path/to/imagefile.iso /mnt
 
+############################################################## instance ########################################################################
+mount -t ext4 /dev/sdb1 /mnt/data
+mount -t ext4 -o ro /dev/sdb1 /mnt/data
+mount -t xfs /dev/sdc1 /mnt/xfsdata
+mount -t ntfs-3g /dev/sda2 /mnt/winntfs
+mount -t ntfs -o ro /dev/sda2 /mnt/winro
+mount -t vfat -o uid=1000,gid=1000 /dev/sdf1 /mnt/usb
+mount -t exfat /dev/sdg1 /mnt/exfat
+mount -o loop /root/CentOS.iso /mnt/cdrom
+mount -t iso9660 -o loop /xxx.iso /mnt/cd
+mount -t nfs 192.168.10.10:/export/share /mnt/nfs
+mount -t nfs4 192.168.10.10:/ /mnt/nfs4
+mount -t cifs //192.168.20.50/share /mnt/smb -o username=admin,password=123456
+mount -t cifs //192.168.20.50/share /mnt/smb -o guest
+mount -t sshfs root@192.168.30.10:/data /mnt/sshfs
+mount -t tmpfs -o size=512M /mnt/tmpfs
+mount -t devtmpfs devtmpfs /dev
+mount -t squashfs -o loop sys.squashfs /mnt/squash
+mount -t proc none /proc
+mount -t sysfs none /sys
+mount -t devpts none /dev/pts -o gid=5,mode=620,ptmxmode=0666
+mount -t securityfs none /sys/kernel/security
+mount -t debugfs none /sys/kernel/debug
+mount -t configfs none /sys/kernel/config
+mount -t hugetlbfs none /dev/hugepages
+mount -t mqueue none /dev/mqueue
+mount -t ramfs none /mnt/ramfs
+mount -t overlay overlay /mnt/overlay \
+mount --bind /host/data /container/mntdata
+mount --bind -o ro /host/readonly /container/rodir
+mount -t glusterfs server1:/volname /mnt/gluster
+mount -t ceph 192.168.1.40:6789:/ /mnt/ceph -o name=admin,secret=xxx
+mount -t davfs https://xxx.com/dav /mnt/dav
+
+######################################################### /etc/fstab 文件格式 ####################################################################
 
 # /etc/fstab 文件格式
 <file system> <mount point> <type> <options> <dump> <pass>
