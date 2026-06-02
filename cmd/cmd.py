@@ -2869,3 +2869,59 @@ echo 1 2 3 4 | xargs -n 2 echo
    """
     print(xargs_cmd) 
 
+def print_chroot_cmd():
+    chroot_cmd = """
+
+进入 chroot 环境前，必须挂载内核文件系统，缺一不可：
+
+# $NEWROOT 为你要当作新根的目录，示例：/mnt/root
+NEWROOT=/tmp/rootfs
+
+mount -t proc none $NEWROOT/proc
+mount -t sysfs none $NEWROOT/sys
+mount -o bind /dev $NEWROOT/dev
+mount -o bind /dev/pts $NEWROOT/dev/pts
+
+############################################################## overview ########################################################################
+
+chroot [新根目录] [执行的shell/命令]
+
+mkdir -p /tmp/rootfs/{bin,lib,lib64,usr,dev,proc,sys}
+# 拷贝 bash、ls 等二进制 + 依赖库（ldd 查依赖）
+
+chroot /tmp/rootfs/ /bin/bash  # /bin/bash 可省略
+chroot $NEWROOT /bin/bash
+
+############################################################## instance ########################################################################
+
+系统急救（最常用，挂载损坏系统分区）
+场景：Linux 系统进不去，用 PE / 安装 U 盘启动，挂载原系统分区到 /mnt
+
+# 1.挂载原系统根分区(假设原系统在/dev/sda2)
+mount /dev/sda2 /mnt
+# 挂载boot（可选，原系统单独分区时）
+mount /dev/sda1 /mnt/boot
+
+# 2.挂载必要虚拟文件系统
+mount -t proc none /mnt/proc
+mount -t sysfs none /mnt/sys
+mount -o bind /dev /mnt/dev
+mount -o bind /dev/pts /mnt/dev/pts
+
+# 3.切换到原系统环境
+chroot /mnt /bin/bash
+
+############################################################## caution #########################################################################
+常见报错
+
+chroot: cannot run command '/bin/bash': No such file or directory
+原因：新根缺少 /bin/bash，或缺少依赖库
+
+cannot mount /proc: Permission denied
+原因：未 root，或目录不存在
+
+bash: error while loading shared libraries
+原因：缺失对应.so 动态链接库，用 ldd 补齐
+   """
+    print(chroot_cmd) 
+
