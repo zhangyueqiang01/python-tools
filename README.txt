@@ -159,6 +159,7 @@ docker_repo: 国内可用的公网docker repo
 docker_theory: docker 理论知识概述
 cgroup: cgroup 简介
 cgroup_ns: cgroup name space 简介
+docker_img_create: 快速构建docker镜像的方法
 
 aa --show c --item current : 通过 current 宏查看进程属性的示例代码
 aa --show c --item cpu_consume: cpu 负载打满源代码
@@ -263,3 +264,10 @@ systemd: update 进程启动流程
 docker 如何把静态的镜像文件组合成为一个完成的根文件系统的
 nmap:
 readjson: 友好的转换json格式的数据，人类可读
+runc: 容器运行时讲解
+tar: tar -C rootfs -czf layer.tar .
+ldd:
+gcc:
+rootfs: 快速制作 mini linux的方法
+groupinstall: 常见的各类group示例
+
