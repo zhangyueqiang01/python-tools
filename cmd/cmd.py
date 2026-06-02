@@ -2758,3 +2758,38 @@ pstree username
    """
     print(pstree_cmd) 
 
+def print_groupinstall_cmd():
+    groupinstall_cmd = """
+
+Available Environment Groups 环境组，一整套系统环境介绍
+
+############################################################## instance ########################################################################
+
+[root@ct7_node04 docker]# yum group list
+
+分组	                   用途
+Minimal Install	       最小化安装，仅基础命令、内核，无图形、多余工具，服务器最简部署
+Compute Node	       计算节点，侧重算力、虚拟化计算依赖，多用于云计算集群计算机
+Infrastructure Server  基础设施服务器，DNS、NTP、DHCP、路由等基础服务必备组件
+File and Print Server  文件 + 打印服务，Samba、NFS、CUPS 打印服务依赖包集合
+Basic Web Server       基础 WEB 服务器，httpd、nginx 环境、php 运行基础依赖
+Virtualization Host    虚拟化宿主机，内置 KVM/QEMU、libvirt 全套虚拟化组件
+Server with GUI        带桌面的服务器，服务器 + 精简 GNOME 图形桌面
+GNOME Desktop          完整 GNOME 桌面环境，日常可视化操作系统
+KDE Plasma Workspaces  KDE 桌面，另一款 Linux 桌面环境
+Development and Creative Workstation	开发工作站，全套编译 + 桌面 + 创意绘图开发环境
+
+
+# 安装编译工具
+yum groupinstall "Development Tools" -y
+# 安装图形桌面
+yum groupinstall "GNOME Desktop" -y
+
+# 查看已安装的组
+yum grouplist installed
+
+# 查看某个组里包含哪些包
+yum groupinfo "Development Tools"
+   """
+    print(groupinstall_cmd) 
+

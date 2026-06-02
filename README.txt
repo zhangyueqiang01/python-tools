@@ -161,6 +161,7 @@ cgroup: cgroup 简介
 cgroup_ns: cgroup name space 简介
 docker_img_create: 快速构建docker镜像的方法
 rootfs: 快速制作 mini linux的方法
+groupinstall: 常见的各类rpm group示例
 
 aa --show c --item current : 通过 current 宏查看进程属性的示例代码
 aa --show c --item cpu_consume: cpu 负载打满源代码
@@ -269,5 +270,4 @@ runc: 容器运行时讲解
 tar: tar -C rootfs -czf layer.tar .
 ldd:
 gcc:
-groupinstall: 常见的各类group示例
 
