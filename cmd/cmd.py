@@ -2825,6 +2825,12 @@ ldd输出中的库文件路径提取
 
 ldd /usr/bin/cat | awk '/vdso/||/not found/{next}/=> \//{print $3}/^[[:space:]]*\//&&!/=>/{print $1}'
 ldd /usr/bin/ls | awk '/vdso/||/not found/{next}/=> \//{print $3}/^[[:space:]]*\//&&!/=>/{print $1}'
+
+若静态编译，不依赖任何动态库，ldd输出内容如下
+[root@ct7_node04 ~]# gcc -static -o hello hello.c
+[root@ct7_node04 ~]# ldd hello
+	not a dynamic executable
+[root@ct7_node04 ~]#
    """
     print(ldd_cmd) 
 
