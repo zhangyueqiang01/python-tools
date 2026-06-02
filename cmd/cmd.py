@@ -2822,9 +2822,16 @@ GNU 标准 C 运行库 glibc，Linux 所有基础命令（cat/ls/cp 等）都依
 ############################################################## others ##########################################################################
 
 ldd输出中的库文件路径提取
-
 ldd /usr/bin/cat | awk '/vdso/||/not found/{next}/=> \//{print $3}/^[[:space:]]*\//&&!/=>/{print $1}'
 ldd /usr/bin/ls | awk '/vdso/||/not found/{next}/=> \//{print $3}/^[[:space:]]*\//&&!/=>/{print $1}'
+
+通过别名进行引用
+alias getso='awk '\\''/vdso/||/not found/{next}/=> \//{print $3}/^[[:space:]]*\//&&!/=>/{print $1}'\\'''
+ldd /usr/bin/ls | getso
+
+一键拷贝所有依赖库到目录
+ldd /usr/bin/ls | getso |xargs cp -t /tmp/rootfs/
+
 
 若静态编译，不依赖任何动态库，ldd输出内容如下
 [root@ct7_node04 ~]# gcc -static -o hello hello.c
