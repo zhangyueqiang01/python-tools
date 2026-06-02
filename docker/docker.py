@@ -82,3 +82,51 @@ docker load -i ./httpd-image.tar
    """
     print(docker_img_create_cmd) 
 
+def print_rootfs_cmd():
+    rootfs_cmd = """
+
+以下是快速创建一个根文件系统的方法
+
+########################################################## 构建只有bash的rootfs ##################################################################
+
+1、查看bash指令依赖的动态库文件
+[root@VM-24-9-centos ~]# ldd /usr/bin/bash
+	linux-vdso.so.1 (0x00007ffe74b91000)
+	libtinfo.so.6 => /lib64/libtinfo.so.6 (0x00007fafa80f6000)
+	libdl.so.2 => /lib64/libdl.so.2 (0x00007fafa7ef2000)
+	libc.so.6 => /lib64/libc.so.6 (0x00007fafa7b1c000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007fafa8641000)
+
+2、 拷贝bash主程序，拷贝所有依赖库到rootfs中
+mkdir -p rootfs/{bin,lib64}
+cp /usr/bin/bash rootfs/bin/
+cp /lib64/libtinfo.so.5 rootfs/lib64/
+cp /lib64/libdl.so.2 rootfs/lib64/
+cp /lib64/libc.so.6 rootfs/lib64/
+cp /lib64/ld-linux-x86-64.so.2 rootfs/lib64/
+
+[root@ct7_node04 tmp]# chroot rootfs/
+
+############################################################ 构建 mini os #######################################################################
+
+rm -rf rootfs
+mkdir rootfs
+yum初始化安装最小系统到rootfs
+yum install -y --installroot=$(pwd)/rootfs centos-release bash coreutils iproute iputils --nogpgcheck
+    --installroot=xxx：把软件全部安装到自定义目录，不污染宿主机
+    centos-release：系统发行版配置
+    coreutils：自带 ls/cat/pwd 等基础命令
+    iproute：ip 命令
+    iputils：ping 命令
+
+[root@ct7_node04 tmp]# du -sh rootfs/
+202M	rootfs/
+
+[root@ct7_node04 tmp]# chroot rootfs/
+bash-4.2# ls
+bin  boot  dev	etc  home  lib	lib64  media  mnt  opt	proc  root  run  sbin  srv  sys  tmp  usr  var
+bash-4.2# ls /boot/
+bash-4.2# ls /proc/
+   """
+    print(rootfs_cmd) 
+
