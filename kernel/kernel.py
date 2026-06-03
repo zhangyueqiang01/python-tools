@@ -1518,3 +1518,85 @@ echo $$ > /sys/fs/cgroup/testgroup/cgroup.procs
    """
     print(cgroup_ns_cmd) 
 
+def print_procfs_cmd():
+    procfs_cmd = """
+
+############################################################## overview ########################################################################
+
+procfs（Process File System，进程文件系统）是 Linux 内核提供的一种伪文件系统（pseudo filesystem），通常挂载在 /proc 目录下。在 Linux 早期，用户空间程序想获取内核状态非常困难。于是 Linux 引入了 procfs
+特点： /proc 中的大部分文件和目录并不真正存储在磁盘上，而是在访问时由内核动态生成。
+procfs = 用户空间观察和控制内核的窗口
+
+procfs 的目录结构
+    第一类：系统信息（/proc/{cpuinfo，meminfo，uptime，loadavg}）
+    第二类：进程信息（/proc/{1，100，2000}）
+
+常见系统信息文件
+cat /proc/cpuinfo
+cat /proc/meminfo
+cat /proc/uptime       # 系统运行时间
+cat /proc/loadavg      # 平均负载
+cat /proc/version      # 内核版本
+
+重要进程文件
+cat /proc/1000/cmdline   # 查看启动参数
+cat /proc/1000/status    # 查看进程状态
+cat /proc/1000/stat      # 最底层的进程统计信息
+ls -l /proc/1000/fd      # 查看打开的文件描述符
+ls -l /proc/1000/exe     # 查看执行程序
+ls -l /proc/1000/cwd     # 查看当前工作目录
+cat /proc/self/status    # self代表当前访问进程自己的PID
+
+############################################################## caution #########################################################################
+
+修改 /proc 文件本质：/proc 不是磁盘文件，所有写入操作直接改写内核内存里的运行参数、内核全局变量、运行时状态，不落地磁盘。
+   1. /proc/sys/*（可写，内核可调参数）
+   2. 进程目录 /proc/$PID/*（大多只读，少数可写）
+     /proc/$PID/fd、stat、maps、status：只读
+     /proc/$PID/oom_score_adj、oom_adj：可写
+     /proc/$PID/cgroup、limits 相关：修改进程资源限制
+   3. 硬件 / 驱动类节点（如 /proc/cpuinfo、/proc/meminfo）（只读，无法写入修改）
+
+procfs 是内核虚拟文件系统，没有 inode 存磁盘；
+/proc：偏向系统全局参数、进程信息、传统 sysctl；
+/sys：面向驱动、设备模型，修改也是改驱动内核变量，逻辑一致。
+
+挂载方式： mount -t proc proc /proc
+
+################################################################ how ###########################################################################
+procfs 的实现原理：
+  cat /proc/meminfo
+        用户态
+          │
+          ▼
+         VFS
+          │
+          ▼
+        procfs
+          │
+          ▼
+     meminfo_show()
+          │
+          ▼
+   读取内核内存管理数据
+          │
+          ▼
+      动态生成文本
+          │
+          ▼
+       返回给cat
+
+############################################################## others ##########################################################################
+
+如果你正在深入学习 Linux 内核（尤其是进程、调度、内存、容器），建议重点研究：
+/proc/PID/{stat，status，maps，smaps，cgroup，ns}
+/proc/{meminfo，slabinfo，interrupts，softirqs，modules，sys/*}
+
+如果研究容器，建议重点研究：
+cat /proc/self/cgroup
+cat /proc/self/mountinfo
+ls -l /proc/self/ns/
+cat /proc/self/status
+   """
+    print(procfs_cmd) 
+
