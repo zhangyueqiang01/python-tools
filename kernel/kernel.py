@@ -1600,3 +1600,69 @@ cat /proc/self/status
    """
     print(procfs_cmd) 
 
+def print_sysfs_cmd():
+    sysfs_cmd = """
+sysfs 是 Linux 内核提供的一种虚拟文件系统（Virtual Filesystem）挂载在 /sys，基于 ramfs，不占用磁盘空间，内核启动后自动生成，用于将内核中的对象、设备、驱动和子系统信息以文件和目录的形式导出到用户空间。
+sysfs = 内核硬件信息的命令行查询 / 配置接口目录
+挂载： mount -t sysfs none /sys
+
+############################################################## overview ########################################################################
+
+[root@ct7_node04 ~]# tree -L 1 /sys/
+/sys/
+├── block      # 所有块设备（sda/sdb/vda）软链接，全部指向/sys/devices真实设备，包含分区信息
+├── bus        # 各类总线：pci、usb、i2c、spi、platform，包含 drivers/(驱动)、devices/(绑定设备)
+├── class      # 按设备功能分类：net (网卡)、block (块设备)、input (输入)、rtc (时钟)，大多是软链接指向 /sys/devices
+├── dev        # 主次设备号映射：字符设备 / 块设备 <-> 设备路径
+├── devices    # 全系统真实物理设备拓扑树（PCI、USB、CPU、磁盘、网卡都在这里），sysfs 本源
+├── firmware   # BIOS/UEFI、ACPI、设备树 DT 信息
+├── fs         # 存放各类文件系统专属配置、运行参数，VFS 层导出到用户空间
+├── hypervisor # 存放底层虚拟化平台信息：KVM、Xen、Hyper-V 相关特征、版本、虚拟机配置
+├── kernel     # 内核非硬件类全局配置，替代部分 /proc/sys 功能，内核 kobject 导出
+├── module     # 所有已加载内核模块信息：参数、引用计数、sections
+└── power      # 电源管理：休眠、待机、cpu 省电配置
+
+sysfs 与 procfs 的区别
+    procfs 主要获取内核中的进程信息和系统信息
+    sysfs 主要获取内核中的对象、设备、驱动和子系统信息
+
+############################################################## instance ########################################################################
+
+cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq   # 查看 CPU 最大主频
+cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_min_freq   # 查看 CPU 最小主频 
+cat /sys/devices/system/cpu/cpu0/cache/index0/size          # 查看 CPU 各级缓存
+echo 0 > /sys/devices/system/cpu/cpu1/online   # 下线cpu1
+echo 1 > /sys/devices/system/cpu/cpu1/online   # 上线cpu1
+cat /sys/devices/system/node/node0/meminfo     # NUMA 内存节点查看
+cat /sys/kernel/mm/transparent_hugepage/enabled  # 查看透明大页THP状态 [always/madvise/never]
+echo never > /sys/kernel/mm/transparent_hugepage/enabled   # 临时关闭透明大页（数据库优化）
+echo never > /sys/kernel/mm/transparent_hugepage/defrag    # 临时关闭透明大页（数据库优化）
+cat /sys/block/sda/queue/scheduler    # 查看磁盘IO调度算法
+cat /sys/block/sda/queue/nr_requests  # 查看磁盘队列深度
+cat /sys/block/sda/device/model       # 查看硬盘型号
+cat /sys/block/sda/queue/physical_block_size  # 查看扇区大小
+cat /sys/class/net/eth0/address   # 查看网卡MAC
+cat /sys/class/net/eth0/speed     # 查看网卡速率
+cat /sys/class/net/eth0/duplex    # 查看双工模式
+cat /sys/class/net/eth0/statistics/rx_errors  # 查看RX/TX错误包
+cat /sys/class/net/eth0/statistics/tx_errors  # 查看RX/TX错误包
+echo 9000 > /sys/class/net/eth0/mtu   # 修改网卡MTU
+cat /sys/fs/cgroup/cpu/docker/xxx/cpu.cfs_quota_us         # 查看容器CPU配额
+cat /sys/fs/cgroup/memory/docker/xxx/memory.limit_in_bytes # 查看容器内存限制
+cat /sys/power/state  # 查看支持的休眠模式
+cat /sys/firmware/dmi/entries/1-0/raw  # 查看BIOS信息
+
+
+############################################################## others #########################################################################@
+
+umount /sys 后果非常严重（严禁生产随便执行）
+    lspci、lsusb、ip、ethtool、fdisk、mount、df 异常、查不到硬件
+    sar、iostat、top、nmon、prometheus 采集不到硬件指标
+    无法查看网卡、磁盘、CPU 信息
+	...
+	
+umount -l /sys    # 大部分环境直接umount会报busy，加-l懒卸载强行脱钩
+/sys = 用户空间和内核硬件的桥梁，卸载≈切断系统识别硬件的通道。
+   """
+    print(sysfs_cmd) 
+
