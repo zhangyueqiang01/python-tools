@@ -1669,3 +1669,51 @@ umount -l /sys    # 大部分环境直接umount会报busy，加-l懒卸载强行
    """
     print(sysfs_cmd) 
 
+def print_tmpfs_cmd():
+    tmpfs_cmd = """
+mount -t tmpfs tmpfs /mnt
+############################################################## overview ########################################################################
+
+tmpfs 是 Linux 内核提供的一种基于内存的虚拟文件系统（RAM Filesystem）。
+特点：
+    数据主要存储在内存（RAM）中
+    内存不足时，可以交换到 Swap
+    重启后数据消失
+    支持动态扩容缩容
+    支持标准文件系统操作（创建文件、目录、权限管理等）
+它的设计目标： 提供一个速度极快的临时存储空间。
+
+
+tmpfs 与 ramfs 的区别
+| 特性        | ramfs | tmpfs
+| ----------- | ----- | -----
+| 使用内存    | 是    | 是
+| 支持Swap    | 否    | 是
+| 可限制大小  | 否    | 是
+| 内存耗尽风险| 高    | 低
+| Linux推荐   | 否    | 是
+
+############################################################## instance ########################################################################
+
+[root@ct7_node04 proc]# df -Tha
+Filesystem              Type         Size  Used Avail Use% Mounted on
+tmpfs                   tmpfs        496M     0  496M   0% /dev/shm        # 共享内存（POSIX Shared Memory）区域（PostgreSQL,MySQL,Docker常使用本）
+tmpfs                   tmpfs        496M  6.8M  489M   2% /run            # 存放系统开机后正在运行进程的临时运行数据
+tmpfs                   tmpfs        496M     0  496M   0% /sys/fs/cgroup  # Linux Cgroup（Control Groups，资源控制组） 的标准挂载目录（cgroup 文件系统会挂载到其下）
+tmpfs                   tmpfs        100M     0  100M   0% /run/user/0     # 这是 root 用户的运行时目录，如果有普通用户，会看到类似/run/user/1000
+/dev/mapper/centos-root xfs           96G  5.3G   90G   6% /
+/dev/vda1               xfs         1014M  152M  863M  15% /boot
+
+############################################################## caution #########################################################################
+
+注意： 虽然都是 tmpfs 但是向指定的目录下写数据的程序不一样，所以内容不一样（常见）
+    /run: systemd、各类守护进程（sshd、dbus、docker）在这里生成：pid 文件、unix socket、运行时状态文件，因此一堆进程相关文件。
+    /run/user/0: systemd-logind 登录 root 用户自动挂载，存放 root 用户桌面 / 进程私有 socket、临时环境文件。
+    /dev/shm: 程序调用 shm_open() POSIX 共享内存，数据库、容器、音视频程序在这里创建共享内存文件。
+    /sys/fs/cgroup: systemd 只在这个 tmpfs 里创建空文件夹，再往子目录挂载 cgroup 伪文件系统，所有真正 cgroup 控制文件是 cgroup 文件系统生成，不是 tmpfs 写入。
+
+Q： 为什么还要创建这么多目录，而不是创建一个目录，再创建子目录给不同程序用？
+A： 同一个tmpfs，子目录无法单独限制容量，shm写满，run直接没空间，无法拆分限制
+   """
+    print(tmpfs_cmd) 
+
