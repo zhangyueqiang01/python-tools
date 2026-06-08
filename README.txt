@@ -168,6 +168,7 @@ chroot: chroot 使用示例
 procfs: proc 文件系统简介
 sysfs: sys 文件系统简介
 tmpfs: tmpfs 简介
+cgroupfs: cgroupfs 文件系统概述，cgroup使用示例
 
 aa --show c --item current : 通过 current 宏查看进程属性的示例代码
 aa --show c --item cpu_consume: cpu 负载打满源代码
@@ -278,5 +279,5 @@ gcc:
 devtmpfs:
 securityfs:
 ramfs:
-cgroupfs:
 tee: echo performance | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+systemd_cgroup:
