@@ -1825,3 +1825,101 @@ aa --show systemd_cgroup
    """
     print(cgroupfs_cmd) 
 
+def print_systemd_cgroup_cmd():
+    systemd_cgroup_cmd = """
+
+只要一个进程是由 systemd 作为 Service Unit 启动的，systemd 就会自动为它创建对应的 cgroup，并将所有相关进程纳入其中管理
+############################################################## overview ########################################################################
+
+如下所示，unit文件中并没有cgroup配置，但是查看服务可以看到cgroup信息
+[root@ct7_node04 ~]# systemctl status sshd
+● sshd.service - OpenSSH server daemon
+   Loaded: loaded (/usr/lib/systemd/system/sshd.service; enabled; vendor preset: enabled)
+   Active: active (running) since Tue 2026-06-09 09:34:18 CST; 4min 10s ago
+     Docs: man:sshd(8)
+           man:sshd_config(5)
+ Main PID: 1117 (sshd)
+    Tasks: 1
+   Memory: 4.6M
+   CGroup: /system.slice/sshd.service
+           └─1117 /usr/sbin/sshd -D
+
+[root@ct7_node04 ~]# cat /usr/lib/systemd/system/sshd.service
+[Unit]
+Description=OpenSSH server daemon
+Documentation=man:sshd(8) man:sshd_config(5)
+After=network.target sshd-keygen.service
+Wants=sshd-keygen.service
+
+[Service]              # 已经告诉 systemd sshd 是一个 Service Unit，对于 Service Unit，systemd 默认为其创建独立 cgroup
+Type=notify
+EnvironmentFile=/etc/sysconfig/sshd
+ExecStart=/usr/sbin/sshd -D $OPTIONS
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+Restart=on-failure
+RestartSec=42s
+
+[Install]
+WantedBy=multi-user.target
+[root@ct7_node04 ~]# 
+
+####################################################### systemd 和 cgroup 的关系 #################################################################
+
+systemd 和 cgroup 的关系
+
+
+执行 systemctl start sshd 并不是简单地
+    fork()
+    execve("/usr/sbin/sshd")
+而是
+    /system.slice/sshd.service  # 创建 cgroup
+            ↓
+    把 sshd 进程放进去
+            ↓
+    持续跟踪该 cgroup 中所有进程
+
+######################################################## system.slice 是什么 ####################################################################
+
+[zyq@zyq ~]$ ll /sys/fs/cgroup/systemd/*.slice -d
+drwxr-xr-x   3 root root 0 Jun  8 17:33 /sys/fs/cgroup/systemd/machine.slice
+drwxr-xr-x 111 root root 0 Jun  9 09:34 /sys/fs/cgroup/systemd/system.slice
+drwxr-xr-x   5 root root 0 Jun  2 10:01 /sys/fs/cgroup/systemd/user.slice
+[zyq@zyq ~]$ 
+
+systemd 把所有 Unit 放到一个树状 cgroup 结构中
+/                 （根cgroup）
+│
+├── system.slice          # 系统服务
+│    ├── sshd.service
+│    ├── crond.service
+│    ├── rsyslog.service
+│    └── docker.service
+│
+├── user.slice            # 用户登录会话
+│    ├── user-0.slice
+│    └── user-1000.slice
+│
+└── machine.slice         # 虚拟机、容器
+     ├── docker
+     ├── podman
+     └── libvirt
+	 
+############################################################## instance ########################################################################
+
+什么时候 .service 文件里才会写 CGroup 配置？
+只有需要手动限制资源（CPU、内存、IO）时，才会在 [Service] 段主动加参数，例如：
+
+[Service]
+
+CPUQuota=50%      # CPU限制（不是每一颗cpu的50%，是在所有cpu上运行的效果等于一颗cpu的50%，100%等价于一颗cpu，200%等价于2颗cpu）
+MemoryLimit=500M  # 内存限制
+TasksMax=100      # 进程数限制
+LimitNOFILE=65535 # 文件描述符限制
+LimitNPROC=200    # 最大进程数（RLIMIT_NPROC）
+
+
+注意： 进程可以有多线程，多线程可以同时在各cpu上运行，所以进程的cpu使用率可以超过100%
+   """
+    print(systemd_cgroup_cmd) 
+
