@@ -170,7 +170,7 @@ sysfs: sys 文件系统简介
 tmpfs: tmpfs 简介
 cgroupfs: cgroupfs 文件系统概述，cgroup使用示例
 systemd_cgroup: systemd unit files 文件于cgroup的关系
-qemu-img: qemu-img指令简介
+qemu_img: qemu-img指令简介
 
 aa --show c --item current : 通过 current 宏查看进程属性的示例代码
 aa --show c --item cpu_consume: cpu 负载打满源代码

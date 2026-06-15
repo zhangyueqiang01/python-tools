@@ -2902,8 +2902,8 @@ overlay2 本质： 很多只读镜像层 + 一个容器可写层 + OverlayFS 联
    """
     print(dockerdir_cmd) 
 
-def print_qemu-img_cmd():
-    qemu-img_cmd = """
+def print_qemu_img_cmd():
+    qemu_img_cmd = """
 
 ############################################################## create ##########################################################################
 
@@ -2967,5 +2967,5 @@ qemu-img check -r all disk.qcow2
 4、跨虚拟化平台迁移（KVM ↔ VMware）优先用 convert 转对应格式。
 5、 aa --show qcow2(qcow2简介)
    """
-    print(qemu-img_cmd) 
+    print(qemu_img_cmd) 
 
