@@ -686,6 +686,9 @@ sudo apt-get install virt-top  # Debian/Ubuntu 系列系统
 
 使用 virt-top 命令来监控所有虚拟机的负载：
 sudo virt-top
+
+查看宿主机上每个vm的规格
+virsh list --all | awk '/instance/{print $2}' | xargs -I {} sh -c 'echo {} $(virsh dominfo {}|awk "/VCPUs/{v=\$2}/memory/{m=\$3}END{print v\\"核 \\"m/1024\\"G\\"}")'
    """
     print(virsh_cmd) 
 
