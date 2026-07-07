@@ -688,7 +688,11 @@ sudo apt-get install virt-top  # Debian/Ubuntu 系列系统
 sudo virt-top
 
 查看宿主机上每个vm的规格
-virsh list --all | awk '/instance/{print $2}' | xargs -I {} sh -c 'echo {} $(virsh dominfo {}|awk "/VCPUs/{v=\$2}/memory/{m=\$3}END{print v\\"核 \\"m/1024\\"G\\"}")'
+for vm in $(virsh list --all --name); do
+    cpu=$(virsh dominfo $vm | awk '/CPU\(s\)/{print $2}')
+    mem=$(virsh dominfo $vm | awk '/Max memory/{print $3}')
+    printf "%-30s %-10s %-10s\\n" "$vm" "${cpu}核" "$((mem/1024/1024))GB"
+done
    """
     print(virsh_cmd) 
 
