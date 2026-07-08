@@ -275,7 +275,7 @@ tree: tree -L 2 /sys/fs/cgroup
 systemd: update 进程启动流程
 docker 如何把静态的镜像文件组合成为一个完成的根文件系统的
 nmap:
-readjson: 友好的转换json格式的数据，人类可读
+readjson: 友好的转换json格式的数据，人类可读,程序位于/src目录下，使用方法查看/src/readme文件
 runc: 容器运行时讲解
 tar: tar -C rootfs -czf layer.tar .
 gcc:
@@ -284,3 +284,4 @@ securityfs:
 ramfs:
 tee: echo performance | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 disksnapshot:
+创建一个Linux上无法删除的进程
