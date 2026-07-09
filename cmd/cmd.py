@@ -2925,3 +2925,10 @@ bash: error while loading shared libraries
    """
     print(chroot_cmd) 
 
+def print_ssh_cmd():
+    ssh_cmd = """
+# 指定用户和端口登录
+ssh secure@10.33.18.109 -p 10000
+   """
+    print(ssh_cmd) 
+

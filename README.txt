@@ -172,6 +172,7 @@ cgroupfs: cgroupfs 文件系统概述，cgroup使用示例
 systemd_cgroup: systemd unit files 文件于cgroup的关系
 qemu_img: qemu-img指令简介
 qcow2: qcow2简介
+ssh: ssh cmd usage instance
 
 aa --show c --item current : 通过 current 宏查看进程属性的示例代码
 aa --show c --item cpu_consume: cpu 负载打满源代码
@@ -285,3 +286,5 @@ ramfs:
 tee: echo performance | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 disksnapshot:
 创建一个Linux上无法删除的进程
+ln: ln cmd usage instance
+osp_sch:open stack vm 创建时候的调度算法
