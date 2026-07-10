@@ -477,10 +477,10 @@ scp -r /path/to/local/dir user@remote:/path/to/remote/
 
 # 指定端口号
 scp -P 2222 file.txt user@remote:/path/
+scp -P 2222 user@remote:/path/file.txt ./local/path/
 
 # 限制速度为 100KB/s（即 800 Kbit/s）
 scp -l 800 file.txt user@remote:/path/
-
 
 ########################## caution #####################################
 
