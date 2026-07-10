@@ -2932,3 +2932,77 @@ ssh secure@10.33.18.109 -p 10000
    """
     print(ssh_cmd) 
 
+def print_numa_cmd():
+    numa_cmd = """
+################################################################ what ##########################################################################
+
+SMP（Symmetric Multi Processing，对称多处理）             Non-Uniform Memory Access(非一致性内存访问)
+          CPU0                                             NUMA Node0    NUMA Node1 
+           |                                                             
+CPU1 ---- Memory ---- CPU2                                 CPU0 CPU1     CPU2 CPU3 
+           |                                                  |             | 
+          CPU3                                             Memory0       Memory1 
+		  
+CPU访问自己的内存：延迟低、带宽高
+CPU0访问Node1内存：延迟高、带宽低
+
+############################################################## instance ########################################################################
+
+[root@zyq ~]# numactl --hardware     #查看跨node开销
+available: 2 nodes (0-1)
+node 0 cpus: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71
+node 0 size: 384921 MB
+node 0 free: 30783 MB
+node 1 cpus: 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95
+node 1 size: 386909 MB
+node 1 free: 33854 MB
+node distances:
+node   0   1    #10 = 本地访问内存的“代价”，21 = 跨NUMA访问内存的“代价”
+  0:  10  21 
+  1:  21  10
+
+[root@zyq ~]# lscpu | grep -i numa     #查看numa信息概览
+NUMA node(s):                    2
+NUMA node0 CPU(s):               0-23,48-71
+NUMA node1 CPU(s):               24-47,72-95
+
+[root@zyq ~]# numastat    #NUMA性能分析
+                           node0           node1
+numa_hit             11689489324      9702808443
+numa_miss                      0               0
+numa_foreign                   0               0
+interleave_hit             64818           65338
+local_node           11686812186      9700389976
+other_node               2677138         2418467
+
+############################################################## others ##########################################################################
+Q: 常见机器都是几个node的？
+| 服务器类型      | 典型NUMA
+| --------------- | -------
+| 普通PC          | 1
+| 单路服务器      | 1
+| 双路服务器      | 2
+| 四路服务器      | 4
+| AMD EPYC双路    | 4~8甚至更多
+| 高端数据库服务器| 8+
+
+Q: 是不是主板有几个cpu socket就有几个node（通常情况下是）
+
+Q: 如何开启numa和关闭numa？
+1、BIOS 中开启/关闭 NUMA（默认开启）
+2、vim /etc/default/grub  --> GRUB_CMDLINE_LINUX="rhgb quiet numa=off" (OpenStack 场景不建议off)
+
+Q: 如何绑定app使用哪些cpu和mem？
+numactl --cpunodebind=0 ./app   #只运行在Node0 CPU
+numactl --membind=0 ./app       #只使用Node0内存
+numactl --cpunodebind=0 --membind=0 ./app    #CPU+内存绑定
+
+Q: open stack如何开启numa？
+物理机 NUMA 开启后，OpenStack 不需要再开启 NUMA 功能开关；但如果希望云主机利用 NUMA，需要通过 nova/libvirt 配置和 flavor 的 hw:numa_ 属性实现 NUMA 感知调度。*
+
+Q: 查看进程NUMA？
+numastat -p PID  
+
+   """
+    print(numa_cmd) 
+
