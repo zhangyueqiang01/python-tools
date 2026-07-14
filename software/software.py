@@ -1038,6 +1038,12 @@ nova-placement：跟踪和管理计算资源的分配和使用情况，为调度
 			################
 			# nova常用指令 #
 			################
+# 查看所有计算节点主机
+nova service-list
+
+# 查看所有zone
+openstack availability zone list
+
 # 磁盘挂载卸载
 nova volume-detach ECS_ID DISK_ID
 nova volume-attach NEW_ECS_ID DISK_ID
