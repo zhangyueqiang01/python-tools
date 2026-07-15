@@ -3006,3 +3006,31 @@ numastat -p PID
    """
     print(numa_cmd) 
 
+def print_gpucmd_cmd():
+    gpucmd_cmd = """
+############################################################## instance ########################################################################
+
+# 查看是否有GPU显卡
+lspci | grep -i nvidia
+
+1. 基础信息（显卡型号、显存、温度、功耗、使用率、CUDA 版本）
+nvidia-smi
+
+2. 查看 CUDA 版本
+nvcc -V
+
+3. 查看显卡详细硬件信息
+nvidia-smi -q
+nvidia-smi -q -d MEMORY,UTILIZATION,TEMPERATURE
+
+4. 实时监控 GPU 动态
+watch -n1 nvidia-smi
+
+5. 查看 GPU 数量
+nvidia-smi -L
+
+6. 查看驱动版本
+cat /proc/driver/nvidia/version
+   """
+    print(gpucmd_cmd) 
+

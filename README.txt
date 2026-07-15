@@ -174,6 +174,7 @@ qemu_img: qemu-img指令简介
 qcow2: qcow2简介
 ssh: ssh cmd usage instance
 numa: numa related info
+gpucmd: check gpu related info 
 
 aa --show c --item current : 通过 current 宏查看进程属性的示例代码
 aa --show c --item cpu_consume: cpu 负载打满源代码
@@ -234,7 +235,6 @@ dpdk:
 efi:
 lscpu:
 hypervisor:
-gpucmd:
 nvidia-smi:
 network_service: 
 dig:
