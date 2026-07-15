@@ -478,6 +478,7 @@ scp -r /path/to/local/dir user@remote:/path/to/remote/
 # 指定端口号
 scp -P 2222 file.txt user@remote:/path/
 scp -P 2222 user@remote:/path/file.txt ./local/path/
+# 若在A机器上运行指令复制B机器的文件到C机器，实际上是B、C机器之间传输文件
 
 # 限制速度为 100KB/s（即 800 Kbit/s）
 scp -l 800 file.txt user@remote:/path/
