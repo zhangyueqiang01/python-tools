@@ -756,6 +756,17 @@ def print_dline2_cmd():
 Interface                   IP Address/Mask    Physical Protocol VPN           
 Vlanif2646                  10.101.80.181/30   up       up       DLine102  
 
+# 查看云侧互联地址接口配置
+<BJYZB-B214-8_A4_8_B5-ASW-HCE68-1U41>display current-configuration interface Vlanif2646
+#
+interface Vlanif2646
+ description To-Zuigaorenminjianchayuan-B17575393
+ ip binding vpn-instance DLine102
+ ip address 10.101.80.181 255.255.255.252
+#
+return
+<BJYZB-B214-8_A4_8_B5-ASW-HCE68-1U41>
+
 # 通过vpn-instance查看专线路由表
 <BJYZB-B214-8_A4_8_B5-ASW-HCE68-1U41>display ip routing-table vpn-instance DLine102
 Proto: Protocol        Pre: Preference
