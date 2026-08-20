@@ -750,69 +750,54 @@ dd if=bitmap.bin of=/root/disk.img bs=1024 count=1 seek=122 conv=notrunc
 def print_dline2_cmd():
     print("dline2 usage command:")
     dline2_cmd = """
-# 查找专线的vlan id
-scm-虚拟私有云-工具箱-云专线-租户名-邮箱
 
-#通过vlan id 找到vpn-instance
-<YZYHB214JF-6-8-1&6-6-2-CE6851-1U42-1U43>display current-configuration | section include 3786
-#
-ip vpn-instance DLine36
- ipv4-family
-  route-distinguisher 3786:3786
-  vpn-target 3786:3786 export-extcommunity
-  vpn-target 3786:3786 import-extcommunity
-#
-interface Eth-Trunk1.36
- ip binding vpn-instance DLine36
- ip address 169.254.195.11 255.255.255.0
- dot1q termination vid 3786
-
-#查看vpn-instance的对外接口和对内接口，以及接口的IP（互联IP偶数是云侧，奇数是客户侧）
-<YZYHB214JF-6-8-1&6-6-2-CE6851-1U42-1U43>display ip interface brief | include DLine36
-*down: administratively down
-!down: FIB overload down
-^down: standby
-(l): loopback
-(s): spoofing
-(d): Dampening Suppressed
-The number of interface that is UP in Physical is 1174
-The number of interface that is DOWN in Physical is 12
-The number of interface that is UP in Protocol is 1165
-The number of interface that is DOWN in Protocol is 21
+# 通过本端互联地址找到vpn-instance
+<BJYZB-B214-8_A4_8_B5-ASW-HCE68-1U41>display ip interface brief | include 10.101.80.181
 Interface                   IP Address/Mask    Physical Protocol VPN           
-10GE1/0/18                  10.101.213.10/30   up       up       DLine36     //对外接口（专线1）  
-10GE2/0/18                  10.101.213.18/30   up       up       DLine36     //对外接口 专线2）  
-Eth-Trunk1.36               169.254.195.11/24  up       up       DLine36    //对内接口
+Vlanif2646                  10.101.80.181/30   up       up       DLine102  
 
-#查看专线路由明细      
-<YZYHB214JF-6-8-1&6-6-2-CE6851-1U42-1U43>display ip routing-table vpn-instance DLine36
+# 通过vpn-instance查看专线路由表
+<BJYZB-B214-8_A4_8_B5-ASW-HCE68-1U41>display ip routing-table vpn-instance DLine102
 Proto: Protocol        Pre: Preference
 Route Flags: R - relay, D - download to fib, T - to vpn-instance, B - black hole route
 ------------------------------------------------------------------------------
-Routing Table : DLine36
-         Destinations : 13       Routes : 18        
+Routing Table : DLine102
+         Destinations : 12       Routes : 18        
 
 Destination/Mask    Proto   Pre  Cost        Flags NextHop         Interface
 
-     10.70.89.0/28  Static  60   0             RD  10.101.213.9    10GE1/0/18
-                    Static  60   0             RD  10.101.213.17   10GE2/0/18
-   10.101.213.8/30  Direct  0    0             D   10.101.213.10   10GE1/0/18
-  10.101.213.10/32  Direct  0    0             D   127.0.0.1       10GE1/0/18
-  10.101.213.11/32  Direct  0    0             D   127.0.0.1       10GE1/0/18
-  10.101.213.16/30  Direct  0    0             D   10.101.213.18   10GE2/0/18
-  10.101.213.18/32  Direct  0    0             D   127.0.0.1       10GE2/0/18
-  10.101.213.19/32  Direct  0    0             D   127.0.0.1       10GE2/0/18
-  169.254.195.0/24  Direct  0    0             D   169.254.195.11  Eth-Trunk1.36
- 169.254.195.11/32  Direct  0    0             D   127.0.0.1       Eth-Trunk1.36
-169.254.195.255/32  Direct  0    0             D   127.0.0.1       Eth-Trunk1.36
-     172.17.0.0/16  Static  60   0             RD  10.101.213.9    10GE1/0/18
-                    Static  60   0             RD  10.101.213.17   10GE2/0/18
-    192.168.0.0/16  Static  60   0             RD  169.254.195.251 Eth-Trunk1.36
-                    Static  60   0             RD  169.254.195.252 Eth-Trunk1.36
-                    Static  60   0             RD  169.254.195.253 Eth-Trunk1.36
-                    Static  60   0             RD  169.254.195.254 Eth-Trunk1.36
+       10.1.0.0/16  Static  60   0             RD  169.254.195.251 Eth-Trunk1.102
+                    Static  60   0             RD  169.254.195.252 Eth-Trunk1.102
+                    Static  60   0             RD  169.254.195.253 Eth-Trunk1.102
+                    Static  60   0             RD  169.254.195.254 Eth-Trunk1.102
+  10.101.80.180/30  Direct  0    0             D   10.101.80.181   Vlanif2646
+  10.101.80.181/32  Direct  0    0             D   127.0.0.1       Vlanif2646
+  10.101.80.183/32  Direct  0    0             D   127.0.0.1       Vlanif2646
+    143.3.121.0/24  Static  60   0             RD  10.101.80.182   Vlanif2646
+    143.3.122.0/24  Static  60   0             RD  10.101.80.182   Vlanif2646
+  169.254.195.0/24  Direct  0    0             D   169.254.195.10  Eth-Trunk1.102
+ 169.254.195.10/32  Direct  0    0             D   127.0.0.1       Eth-Trunk1.102
+169.254.195.255/32  Direct  0    0             D   127.0.0.1       Eth-Trunk1.102
+    172.168.0.0/24  Static  60   0             RD  10.101.80.182   Vlanif2646
+    192.168.0.0/16  Static  60   0             RD  169.254.195.251 Eth-Trunk1.102
+                    Static  60   0             RD  169.254.195.252 Eth-Trunk1.102
+                    Static  60   0             RD  169.254.195.253 Eth-Trunk1.102
+                    Static  60   0             RD  169.254.195.254 Eth-Trunk1.102
 255.255.255.255/32  Direct  0    0             D   127.0.0.1       InLoopBack0
-<YZYHB214JF-6-8-1&6-6-2-CE6851-1U42-1U43>
+<BJYZB-B214-8_A4_8_B5-ASW-HCE68-1U41>
+
+本地互联地址：Interface Vlanif2646 （10.101.80.181）
+对端互联地址：10.101.80.182
+客户侧网段：143.3.121.0/24，143.3.122.0/24，172.168.0.0/24（Vlanif2646对应的网段）
+云侧vpc：10.1.0.0/16，192.168.0.0/16（Eth-Trunk1.102 对应的网段）
+下一跳云上网关：169.254.195.251‑254
+下一跳客户网关：10.101.80.182
+
+配置完专线后安全组需要放通：
+
+ping 本端互联地址ping对端互联地址
+<BJYZB-B214-8_A4_8_B5-ASW-HCE68-1U41>ping -vpn-instance DLine102 -a 10.101.80.181 10.101.80.182
+
    """
     print(dline2_cmd) 
 
