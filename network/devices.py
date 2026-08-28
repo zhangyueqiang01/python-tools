@@ -581,6 +581,10 @@ show interface aggregatePort 11
 # 查看所有接口和/单个接口收发光信息
 show interfaces transceiver
 show interfaces TenGigabitEthernet 0/34 transceiver
+
+# 查看/清除某个接口误码计数
+show interfaces TenGigabitEthernet 0/34 counters errors
+clear counters TenGigabitEthernet 0/34
    """
     print(ruijie_cmd) 
 
