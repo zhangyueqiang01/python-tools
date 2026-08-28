@@ -577,6 +577,10 @@ show running-config interface aggregatePort 11
 
 # 查看聚合口11详细信息
 show interface aggregatePort 11
+
+# 查看所有接口和/单个接口收发光信息
+show interfaces transceiver
+show interfaces TenGigabitEthernet 0/34 transceiver
    """
     print(ruijie_cmd) 
 
