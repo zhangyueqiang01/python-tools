@@ -175,6 +175,7 @@ qcow2: qcow2简介
 ssh: ssh cmd usage instance
 numa: numa related info
 gpucmd: check gpu related info 
+gem: 自研HA相关的指令
 
 aa --show c --item current : 通过 current 宏查看进程属性的示例代码
 aa --show c --item cpu_consume: cpu 负载打满源代码
@@ -289,3 +290,6 @@ disksnapshot:
 ln: ln cmd usage instance
 osp_sch:open stack vm 创建时候的调度算法
 协商离职，居家办公落实
+sort
+手写docker
+制作 k8s 课件
