@@ -3043,11 +3043,15 @@ gem是宿主机HA的cli工具，以rpm形式安装在3个控制节点，主要�
 
 ############################################################## instance ########################################################################
 
-# 查看宿主机列表
-gem host list 
+# 查看HA宿主机列表
+gem host list | head
  
 # 查看单个宿主机的信息（包含带外IP/加密后的BMC账密/三网IP/三网健康状况）
 gem host show <gem-host-id>
+
+# 开启/关闭 宿主机HA功能(默认开启) ，计算节点下电（线）前，需要先关闭HA服务
+gem host ha-enable <gem-host-id>
+gem host ha-disable <gem-host-id>
 
 # 将某台计算节点设置为备机（该步骤包含nova/gs侧的disable以及打tag）
 gem host reservation-set <gem-host-id>
@@ -3064,27 +3068,24 @@ gem host remove <gem-host-id>
 # 同步宿主机列表以及同步拉取cmdb中的带外数据(默认每30分钟会自动同步nova service-list，调用该接口可立马同步) 
 gem host sync 
 
-# 开启宿主机HA功能(默认开启) 
-gem host ha-enable <gem-host-id>
-
-# 关闭宿主机HA功能 ，计算节点下电（线）前，需要先关闭HA服务 
-gem host ha-disable <gem-host-id>
-
 # 设置节点bmc信息（在该资源池无CMDB的情况下使用）
 gem host bmc-set <gem-host-id> --addr <iLO address or BMC IP> --user <BMC username> --password <BCM password> --manufacturer <Hardware manufacturer>
 
-# 查看故障恢复的虚拟机列表 
+
+# 查看集群（az级别）所有/单个 的故障记录列表 
+gem fault-log list | head
+gem fault-log show <fault-log-id>
+由于consul server集群间数据同步使用的是raft协议，不能超过半数的节点故障。所以当前只支持一个控制节点故障后，还可以继续正常提供服务。
+当有超过一个以上控 制节点故障后，在consul server 集群故障期间，需要先恢复控制节点的consul server集群，才能 恢复计算节点的consul agent服务。
+
+# 查看故障恢复的 所有/单个 虚拟机列表
+gem instance list | head 
 gem instance list --fault-log-id <fault-log-id>
 
-# 查看单个故障恢复虚拟机时执行的迁移动作列表，eg：live-migrate（热迁移）、evacuate（疏散）。如果存在故障升级、迁移失败重试等动作，则一个虚机可能会存在多个migrate-task迁移任务记录。 
+# 查看 所有故障/单个故障 恢复虚拟机时执行的迁移动作列表，eg：live-migrate（热迁移）、evacuate（疏散）。如果存在故障升级、迁移失败重试等动作，则一个虚机可能会存在多个migrate-task迁移任务记录。 
+gem migrate-task list | head 
 gem migrate-task list --fault-log-id <fault-log-id>
 
-# 查看集群（az级别）所有的故障记录列表 
-gem fault-log list 
-
-# 查看单个故障记录。说明： 由于consul server集群间数据同步使用的是raft协议，不能超过半数的节点故障。所以当前只支持一个控制节点故障后，还可以继续正常提供服务。当有超过一个以上控 制节点故障后，在consul server 集群故
-# 障期间，需要先恢复控制节点的consul server集群，才能恢复计算节点的consul agent服务。 
-gem fault-log show <fault-log-id>
 
 # 说明：控制HA集群是否处理故障。handle-disable 为关闭HA集群处理故障功能；handle enable为开启HA集群故障处理功能。 
 # 使用场景：如果有会影响计算节点健康的人为变更操作，可以设置handle-disable，所有检测到的故障都不处理，变更完成后再设置handle-enable 
@@ -3096,11 +3097,14 @@ gem host handle-enable
 日志在os-control节点/var/log/gemini/路径下，less /var/log/gemini/gemini.log
 三个控制节点中只有一个节点为主控节点，故障、服务相关日志都在主控节点上，主控节点的日志标识如下，日志持续更新，且包含关键字段Get unhealthy
 
-
 根据查看故障查看日志
 （1）执行gem fault-log list|grep <hostname>, 定位到具体故障，获取fault-log id 如下190
 （2）gem fault-log show <fault-log id>, 获取trace id
 （3）完整的故障日志 可以根据trace id 在控制节点/var/log/gemini/gemini.log中查看完成的故障处理过程
+
+BMC 命令行工具使用方法
+aa --show ipmitool
+
    """
     print(gem_cmd) 
 
