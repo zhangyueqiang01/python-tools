@@ -176,6 +176,7 @@ ssh: ssh cmd usage instance
 numa: numa related info
 gpucmd: check gpu related info 
 gem: 自研HA相关的指令
+ipmitool: 服务器远程BMC工具使用方法
 
 aa --show c --item current : 通过 current 宏查看进程属性的示例代码
 aa --show c --item cpu_consume: cpu 负载打满源代码

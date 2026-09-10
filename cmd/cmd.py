@@ -3104,3 +3104,96 @@ gem host handle-enable
    """
     print(gem_cmd) 
 
+def print_ipmitool_cmd():
+    ipmitool_cmd = """
+################################################################ what ##########################################################################
+`ipmitool` 是开源的 **IPMI（Intelligent Platform Management Interface，智能平台管理接口）** 工具。
+核心能力：**独立于服务器操作系统，通过 BMC（基板管理控制器）远程管理服务器硬件**。哪怕服务器系统挂了、关机，只要 BMC 供电、网络正常，就可以操作。
+IPMI 是服务器硬件管理标准，主流品牌服务器（华为、浪潮、戴尔、HPE、超聚变等）都支持。
+
+############################################################## install #########################################################################
+# CentOS/RHEL
+yum install ipmitool -y
+
+############################################################### option #########################################################################
+ipmitool -I lanplus -H BMC_IP -U 用户名 -P 密码 子命令
+-I <接口>：连接方式
+    lanplus：IPMI v2.0，加密，远程首选
+    lan：IPMI v1.5，明文，不安全，不推荐
+    open：本地，服务器本机使用
+-H：远端 BMC IP 地址
+-U：BMC 用户名
+-P：BMC 密码（明文写命令行有泄露风险，生产慎用）
+-E：从环境变量 IPMI_PASSWORD 读取密码（推荐安全方式）
+
+端口：IPMI 使用 UDP 623，防火墙要放行这个端口。
+
+############################################################## instance ########################################################################
+
+1. 电源管理（最常用）
+# 通过 IPMI 远程查看服务器当前电源状态（开机 / 关机）
+ipmitool -I lanplus -H 10.13.247.41 -U 3W35j69mOW8x8X2x9+vE2w== -P bu5YDQcMcXYYuhXzH3tJ8A== power status
+
+# 开机
+ipmitool power on
+
+# 软关机（通知操作系统正常关机，优先推荐）
+ipmitool power off
+
+# 硬重启（强制重启，相当于长按重启按钮，系统来不及保存）
+ipmitool power reset
+
+# power cycle：断电等待1秒左右，再上电。相当于断电拔电再上电，修复卡死场景
+ipmitool power cycle
+
+
+2. 查看传感器、硬件信息（温度、电压、风扇、电源）
+# 查看所有传感器（温度、风扇转速、电压）
+ipmitool sdr
+
+# 简短输出传感器信息
+ipmitool sdr type temperature
+
+# 查看BMC硬件信息
+ipmitool mc info
+
+# 查看FRU信息（服务器SN、型号、厂商信息）
+ipmitool fru
+
+
+3. 远程控制台 SOL（Serial Over Lan，远程串口，看服务器开机 BIOS/GRUB）
+# 可以远程接入服务器串口，系统起不来、进不去操作系统的时候看启动日志
+# 开启SOL远程串口
+ipmitool -I lanplus -H x.x.x.x -U admin -P xxx sol activate
+
+# 退出SOL： ~ .
+
+
+4. BMC 配置相关
+# 查看BMC用户列表
+ipmitool user list 1
+
+# 设置BMC用户密码
+ipmitool user set password 2 "NewPasswd@123"
+
+# 查看BMC网络信息
+ipmitool lan print 1
+
+
+5. 日志查看（BMC 硬件事件日志，告警、宕机原因）
+# 查看BMC事件日志，硬件告警、掉电、温度过高都会记录在这里
+ipmitool sel elist
+
+# 清空事件日志
+ipmitool sel clear
+
+6. 其他实用
+# 读取整机指示灯（定位灯，机房找服务器）
+ipmitool chassis identify
+
+# 开启定位灯闪烁30秒
+ipmitool chassis identify 30
+
+   """
+    print(ipmitool_cmd) 
+
