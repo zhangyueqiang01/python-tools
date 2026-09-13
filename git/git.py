@@ -756,6 +756,9 @@ def print_dline2_cmd():
 Interface                   IP Address/Mask    Physical Protocol VPN           
 Vlanif2646                  10.101.80.181/30   up       up       DLine102  
 
+# 通过B号找到本地互联地址所在接口
+screen-l 0 temp  -->  display current-configuration  -->  打开日志文件（C:\SecureCRSecureFXPortable64\log） --> 搜索B号(B17575393))
+
 # 查看云侧互联地址接口配置
 <BJYZB-B214-8_A4_8_B5-ASW-HCE68-1U41>display current-configuration interface Vlanif2646
 #
