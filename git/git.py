@@ -776,36 +776,36 @@ Proto: Protocol        Pre: Preference
 Route Flags: R - relay, D - download to fib, T - to vpn-instance, B - black hole route
 ------------------------------------------------------------------------------
 Routing Table : DLine102
-         Destinations : 12       Routes : 18        
+         Destinations : 12       Routes : 18
 
 Destination/Mask    Proto   Pre  Cost        Flags NextHop         Interface
 
-       10.1.0.0/16  Static  60   0             RD  169.254.195.251 Eth-Trunk1.102
+       10.1.0.0/16  Static  60   0             RD  169.254.195.251 Eth-Trunk1.102    // 到云侧vpc网段路由，有四个下一跳地址
                     Static  60   0             RD  169.254.195.252 Eth-Trunk1.102
                     Static  60   0             RD  169.254.195.253 Eth-Trunk1.102
                     Static  60   0             RD  169.254.195.254 Eth-Trunk1.102
-  10.101.80.180/30  Direct  0    0             D   10.101.80.181   Vlanif2646
-  10.101.80.181/32  Direct  0    0             D   127.0.0.1       Vlanif2646
-  10.101.80.183/32  Direct  0    0             D   127.0.0.1       Vlanif2646
-    143.3.121.0/24  Static  60   0             RD  10.101.80.182   Vlanif2646
-    143.3.122.0/24  Static  60   0             RD  10.101.80.182   Vlanif2646
-  169.254.195.0/24  Direct  0    0             D   169.254.195.10  Eth-Trunk1.102
- 169.254.195.10/32  Direct  0    0             D   127.0.0.1       Eth-Trunk1.102
-169.254.195.255/32  Direct  0    0             D   127.0.0.1       Eth-Trunk1.102
-    172.168.0.0/24  Static  60   0             RD  10.101.80.182   Vlanif2646
-    192.168.0.0/16  Static  60   0             RD  169.254.195.251 Eth-Trunk1.102
+  10.101.80.180/30  Direct  0    0             D   10.101.80.181   Vlanif2646      // 互联地址所属网段的路由（包含180/30 180代表网段、181、182互联地址、183广播地址）
+  10.101.80.181/32  Direct  0    0             D   127.0.0.1       Vlanif2646      // 本地互联地址的路由指向127.0.0.1
+  10.101.80.183/32  Direct  0    0             D   127.0.0.1       Vlanif2646      // 互联网段的广播地址路由
+    143.3.121.0/24  Static  60   0             RD  10.101.80.182   Vlanif2646  // 客户侧访问vpc的网段
+    143.3.122.0/24  Static  60   0             RD  10.101.80.182   Vlanif2646  // 客户侧访问vpc的网段
+  169.254.195.0/24  Direct  0    0             D   169.254.195.10  Eth-Trunk1.102  // 以下三条路由每个专线都有，169.254.195.0/24是云内的虚拟网网段，具体作用未知
+ 169.254.195.10/32  Direct  0    0             D   127.0.0.1       Eth-Trunk1.102  //
+169.254.195.255/32  Direct  0    0             D   127.0.0.1       Eth-Trunk1.102  //
+    172.168.0.0/24  Static  60   0             RD  10.101.80.182   Vlanif2646  // 客户侧访问vpc的网段
+    192.168.0.0/16  Static  60   0             RD  169.254.195.251 Eth-Trunk1.102     // 到云侧vpc网段路由，有四个下一跳地址
                     Static  60   0             RD  169.254.195.252 Eth-Trunk1.102
                     Static  60   0             RD  169.254.195.253 Eth-Trunk1.102
                     Static  60   0             RD  169.254.195.254 Eth-Trunk1.102
 255.255.255.255/32  Direct  0    0             D   127.0.0.1       InLoopBack0
 <BJYZB-B214-8_A4_8_B5-ASW-HCE68-1U41>
 
-本地互联地址：Interface Vlanif2646 （10.101.80.181）
-对端互联地址：10.101.80.182
+Static路由是手动配置产生的，Direct路由是给接口配置地址后自动生成的
+Vlanif2646： 本地互联地址所在接口
+Eth-Trunk1.102： 通往云内vpc的接口（聚合口Eth-Trunk1下的子接口102）
 客户侧网段：143.3.121.0/24，143.3.122.0/24，172.168.0.0/24（Vlanif2646对应的网段）
 云侧vpc：10.1.0.0/16，192.168.0.0/16（Eth-Trunk1.102 对应的网段）
 下一跳云上网关：169.254.195.251‑254
-下一跳客户网关：10.101.80.182
 
 配置完专线后安全组需要放通：
 
