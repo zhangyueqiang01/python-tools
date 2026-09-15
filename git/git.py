@@ -809,9 +809,12 @@ vrouter地址：169.254.195.251‑254
 
 配置完专线后安全组需要放通：
 
-ping 本端互联地址ping对端互联地址
+# ping 本端互联地址ping对端互联地址
 <BJYZB-B214-8_A4_8_B5-ASW-HCE68-1U41>ping -vpn-instance DLine102 -a 10.101.80.181 10.101.80.182
 
+# 客户互联地址如果ping不通可以排查是否是对端禁ping所导致，以下ip即二层可达、ARP 应答正常，ping 不通纯粹是对端设备/防火墙拦截了 ICMP 请求，不是链路、路由、二层问题
+ping -vpn-instance DLine8 -a 10.101.214.110 10.101.214.109
+display arp vpn-instance DLine8 | include 10.101.214.109
    """
     print(dline2_cmd) 
 
