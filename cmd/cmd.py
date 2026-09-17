@@ -3136,7 +3136,7 @@ ipmitool -I lanplus -H BMC_IP -U 用户名 -P 密码 子命令
 
 1. 电源管理（最常用）
 # 通过 IPMI 远程查看服务器当前电源状态（开机 / 关机）
-ipmitool -I lanplus -H 10.13.247.41 -U 3W35j69mOW8x8X2x9+vE2w== -P bu5YDQcMcXYYuhXzH3tJ8A== power status
+ipmitool -I lanplus -H 10.13.247.41 -U bjtyyadmin -P XD1ioNnzgdzP@N7 power status
 
 # 开机
 ipmitool power on
