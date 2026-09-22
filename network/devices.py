@@ -352,6 +352,9 @@ ethtool --version
 # 展示网卡设备的标准信息	
 ethtool DEVNAME	
 
+# 查看网卡是光口还是电口，TP（Twisted Pair 双绞线电口），FIBRE （fibre 纤维）
+ethtool DEVNAME | grep -E "FIBRE|TP"
+
 # 查询RX/TX ring parameters
 ethtool -g|--show-ring DEVNAME
 
