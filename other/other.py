@@ -749,6 +749,7 @@ gs host enable <host id>
 
 禁用宿主机
 gs host disable <host id>
+gs host disable <hostid> --disable_reason "Reserve for HA"
 
 ############################################################### 虚拟机 ##########################################################################
 
