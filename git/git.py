@@ -891,18 +891,20 @@ Linux 内核日志缓冲区（Kernel Log Buffer）用于存储内核日志消息
 # 调整日志缓冲区大小
 GRUB_CMDLINE_LINUX="log_buf_len=8M"
 
+############################################################## instance ########################################################################
+
+# 显示经过解码的内核日志信息，取消分页并使用颜色高亮，同时显示易于理解的时间格式。
 /bin/dmesg --decode --nopager --color --ctime
 alias dmesg='/bin/dmesg --decode --nopager --color --ctime'
 
-#--decode：解码输出中的二进制数据。
-#--nopager：取消分页显示，所有输出一次性显示。
-#--color：启用彩色输出，便于阅读。
-#--ctime：将时间戳转换为当前时间。
-#这条命令的作用是显示经过解码的内核日志信息，取消分页并使用颜色高亮，同时显示易于理解的时间格式。
+    --decode：解码输出中的二进制数据。
+    --nopager：取消分页显示，所有输出一次性显示。
+    --color：启用彩色输出，便于阅读。
+    --ctime：将时间戳转换为当前时间。
 
 
-echo "test_script: msg 1" > /dev/kmsg
 # 将消息 "test_script: msg 1" 写入到 Linux 内核日志（kernel log）中
+echo "test_script: msg 1" > /dev/kmsg
 
 
 echo "<6>test_script: test msg at KERN_INFO" > /dev/kmsg
