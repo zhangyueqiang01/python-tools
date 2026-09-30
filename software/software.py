@@ -1050,6 +1050,7 @@ nova volume-attach NEW_ECS_ID DISK_ID
 
 # 冷迁移虚拟机
 nova migrate VM_ID
+nova resize-confirm VM_ID  # 一般迁移完成后需要执行此步骤
 
 # 手动选择一台主机
 nova migrate VM_ID --host dsthost
