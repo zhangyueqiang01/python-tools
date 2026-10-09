@@ -1041,6 +1041,11 @@ nova-placement：跟踪和管理计算资源的分配和使用情况，为调度
 # 查看所有计算节点主机
 nova service-list
 
+# 禁用计算节点（不让 nova 调度新虚拟机上来，原有虚拟机继续运行），老版本用nova cmd，新版本用openstack cmd
+nova service-disable <主机名> nova-compute --reason "硬件维护"
+openstack compute service set <主机名> nova-compute --disable --disable-reason "硬件维护"
+
+
 # 查看所有zone
 openstack availability zone list
 
