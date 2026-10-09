@@ -1045,6 +1045,9 @@ nova service-list
 nova service-disable <主机名> nova-compute --reason "硬件维护"
 openstack compute service set <主机名> nova-compute --disable --disable-reason "硬件维护"
 
+# 起用计算节点，老版本用nova cmd，新版本用openstack cmd
+nova service-enable <主机名> nova-compute
+openstack compute service set <主机名> nova-compute --enable
 
 # 查看所有zone
 openstack availability zone list
